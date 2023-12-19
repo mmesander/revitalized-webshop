@@ -18,11 +18,13 @@ public class AllergenController {
     }
 
 
-    // Get Requests
+    // CRUD Requests
     @GetMapping("/supplementen/allergenen")
     public ResponseEntity<List<AllergenDto>> getAllAllergens() {
         List<AllergenDto> dtos = allergenService.getAllAllergens();
 
         return ResponseEntity.ok().body(dtos);
     }
+
+
 }
