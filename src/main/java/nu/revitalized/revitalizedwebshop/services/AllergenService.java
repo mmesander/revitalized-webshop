@@ -39,7 +39,7 @@ public class AllergenService {
     }
 
     public List<AllergenDto> getAllAllergensByName(String name) {
-        List<Allergen> allergens = allergenRepository.findAll();
+        List<Allergen> allergens = allergenRepository.findAllergenByNameContainsIgnoreCase(name);
         List<AllergenDto> allergenDtos = new ArrayList<>();
 
         for (Allergen allergen : allergens) {
