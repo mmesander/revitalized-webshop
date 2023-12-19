@@ -1,8 +1,6 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-
-import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -12,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
