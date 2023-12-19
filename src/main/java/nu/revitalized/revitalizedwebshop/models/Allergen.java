@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.Set;
 
+//TODO Repo bouwen, service layer bouwen en controllers bouwen
+
 @Getter
 @Setter
 @Entity
