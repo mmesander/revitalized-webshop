@@ -8,9 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "garments")
-public class Garment extends Product {
+@Table(name = "supplements")
+public class Supplement extends Product {
     // Variables
-    private String size;
-    private String color;
+    private String contains;
 }
