@@ -80,4 +80,22 @@ public class AllergenController {
             return ResponseEntity.created(uri).body(dto);
         }
     }
+
+    @PutMapping("/supplementen/allergenen/{id}")
+    public ResponseEntity<AllergenDto> updateAllergen(
+            @PathVariable("id") Long id,
+            @Valid
+            @RequestBody AllergenInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        AllergenDto dto;
+
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            dto = allergenService.updateAllergen(id, inputDto);
+        }
+
+        return ResponseEntity.ok().body(dto);
+    }
 }
