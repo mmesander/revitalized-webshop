@@ -1,6 +1,6 @@
 -- Allergens
-ALTER SEQUENCE allergens_seq START WITH 1001 INCREMENT BY 1;
-INSERT INTO allergens(id, name)
+ALTER SEQUENCE allergens_seq INCREMENT BY 1;
+INSERT INTO allergens (id, name)
 VALUES
     (nextval('allergens_seq'), 'gluten (tarwe, rogge, gerst, haver en spelt)'),
     (nextval('allergens_seq'), 'ei'),
