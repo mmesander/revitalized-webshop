@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "products")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Product {
     // Variables
     @Id
