@@ -1,14 +1,21 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
-import nu.revitalized.revitalizedwebshop.services.AllergenService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
+import nu.revitalized.revitalizedwebshop.services.AllergenService;
+import static nu.revitalized.revitalizedwebshop.helpers.HelperBindingResult.handleBindingResultError;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.util.List;
+
 
 @RestController
 public class AllergenController {
@@ -45,4 +52,32 @@ public class AllergenController {
         return ResponseEntity.ok().body(dto);
     }
 
+    @DeleteMapping("/supplementen/allergenen/{id}")
+    public ResponseEntity<Object> deleteAllergen(
+            @PathVariable("id") Long id
+    ) {
+        allergenService.deleteAllergen(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/supplementen/allergenen")
+    public ResponseEntity<AllergenDto> createAllergen(
+            @Valid
+            @RequestBody AllergenInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        AllergenDto dto;
+
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            dto = allergenService.createAllergen(inputDto);
+            URI uri = URI.create(
+                    ServletUriComponentsBuilder
+                            .fromCurrentRequest()
+                            .path("/" + dto.getId()).toUriString());
+            return ResponseEntity.created(uri).body(dto);
+        }
+    }
 }
