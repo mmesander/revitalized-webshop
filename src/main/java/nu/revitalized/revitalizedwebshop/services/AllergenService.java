@@ -1,14 +1,12 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.helpers.HelperDtoTransferAllergen;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +58,16 @@ public class AllergenService {
 
         if (allergen.isPresent()) {
             return HelperDtoTransferAllergen.transferToDto(allergen.get());
+        } else {
+            throw new RecordNotFoundException("No allergen found with id: " + id);
+        }
+    }
+
+    public void deleteAllergen(Long id) {
+        Optional<Allergen> allergen = allergenRepository.findById(id);
+
+        if (allergen.isPresent()) {
+            allergenRepository.deleteById(id);
         } else {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }
