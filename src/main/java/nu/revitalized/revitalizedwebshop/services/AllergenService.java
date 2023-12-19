@@ -38,6 +38,22 @@ public class AllergenService {
         }
     }
 
+    public List<AllergenDto> getAllAllergensByName(String name) {
+        List<Allergen> allergens = allergenRepository.findAll();
+        List<AllergenDto> allergenDtos = new ArrayList<>();
+
+        for (Allergen allergen : allergens) {
+            AllergenDto allergenDto = HelperDtoTransferAllergen.transferToDto(allergen);
+            allergenDtos.add(allergenDto);
+        }
+
+        if (allergenDtos.isEmpty()) {
+            throw new RecordNotFoundException("No allergens named: " + name + " are found");
+        } else {
+            return allergenDtos;
+        }
+    }
+
 
 
 
