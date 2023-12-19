@@ -87,5 +87,21 @@ public class AllergenService {
     }
 
 
+    // Update Methods
+    public AllergenDto updateAllergen(Long id, AllergenInputDto inputDto) {
+        Optional<Allergen> allergen = allergenRepository.findById(id);
+
+        if (allergen.isPresent()) {
+            Allergen newAllergen = allergen.get();
+
+            newAllergen.setName(inputDto.getName());
+
+            Allergen updatedAllergen = allergenRepository.save(newAllergen);
+
+            return HelperDtoTransferAllergen.transferToDto(updatedAllergen);
+        } else {
+            throw new RecordNotFoundException("No allergen found with id: " + id);
+        }
+    }
 }
 
