@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "products")
-public class Product {
+public abstract class Product {
     // Variables
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
