@@ -14,5 +14,4 @@ public class AllergenService {
 
 
     // Get Methods
-
 }
