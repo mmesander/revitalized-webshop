@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.helpers.HelperDtoTransferAllergen;
@@ -63,6 +64,8 @@ public class AllergenService {
         }
     }
 
+
+    // Delete methods
     public void deleteAllergen(Long id) {
         Optional<Allergen> allergen = allergenRepository.findById(id);
 
@@ -72,5 +75,17 @@ public class AllergenService {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }
     }
+
+
+    // Create Methods
+    public AllergenDto createAllergen(AllergenInputDto inputDto) {
+        Allergen allergen = HelperDtoTransferAllergen.transferToAllergen(inputDto);
+
+        allergenRepository.save(allergen);
+
+        return HelperDtoTransferAllergen.transferToDto(allergen);
+    }
+
+
 }
 
