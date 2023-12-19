@@ -14,7 +14,7 @@ public class HelperDtoTransferAllergen {
         return allergen;
     }
 
-    public static AllergenDto transferAllergenToDto(Allergen allergen) {
+    public static AllergenDto transferToDto(Allergen allergen) {
         AllergenDto allergenDto = new AllergenDto();
 
         allergenDto.setName(allergen.getName());
