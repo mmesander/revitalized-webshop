@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AllergenService {
@@ -54,8 +55,14 @@ public class AllergenService {
         }
     }
 
+    public AllergenDto getAllergenById(Long id) {
+        Optional<Allergen> allergen = allergenRepository.findById(id);
 
-
-
+        if (allergen.isPresent()) {
+            return HelperDtoTransferAllergen.transferToDto(allergen.get());
+        } else {
+            throw new RecordNotFoundException("No allergen found with id: " + id);
+        }
+    }
 }
 
