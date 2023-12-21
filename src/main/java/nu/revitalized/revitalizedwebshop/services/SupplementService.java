@@ -5,6 +5,7 @@ import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 
 import java.util.ArrayList;
@@ -62,6 +63,71 @@ public class SupplementService {
             return transferToSupplementDto(supplement.get());
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByBrandAndName(String brand, String name) {
+        List<Supplement> supplements = supplementRepository.
+                findSupplementsByBrandContainsIgnoreCaseAndNameContainsIgnoreCase(brand, name);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with name: " + name + " and brand: " + brand);
+        } else {
+            return supplementDtos;
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByBrand(String brand) {
+        List<Supplement> supplements = supplementRepository.findSupplementsByBrandContainsIgnoreCase(brand);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with brand: " + brand);
+        } else {
+            return supplementDtos;
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByName(String name) {
+        List<Supplement> supplements = supplementRepository.findSupplementByNameContainsIgnoreCase(name);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with name: " + name);
+        } else {
+            return supplementDtos;
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByPrice(Double price) {
+        List<Supplement> supplements = supplementRepository.findSupplementsByPriceLessThanEqual(price);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with a price lower or equal to " + price);
+        } else {
+            return supplementDtos;
         }
     }
 }
