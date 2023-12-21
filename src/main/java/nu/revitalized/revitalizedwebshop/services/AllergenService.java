@@ -4,7 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
-import nu.revitalized.revitalizedwebshop.helpers.HelperDtoTransferAllergen;
+import nu.revitalized.revitalizedwebshop.helpers.HelperDtoTransfer;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class AllergenService {
         List<AllergenDto> allergenDtos = new ArrayList<>();
 
         for (Allergen allergen : allergens) {
-            AllergenDto allergenDto = HelperDtoTransferAllergen.transferToDto(allergen);
+            AllergenDto allergenDto = HelperDtoTransfer.transferToDto(allergen);
             allergenDtos.add(allergenDto);
         }
 
@@ -43,7 +43,7 @@ public class AllergenService {
         List<AllergenDto> allergenDtos = new ArrayList<>();
 
         for (Allergen allergen : allergens) {
-            AllergenDto allergenDto = HelperDtoTransferAllergen.transferToDto(allergen);
+            AllergenDto allergenDto = HelperDtoTransfer.transferToDto(allergen);
             allergenDtos.add(allergenDto);
         }
 
@@ -58,7 +58,7 @@ public class AllergenService {
         Optional<Allergen> allergen = allergenRepository.findById(id);
 
         if (allergen.isPresent()) {
-            return HelperDtoTransferAllergen.transferToDto(allergen.get());
+            return HelperDtoTransfer.transferToDto(allergen.get());
         } else {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }
@@ -79,11 +79,11 @@ public class AllergenService {
 
     // Create Methods
     public AllergenDto createAllergen(AllergenInputDto inputDto) {
-        Allergen allergen = HelperDtoTransferAllergen.transferToAllergen(inputDto);
+        Allergen allergen = HelperDtoTransfer.transferToAllergen(inputDto);
 
         allergenRepository.save(allergen);
 
-        return HelperDtoTransferAllergen.transferToDto(allergen);
+        return HelperDtoTransfer.transferToDto(allergen);
     }
 
 
@@ -98,7 +98,7 @@ public class AllergenService {
 
             Allergen updatedAllergen = allergenRepository.save(newAllergen);
 
-            return HelperDtoTransferAllergen.transferToDto(updatedAllergen);
+            return HelperDtoTransfer.transferToDto(updatedAllergen);
         } else {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }

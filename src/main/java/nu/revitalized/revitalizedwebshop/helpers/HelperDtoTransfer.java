@@ -4,8 +4,9 @@ package nu.revitalized.revitalizedwebshop.helpers;
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
+import org.springframework.beans.BeanUtils;
 
-public class HelperDtoTransferAllergen {
+public class HelperDtoTransfer {
     public static Allergen transferToAllergen(AllergenInputDto inputDto) {
         Allergen allergen = new Allergen();
 
@@ -21,5 +22,9 @@ public class HelperDtoTransferAllergen {
         allergenDto.setName(allergen.getName());
 
         return allergenDto;
+    }
+
+    public static <Input, Output> void transferProperties(Input source, Output destination) {
+        BeanUtils.copyProperties(source, destination);
     }
 }
