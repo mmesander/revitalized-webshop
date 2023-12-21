@@ -20,6 +20,7 @@ public class AllergenService {
         this.allergenRepository = allergenRepository;
     }
 
+
     // Transfer Methods
     public Allergen transferToAllergen(AllergenInputDto inputDto) {
         Allergen allergen = new Allergen();
