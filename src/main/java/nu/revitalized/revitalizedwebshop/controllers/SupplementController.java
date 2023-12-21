@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
