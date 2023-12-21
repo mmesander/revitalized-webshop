@@ -192,5 +192,13 @@ public class SupplementService {
 
 
     // Delete Methods
+    public void deleteSupplement(Long id) {
+        Optional<Supplement> supplement = supplementRepository.findById(id);
 
+        if (supplement.isPresent()) {
+            supplementRepository.deleteById(id);
+        } else {
+            throw new RecordNotFoundException("No supplement found with id: " + id);
+        }
+    }
 }
