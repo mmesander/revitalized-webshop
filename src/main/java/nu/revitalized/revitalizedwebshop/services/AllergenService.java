@@ -83,18 +83,6 @@ public class AllergenService {
     }
 
 
-    // Delete methods
-    public void deleteAllergen(Long id) {
-        Optional<Allergen> allergen = allergenRepository.findById(id);
-
-        if (allergen.isPresent()) {
-            allergenRepository.deleteById(id);
-        } else {
-            throw new RecordNotFoundException("No allergen found with id: " + id);
-        }
-    }
-
-
     // Create Methods
     public AllergenDto createAllergen(AllergenInputDto inputDto) {
         Allergen allergen = transferToAllergen(inputDto);
@@ -117,6 +105,18 @@ public class AllergenService {
             Allergen updatedAllergen = allergenRepository.save(newAllergen);
 
             return transferAllergenToDto(updatedAllergen);
+        } else {
+            throw new RecordNotFoundException("No allergen found with id: " + id);
+        }
+    }
+
+
+    // Delete methods
+    public void deleteAllergen(Long id) {
+        Optional<Allergen> allergen = allergenRepository.findById(id);
+
+        if (allergen.isPresent()) {
+            allergenRepository.deleteById(id);
         } else {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }
