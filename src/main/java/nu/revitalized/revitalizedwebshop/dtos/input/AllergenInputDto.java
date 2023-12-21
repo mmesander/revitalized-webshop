@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop.dtos.input;
 
 // Imports
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

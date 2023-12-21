@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SupplementRepository extends JpaRepository<Supplement, Long> {
-    List<Supplement> findSupplementByName(String name);
-    List<Supplement> findSupplementsByBrand(String brand);
-    List<Supplement> findSupplementsByBrandAndName(String brand, String name);
-    List<Supplement> findSupplementsByPriceBefore(Double price);
+    List<Supplement> findSupplementByNameContainsIgnoreCase(String name);
+    List<Supplement> findSupplementsByBrandContainsIgnoreCase(String brand);
+    List<Supplement> findSupplementsByBrandContainsIgnoreCaseAndNameContainsIgnoreCase(String brand, String name);
+    List<Supplement> findSupplementsByPriceLessThanEqual(Double price);
 }

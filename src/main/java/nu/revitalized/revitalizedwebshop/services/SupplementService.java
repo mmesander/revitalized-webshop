@@ -3,8 +3,10 @@ package nu.revitalized.revitalizedwebshop.services;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 
 import java.util.ArrayList;
@@ -55,13 +57,146 @@ public class SupplementService {
         }
     }
 
-
-
     public SupplementDto getSupplementById(Long id) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
 
         if (supplement.isPresent()) {
             return transferToSupplementDto(supplement.get());
+        } else {
+            throw new RecordNotFoundException("No supplement found with id: " + id);
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByBrandAndName(String brand, String name) {
+        List<Supplement> supplements = supplementRepository.
+                findSupplementsByBrandContainsIgnoreCaseAndNameContainsIgnoreCase(brand, name);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with name: " + name + " and brand: " + brand);
+        } else {
+            return supplementDtos;
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByBrand(String brand) {
+        List<Supplement> supplements = supplementRepository.findSupplementsByBrandContainsIgnoreCase(brand);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with brand: " + brand);
+        } else {
+            return supplementDtos;
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByName(String name) {
+        List<Supplement> supplements = supplementRepository.findSupplementByNameContainsIgnoreCase(name);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with name: " + name);
+        } else {
+            return supplementDtos;
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByPrice(Double price) {
+        List<Supplement> supplements = supplementRepository.findSupplementsByPriceLessThanEqual(price);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with a price lower or equal to " + price);
+        } else {
+            return supplementDtos;
+        }
+    }
+
+
+    // Create Methods
+    public SupplementDto createSupplement(SupplementInputDto inputDto) {
+        Supplement supplement = transferToSupplement(inputDto);
+
+        supplementRepository.save(supplement);
+
+        return transferToSupplementDto(supplement);
+    }
+
+
+    // Update Methods
+    public SupplementDto updateSupplement(Long id, SupplementInputDto inputDto) {
+        Optional<Supplement> supplement = supplementRepository.findById(id);
+
+        if (supplement.isPresent()) {
+            Supplement presentSupplement = supplement.get();
+
+            copyProperties(inputDto, presentSupplement);
+
+            Supplement updatedSupplement = supplementRepository.save(presentSupplement);
+
+            return transferToSupplementDto(updatedSupplement);
+        } else {
+            throw new RecordNotFoundException("No supplement found with id: " + id);
+        }
+    }
+
+    public SupplementDto patchSupplement(Long id, SupplementInputDto inputDto) {
+        Optional<Supplement> supplement = supplementRepository.findById(id);
+
+        if (supplement.isPresent()) {
+            Supplement presentSupplement = supplement.get();
+
+            if (inputDto.getName() != null) {
+                presentSupplement.setName(inputDto.getName());
+            }
+            if (inputDto.getBrand() != null) {
+                presentSupplement.setBrand(inputDto.getBrand());
+            }
+            if (inputDto.getDescription() != null) {
+                presentSupplement.setDescription(inputDto.getDescription());
+            }
+            if (inputDto.getPrice() != null) {
+                presentSupplement.setPrice(inputDto.getPrice());
+            }
+            if (inputDto.getContains() != null) {
+                presentSupplement.setContains(inputDto.getContains());
+            }
+
+            Supplement patchedSupplement = supplementRepository.save(presentSupplement);
+
+            return transferToSupplementDto(patchedSupplement);
+        } else {
+            throw new RecordNotFoundException("No supplement found with id: " + id);
+        }
+    }
+
+
+    // Delete Methods
+    public void deleteSupplement(Long id) {
+        Optional<Supplement> supplement = supplementRepository.findById(id);
+
+        if (supplement.isPresent()) {
+            supplementRepository.deleteById(id);
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
         }
