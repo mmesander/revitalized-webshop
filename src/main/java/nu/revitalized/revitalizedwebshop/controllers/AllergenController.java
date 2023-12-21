@@ -24,7 +24,7 @@ public class AllergenController {
     }
 
 
-    // Get Requests
+    // CRUD Requests
     @GetMapping("/supplementen/allergenen")
     public ResponseEntity<List<AllergenDto>> getAllAllergens() {
         List<AllergenDto> dtos = allergenService.getAllAllergens();
@@ -50,8 +50,6 @@ public class AllergenController {
         return ResponseEntity.ok().body(dtos);
     }
 
-
-    // Post Requests
     @PostMapping("/supplementen/allergenen")
     public ResponseEntity<AllergenDto> createAllergen(
             @Valid
@@ -72,8 +70,6 @@ public class AllergenController {
         }
     }
 
-
-    // Put Requests
     @PutMapping("/supplementen/allergenen/{id}")
     public ResponseEntity<AllergenDto> updateAllergen(
             @PathVariable("id") Long id,
@@ -92,8 +88,6 @@ public class AllergenController {
         return ResponseEntity.ok().body(dto);
     }
 
-
-    // Delete Requests
     @DeleteMapping("/supplementen/allergenen/{id}")
     public ResponseEntity<Object> deleteAllergen(
             @PathVariable("id") Long id
