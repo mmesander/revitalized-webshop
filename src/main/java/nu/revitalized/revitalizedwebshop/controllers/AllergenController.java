@@ -1,16 +1,20 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.AllergenService;
+
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
+
 import java.net.URI;
 import java.util.List;
 
@@ -32,7 +36,7 @@ public class AllergenController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/supplementen/allergenen/naam/{name}")
+    @GetMapping("/supplementen/allergenen/zoeken/{name}")
     public ResponseEntity<List<AllergenDto>> getAllAllergensByName(
             @PathVariable(value = "name", required = true) String name
     ) {
