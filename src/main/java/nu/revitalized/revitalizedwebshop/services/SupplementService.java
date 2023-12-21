@@ -1,19 +1,18 @@
 package nu.revitalized.revitalizedwebshop.services;
 
+// Imports
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
-import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
-
+import org.springframework.stereotype.Service;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public class SupplementService {
     private final SupplementRepository supplementRepository;
 
