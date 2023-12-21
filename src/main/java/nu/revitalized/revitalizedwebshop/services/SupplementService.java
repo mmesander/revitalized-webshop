@@ -130,4 +130,14 @@ public class SupplementService {
             return supplementDtos;
         }
     }
+
+
+    // Create Methods
+    public SupplementDto createSupplement(SupplementInputDto inputDto) {
+        Supplement supplement = transferToSupplement(inputDto);
+
+        supplementRepository.save(supplement);
+
+        return transferToSupplementDto(supplement);
+    }
 }
