@@ -7,4 +7,12 @@ public class VOLGORDE {
     // Service
     // Model
     // Repository
+
+    // Get all
+    // Get by id
+    // Get specifiek
+    // Post
+    // Put
+    // Patch
+    // Delete
 }
