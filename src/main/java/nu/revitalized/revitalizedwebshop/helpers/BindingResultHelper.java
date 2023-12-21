@@ -3,7 +3,7 @@ package nu.revitalized.revitalizedwebshop.helpers;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-public class HelperBindingResult {
+public class BindingResultHelper {
     public static String handleBindingResultError(BindingResult bindingResult) {
         StringBuilder newString = new StringBuilder();
 

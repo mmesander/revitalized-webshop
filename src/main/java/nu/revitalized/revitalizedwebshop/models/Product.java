@@ -2,6 +2,7 @@ package nu.revitalized.revitalizedwebshop.models;
 
 // Imports
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,7 @@ import lombok.Setter;
 //TODO in de variablen moet nog een foto komen;
 //TODO de class moet een abstracte super class worden
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "products")
 @Inheritance(strategy = InheritanceType.JOINED)
