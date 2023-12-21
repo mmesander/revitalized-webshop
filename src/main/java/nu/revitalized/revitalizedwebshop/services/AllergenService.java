@@ -56,6 +56,16 @@ public class AllergenService {
         }
     }
 
+    public AllergenDto getAllergenById(Long id) {
+        Optional<Allergen> allergen = allergenRepository.findById(id);
+
+        if (allergen.isPresent()) {
+            return transferAllergenToDto(allergen.get());
+        } else {
+            throw new RecordNotFoundException("No allergen found with id: " + id);
+        }
+    }
+
     public List<AllergenDto> getAllAllergensByName(String name) {
         List<Allergen> allergens = allergenRepository.findAllergenByNameContainsIgnoreCase(name);
         List<AllergenDto> allergenDtos = new ArrayList<>();
@@ -69,16 +79,6 @@ public class AllergenService {
             throw new RecordNotFoundException("No allergens named: " + name + " are found");
         } else {
             return allergenDtos;
-        }
-    }
-
-    public AllergenDto getAllergenById(Long id) {
-        Optional<Allergen> allergen = allergenRepository.findById(id);
-
-        if (allergen.isPresent()) {
-            return transferAllergenToDto(allergen.get());
-        } else {
-            throw new RecordNotFoundException("No allergen found with id: " + id);
         }
     }
 

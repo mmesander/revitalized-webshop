@@ -9,5 +9,5 @@ public interface SupplementRepository extends JpaRepository<Supplement, Long> {
     List<Supplement> findSupplementByNameContainsIgnoreCase(String name);
     List<Supplement> findSupplementsByBrandContainsIgnoreCase(String brand);
     List<Supplement> findSupplementsByBrandContainsIgnoreCaseAndNameContainsIgnoreCase(String brand, String name);
-    List<Supplement> findSupplementsByBrandLessThanEqual(Double price);
+    List<Supplement> findSupplementsByPriceLessThanEqual(Double price);
 }

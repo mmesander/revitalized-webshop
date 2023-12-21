@@ -55,8 +55,6 @@ public class SupplementService {
         }
     }
 
-
-
     public SupplementDto getSupplementById(Long id) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
 
