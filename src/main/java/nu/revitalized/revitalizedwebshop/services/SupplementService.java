@@ -5,7 +5,7 @@ import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
-import static nu.revitalized.revitalizedwebshop.helpers.HelperCopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +54,8 @@ public class SupplementService {
             return supplementDtos;
         }
     }
+
+
 
     public SupplementDto getSupplementById(Long id) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
