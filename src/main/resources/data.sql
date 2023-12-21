@@ -1,5 +1,8 @@
+-- Products
+ALTER SEQUENCE products_seq INCREMENT BY 1;
+
 -- Allergens
-ALTER SEQUENCE allergens_seq INCREMENT BY 1;
+ALTER SEQUENCE allergens_seq RESTART 1001 INCREMENT BY 1;
 INSERT INTO allergens (id, name)
 VALUES
     (nextval('allergens_seq'), 'gluten (tarwe, rogge, gerst, haver en spelt)'),
