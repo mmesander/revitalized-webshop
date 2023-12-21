@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.Set;
 
-//TODO Repo bouwen, service layer bouwen en controllers bouwen
-
 @Getter
 @Setter
 @Entity
@@ -17,6 +15,7 @@ public class Allergen {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique = true)
     private String name;
 
     // Relations

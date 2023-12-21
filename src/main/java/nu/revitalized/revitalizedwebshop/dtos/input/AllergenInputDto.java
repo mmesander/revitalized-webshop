@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.dtos.input;
 
 // Imports
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,5 +10,6 @@ import lombok.Setter;
 @Setter
 public class AllergenInputDto {
     @NotNull(message = "Name is required")
+
     private String name;
 }
