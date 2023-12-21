@@ -1,20 +1,16 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.AllergenService;
-
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
-
 import java.net.URI;
 import java.util.List;
 
@@ -28,19 +24,10 @@ public class AllergenController {
     }
 
 
-    // CRUD Requests
+    // Get Requests
     @GetMapping("/supplementen/allergenen")
     public ResponseEntity<List<AllergenDto>> getAllAllergens() {
         List<AllergenDto> dtos = allergenService.getAllAllergens();
-
-        return ResponseEntity.ok().body(dtos);
-    }
-
-    @GetMapping("/supplementen/allergenen/zoeken/{name}")
-    public ResponseEntity<List<AllergenDto>> getAllAllergensByName(
-            @PathVariable(value = "name", required = true) String name
-    ) {
-        List<AllergenDto> dtos = allergenService.getAllAllergensByName(name);
 
         return ResponseEntity.ok().body(dtos);
     }
@@ -54,15 +41,17 @@ public class AllergenController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @DeleteMapping("/supplementen/allergenen/{id}")
-    public ResponseEntity<Object> deleteAllergen(
-            @PathVariable("id") Long id
+    @GetMapping("/supplementen/allergenen/zoeken/{name}")
+    public ResponseEntity<List<AllergenDto>> getAllAllergensByName(
+            @PathVariable(value = "name", required = true) String name
     ) {
-        allergenService.deleteAllergen(id);
+        List<AllergenDto> dtos = allergenService.getAllAllergensByName(name);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(dtos);
     }
 
+
+    // Post Requests
     @PostMapping("/supplementen/allergenen")
     public ResponseEntity<AllergenDto> createAllergen(
             @Valid
@@ -83,6 +72,8 @@ public class AllergenController {
         }
     }
 
+
+    // Put Requests
     @PutMapping("/supplementen/allergenen/{id}")
     public ResponseEntity<AllergenDto> updateAllergen(
             @PathVariable("id") Long id,
@@ -99,5 +90,16 @@ public class AllergenController {
         }
 
         return ResponseEntity.ok().body(dto);
+    }
+
+
+    // Delete Requests
+    @DeleteMapping("/supplementen/allergenen/{id}")
+    public ResponseEntity<Object> deleteAllergen(
+            @PathVariable("id") Long id
+    ) {
+        allergenService.deleteAllergen(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
