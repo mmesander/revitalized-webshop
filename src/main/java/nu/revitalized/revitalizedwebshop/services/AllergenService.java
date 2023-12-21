@@ -38,16 +38,13 @@ public class AllergenService {
     }
 
 
-
-
     // Get Methods
     public List<AllergenDto> getAllAllergens() {
         List<Allergen> allergens = allergenRepository.findAll();
         List<AllergenDto> allergenDtos = new ArrayList<>();
 
         for (Allergen allergen : allergens) {
-            AllergenDto allergenDto = HelperCopyProperties.transferToDto(allergen);
-            HelperCopyProperties.transferProperties(allergen, allergenDto);
+            AllergenDto allergenDto = transferAllergenToDto(allergen);
             allergenDtos.add(allergenDto);
         }
 
@@ -63,7 +60,7 @@ public class AllergenService {
         List<AllergenDto> allergenDtos = new ArrayList<>();
 
         for (Allergen allergen : allergens) {
-            AllergenDto allergenDto = HelperCopyProperties.transferToDto(allergen);
+            AllergenDto allergenDto = transferAllergenToDto(allergen);
             allergenDtos.add(allergenDto);
         }
 
@@ -78,7 +75,7 @@ public class AllergenService {
         Optional<Allergen> allergen = allergenRepository.findById(id);
 
         if (allergen.isPresent()) {
-            return HelperCopyProperties.transferToDto(allergen.get());
+            return transferAllergenToDto(allergen.get());
         } else {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }
@@ -99,11 +96,11 @@ public class AllergenService {
 
     // Create Methods
     public AllergenDto createAllergen(AllergenInputDto inputDto) {
-        Allergen allergen = HelperCopyProperties.transferToAllergen(inputDto);
+        Allergen allergen = transferToAllergen(inputDto);
 
         allergenRepository.save(allergen);
 
-        return HelperCopyProperties.transferToDto(allergen);
+        return transferAllergenToDto(allergen);
     }
 
 
@@ -118,7 +115,7 @@ public class AllergenService {
 
             Allergen updatedAllergen = allergenRepository.save(newAllergen);
 
-            return HelperCopyProperties.transferToDto(updatedAllergen);
+            return transferAllergenToDto(updatedAllergen);
         } else {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }
