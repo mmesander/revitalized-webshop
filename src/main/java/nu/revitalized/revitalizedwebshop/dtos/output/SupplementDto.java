@@ -19,5 +19,5 @@ public class SupplementDto {
 
 
     // Relations
-    private Set<AllergenDto> allergens;
+    private Set<AllergenShortDto> allergens;
 }

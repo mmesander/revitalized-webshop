@@ -2,16 +2,18 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.stereotype.Service;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
+
+import java.util.*;
 
 @Service
 public class SupplementService {
@@ -35,6 +37,13 @@ public class SupplementService {
         SupplementDto supplementDto = new SupplementDto();
 
         copyProperties(supplement, supplementDto);
+
+        if (supplement.getAllergens() != null) {
+            Set<AllergenShortDto> dtos = new HashSet<>();
+            for (Allergen allergen : supplement.getAllergens()) {
+                dtos.add(allergenToShortDto(allergen));
+            }
+        }
 
         return supplementDto;
     }
