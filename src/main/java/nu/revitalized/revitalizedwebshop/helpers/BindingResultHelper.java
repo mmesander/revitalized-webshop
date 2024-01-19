@@ -9,7 +9,7 @@ public class BindingResultHelper {
 
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             newString.append(fieldError.getField());
-            newString.append(" : ");
+            newString.append(": ");
             newString.append(fieldError.getDefaultMessage());
             newString.append("\n");
         }
