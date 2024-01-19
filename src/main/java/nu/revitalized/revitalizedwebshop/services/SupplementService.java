@@ -239,12 +239,46 @@ public class SupplementService {
             Allergen allergen = optionalAllergen.get();
 
             allergens = supplement.getAllergens();
+
             if (allergens.contains(allergen)) {
                 throw new InvalidInputException("Supplement already contains allergen: " + allergen.getName() + " with id: " + allergenId);
             } else {
                 allergens.add(allergen);
                 supplement.setAllergens(allergens);
                 supplementRepository.save(supplement);
+                dto = supplementToDto(supplement);
+            }
+            return dto;
+        } else {
+            if (optionalSupplement.isEmpty() && optionalAllergen.isEmpty()) {
+                throw new RecordNotFoundException("Supplement with id: "
+                        + supplementId + " and allergen with id: "
+                        + allergenId + " are not found");
+            } else if (optionalSupplement.isEmpty()) {
+                throw new RecordNotFoundException("Supplement with id: " + supplementId + " is not found");
+            } else {
+                throw new RecordNotFoundException("Allergen with id: " + allergenId + " is not found");
+            }
+        }
+    }
+
+    public SupplementDto removeAllergenFromSupplement(Long supplementId, Long allergenId) {
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(supplementId);
+        Optional<Allergen> optionalAllergen = allergenRepository.findById(allergenId);
+        Set<Allergen> allergens;
+        SupplementDto dto;
+
+        if (optionalSupplement.isPresent() && optionalAllergen.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            Allergen allergen = optionalAllergen.get();
+
+            allergens = supplement.getAllergens();
+
+            if (!allergens.contains(allergen)) {
+                throw new InvalidInputException("Supplement doesn't contain allergen: " + allergen.getName() + " with id: " + allergenId);
+            } else {
+                allergens.remove(allergen);
+                supplement.setAllergens(allergens);
                 dto = supplementToDto(supplement);
             }
             return dto;
