@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AllergenDto {
-    // Variables
     private Long id;
     private String name;
 }
