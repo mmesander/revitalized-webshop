@@ -4,16 +4,15 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
-public class AllergenDto {
+public class SupplementShortDto {
     // Variables
     private Long id;
     private String name;
-
-
-    // Relations
-    private Set<SupplementShortDto> supplements;
+    private String brand;
+    private String description;
+    private Double price;
+    private Double averageRating;
+    private String contains;
 }

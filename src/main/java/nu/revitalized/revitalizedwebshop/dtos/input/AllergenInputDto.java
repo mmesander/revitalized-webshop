@@ -9,6 +9,5 @@ import lombok.Setter;
 @Setter
 public class AllergenInputDto {
     @NotNull(message = "Name is required")
-
     private String name;
 }

@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.Set;
 
 @Getter
@@ -18,6 +19,8 @@ public class Allergen {
     @Column(unique = true)
     private String name;
 
+
     // Relations
-//    private Set<Supplement> supplements;
+    @ManyToMany(mappedBy = "allergens")
+    private Set<Supplement> supplements;
 }

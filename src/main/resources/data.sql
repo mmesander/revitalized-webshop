@@ -1,5 +1,10 @@
 -- Products
-ALTER SEQUENCE products_seq INCREMENT BY 1;
+ALTER SEQUENCE products_seq RESTART 100462 INCREMENT BY 123;
+
+-- Supplements
+INSERT INTO supplements (id, name, brand, description, price, average_rating, contains)
+VALUES
+    (nextval('products_seq'), 'Magnesium Malaat', 'Vitakruid', 'lekker spul', 22.99, 4, '100g');
 
 -- Allergens
 ALTER SEQUENCE allergens_seq RESTART 1001 INCREMENT BY 1;
@@ -19,3 +24,10 @@ VALUES
     (nextval('allergens_seq'), 'sesamzaad'),
     (nextval('allergens_seq'), 'sulfiet'),
     (nextval('allergens_seq'), 'lupine');
+
+-- Supplement and Allergens relations
+INSERT INTO supplement_allergens (supplement_id, allergen_id)
+VALUES
+    (100462, 1001),
+    (100462, 1002),
+    (100462, 1003);
