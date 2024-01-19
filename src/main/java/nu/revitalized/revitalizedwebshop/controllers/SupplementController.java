@@ -135,4 +135,12 @@ public class SupplementController {
         return ResponseEntity.ok().body(dto);
     }
 
+    @DeleteMapping(value = "/supplementen/{id}/allergenen")
+    public ResponseEntity<Object> removeAllergenFromSupplement(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody IdInputDto inputDto
+    ) {
+        SupplementDto dto = supplementService.removeAllergenFromSupplement(id, inputDto.getId());
+        return ResponseEntity.ok().body(dto);
+    }
 }
