@@ -279,6 +279,7 @@ public class SupplementService {
             } else {
                 allergens.remove(allergen);
                 supplement.setAllergens(allergens);
+                supplementRepository.save(supplement);
                 dto = supplementToDto(supplement);
             }
             return dto;
