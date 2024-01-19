@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.controllers;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.PriceInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -58,8 +59,17 @@ public class SupplementController {
         } else if (name.isPresent()) {
             dtos = supplementService.getSupplementsByName(name.get());
         } else {
-            dtos = supplementService.getAllSupplements();
+            throw new InvalidInputException("No supplements are found");
         }
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping("/supplementen/zoeken-op-prijs")
+    public ResponseEntity<List<SupplementDto>> getSupplementsByPrice(
+            @Valid @RequestBody PriceInputDto inputDto
+    ) {
+        List<SupplementDto> dtos = supplementService.getSupplementsByPrice(inputDto.getPrice());
 
         return ResponseEntity.ok().body(dtos);
     }

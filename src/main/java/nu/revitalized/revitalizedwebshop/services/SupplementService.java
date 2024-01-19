@@ -162,10 +162,21 @@ public class SupplementService {
     // CRUD Methods --> POST Methods
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
         Supplement supplement = dtoToSupplement(inputDto);
+        List<SupplementDto> dtos = getAllSupplements();
+        Boolean isUnique = true;
 
-        supplementRepository.save(supplement);
+        for (SupplementDto supplementDto : dtos) {
+            if (supplementDto.getName().equalsIgnoreCase(inputDto.getName())) {
+                isUnique = false;
+            }
+        }
 
-        return supplementToDto(supplement);
+        if (isUnique) {
+            supplementRepository.save(supplement);
+            return supplementToDto(supplement);
+        } else {
+            throw new InvalidInputException("Supplement with name: " + inputDto.getName() + " already exists.");
+        }
     }
 
     // CRUD Methods --> PUT/PATCH Methods

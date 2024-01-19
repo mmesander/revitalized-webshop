@@ -20,6 +20,7 @@ public abstract class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String name;
     private String brand;
     private String description;

@@ -1,5 +1,5 @@
 -- Products
-ALTER SEQUENCE products_seq RESTART 100462 INCREMENT BY 123;
+ALTER SEQUENCE products_seq RESTART 100462 INCREMENT BY 2137;
 
 -- Supplements
 INSERT INTO supplements (id, name, brand, description, price, average_rating, contains)
