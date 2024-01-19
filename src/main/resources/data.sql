@@ -24,3 +24,10 @@ VALUES
     (nextval('allergens_seq'), 'sesamzaad'),
     (nextval('allergens_seq'), 'sulfiet'),
     (nextval('allergens_seq'), 'lupine');
+
+-- Supplement and Allergens relations
+INSERT INTO supplement_allergens (supplement_id, allergen_id)
+VALUES
+    (100462, 1001),
+    (100462, 1002),
+    (100462, 1003);

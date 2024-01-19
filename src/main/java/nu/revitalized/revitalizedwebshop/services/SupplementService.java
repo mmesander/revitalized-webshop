@@ -22,7 +22,7 @@ public class SupplementService {
 
 
     // Transfer Methods
-    public Supplement transferToSupplement(SupplementInputDto inputDto) {
+    public static Supplement dtoToSupplement(SupplementInputDto inputDto) {
         Supplement supplement = new Supplement();
 
         copyProperties(inputDto, supplement);
@@ -30,7 +30,7 @@ public class SupplementService {
         return supplement;
     }
 
-    public SupplementDto transferToSupplementDto(Supplement supplement) {
+    public static SupplementDto supplementToDto(Supplement supplement) {
         SupplementDto supplementDto = new SupplementDto();
 
         copyProperties(supplement, supplementDto);
@@ -45,7 +45,7 @@ public class SupplementService {
         List<SupplementDto> supplementDtos = new ArrayList<>();
 
         for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            SupplementDto supplementDto = supplementToDto(supplement);
             supplementDtos.add(supplementDto);
         }
 
@@ -60,7 +60,7 @@ public class SupplementService {
         Optional<Supplement> supplement = supplementRepository.findById(id);
 
         if (supplement.isPresent()) {
-            return transferToSupplementDto(supplement.get());
+            return supplementToDto(supplement.get());
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
         }
@@ -72,7 +72,7 @@ public class SupplementService {
         List<SupplementDto> supplementDtos = new ArrayList<>();
 
         for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            SupplementDto supplementDto = supplementToDto(supplement);
             supplementDtos.add(supplementDto);
         }
 
@@ -88,7 +88,7 @@ public class SupplementService {
         List<SupplementDto> supplementDtos = new ArrayList<>();
 
         for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            SupplementDto supplementDto = supplementToDto(supplement);
             supplementDtos.add(supplementDto);
         }
 
@@ -104,7 +104,7 @@ public class SupplementService {
         List<SupplementDto> supplementDtos = new ArrayList<>();
 
         for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            SupplementDto supplementDto = supplementToDto(supplement);
             supplementDtos.add(supplementDto);
         }
 
@@ -120,7 +120,7 @@ public class SupplementService {
         List<SupplementDto> supplementDtos = new ArrayList<>();
 
         for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = transferToSupplementDto(supplement);
+            SupplementDto supplementDto = supplementToDto(supplement);
             supplementDtos.add(supplementDto);
         }
 
@@ -134,11 +134,11 @@ public class SupplementService {
 
     // Create Methods
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
-        Supplement supplement = transferToSupplement(inputDto);
+        Supplement supplement = dtoToSupplement(inputDto);
 
         supplementRepository.save(supplement);
 
-        return transferToSupplementDto(supplement);
+        return supplementToDto(supplement);
     }
 
 
@@ -153,7 +153,7 @@ public class SupplementService {
 
             Supplement updatedSupplement = supplementRepository.save(presentSupplement);
 
-            return transferToSupplementDto(updatedSupplement);
+            return supplementToDto(updatedSupplement);
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
         }
@@ -183,7 +183,7 @@ public class SupplementService {
 
             Supplement patchedSupplement = supplementRepository.save(presentSupplement);
 
-            return transferToSupplementDto(patchedSupplement);
+            return supplementToDto(patchedSupplement);
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
         }
