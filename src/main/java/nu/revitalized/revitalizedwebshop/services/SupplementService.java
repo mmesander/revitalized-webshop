@@ -240,7 +240,7 @@ public class SupplementService {
 
             allergens = supplement.getAllergens();
             if (allergens.contains(allergen)) {
-                throw new InvalidInputException("Supplement already contains allergen: " + allergen.getName());
+                throw new InvalidInputException("Supplement already contains allergen: " + allergen.getName() + " with id: " + allergenId);
             } else {
                 allergens.add(allergen);
                 supplement.setAllergens(allergens);

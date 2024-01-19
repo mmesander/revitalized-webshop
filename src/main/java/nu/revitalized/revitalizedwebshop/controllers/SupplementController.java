@@ -2,6 +2,8 @@ package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+
+import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -25,7 +27,7 @@ public class SupplementController {
     }
 
 
-    // CRUD Requests
+    // CRUD Requests -- GET Requests
     @GetMapping("/supplementen")
     public ResponseEntity<List<SupplementDto>> getAllSupplements() {
         List<SupplementDto> dtos = supplementService.getAllSupplements();
@@ -62,6 +64,7 @@ public class SupplementController {
         return ResponseEntity.ok().body(dtos);
     }
 
+    // CRUD Requests -- POST Requests
     @PostMapping("/supplementen")
     public ResponseEntity<SupplementDto> createSupplement(
             @Valid
@@ -82,6 +85,7 @@ public class SupplementController {
         }
     }
 
+    // CRUD Requests -- PUT/PATCH Requests
     @PutMapping("/supplementen/{id}")
     public ResponseEntity<SupplementDto> updateSupplement(
             @PathVariable("id") Long id,
@@ -110,6 +114,7 @@ public class SupplementController {
         return ResponseEntity.ok().body(dto);
     }
 
+    // CRUD Requests -- DELETE Requests
     @DeleteMapping("/supplementen/{id}")
     public ResponseEntity<Object> deleteSupplement(
             @PathVariable("id") Long id
@@ -118,4 +123,16 @@ public class SupplementController {
 
         return ResponseEntity.noContent().build();
     }
+
+
+    // Relations Requests
+    @PostMapping(value = "/supplementen/{id}/allergenen")
+    public ResponseEntity<Object> addAllergenToSupplement(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody IdInputDto inputDto
+            ) {
+        SupplementDto dto = supplementService.assignAllergenToSupplement(id, inputDto.getId());
+        return ResponseEntity.ok().body(dto);
+    }
+
 }
