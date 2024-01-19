@@ -39,7 +39,7 @@ public class SupplementService {
         return supplementDto;
     }
 
-    public static SupplementShortDto supplementShortToDto(Supplement supplement) {
+    public static SupplementShortDto supplementToShortDto(Supplement supplement) {
         SupplementShortDto supplementShortDto = new SupplementShortDto();
 
         copyProperties(supplement, supplementShortDto);

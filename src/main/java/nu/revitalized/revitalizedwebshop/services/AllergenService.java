@@ -3,6 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
@@ -10,7 +11,7 @@ import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import org.springframework.stereotype.Service;
-import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementShortToDto;
+import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToShortDto;
 
 import java.util.*;
 
@@ -40,12 +41,20 @@ public class AllergenService {
         if (allergen.getSupplements() != null) {
             Set<SupplementShortDto> dtos = new HashSet<>();
             for (Supplement supplement : allergen.getSupplements()) {
-                dtos.add(supplementShortToDto(supplement));
+                dtos.add(supplementToShortDto(supplement));
             }
             allergenDto.setSupplements(dtos);
         }
 
         return allergenDto;
+    }
+
+    public static AllergenShortDto allergenToShortDto(Allergen allergen) {
+        AllergenShortDto allergenShortDto = new AllergenShortDto();
+
+        copyProperties(allergen, allergenShortDto);
+
+        return allergenShortDto;
     }
 
 
