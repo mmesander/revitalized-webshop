@@ -14,6 +14,7 @@ public class SupplementInputDto {
     private String name;
     @NotNull(message = "Brand is required")
     private String brand;
+    @NotNull
     @Size(min = 10, max = 200, message = "Description must be between 2 and 200 characters")
     private String description;
     @NotNull
