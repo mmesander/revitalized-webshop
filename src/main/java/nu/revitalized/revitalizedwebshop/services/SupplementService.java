@@ -1,15 +1,19 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
+import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.stereotype.Service;
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 
@@ -18,9 +22,14 @@ import java.util.*;
 @Service
 public class SupplementService {
     private final SupplementRepository supplementRepository;
+    private final AllergenRepository allergenRepository;
 
-    public SupplementService(SupplementRepository supplementRepository) {
+    public SupplementService(
+            SupplementRepository supplementRepository,
+            AllergenRepository allergenRepository
+    ) {
         this.supplementRepository = supplementRepository;
+        this.allergenRepository = allergenRepository;
     }
 
 
@@ -58,7 +67,7 @@ public class SupplementService {
     }
 
 
-    // Get Methods
+    // CRUD Methods --> GET Methods
     public List<SupplementDto> getAllSupplements() {
         List<Supplement> supplements = supplementRepository.findAll();
         List<SupplementDto> supplementDtos = new ArrayList<>();
@@ -150,8 +159,7 @@ public class SupplementService {
         }
     }
 
-
-    // Create Methods
+    // CRUD Methods --> POST Methods
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
         Supplement supplement = dtoToSupplement(inputDto);
 
@@ -160,8 +168,7 @@ public class SupplementService {
         return supplementToDto(supplement);
     }
 
-
-    // Update Methods
+    // CRUD Methods --> PUT/PATCH Methods
     public SupplementDto updateSupplement(Long id, SupplementInputDto inputDto) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
 
@@ -208,8 +215,7 @@ public class SupplementService {
         }
     }
 
-
-    // Delete Methods
+    // CRUD Methods --> DELETE Methods
     public void deleteSupplement(Long id) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
 
@@ -217,6 +223,41 @@ public class SupplementService {
             supplementRepository.deleteById(id);
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
+        }
+    }
+
+
+    // Relations Methods
+    public SupplementDto assignAllergenToSupplement(Long supplementId, Long allergenId) {
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(supplementId);
+        Optional<Allergen> optionalAllergen = allergenRepository.findById(allergenId);
+        Set<Allergen> allergens;
+        SupplementDto dto;
+
+        if (optionalSupplement.isPresent() && optionalAllergen.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            Allergen allergen = optionalAllergen.get();
+
+            allergens = supplement.getAllergens();
+            if (allergens.contains(allergen)) {
+                throw new InvalidInputException("Supplement already contains allergen: " + allergen.getName());
+            } else {
+                allergens.add(allergen);
+                supplement.setAllergens(allergens);
+                supplementRepository.save(supplement);
+                dto = supplementToDto(supplement);
+            }
+            return dto;
+        } else {
+            if (optionalSupplement.isEmpty() && optionalAllergen.isEmpty()) {
+                throw new RecordNotFoundException("Supplement with id: "
+                        + supplementId + " and allergen with id: "
+                        + allergenId + " are not found");
+            } else if (optionalSupplement.isEmpty()) {
+                throw new RecordNotFoundException("Supplement with id: " + supplementId + " is not found");
+            } else {
+                throw new RecordNotFoundException("Allergen with id: " + allergenId + " is not found");
+            }
         }
     }
 }
