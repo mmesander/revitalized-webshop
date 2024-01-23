@@ -96,8 +96,14 @@ public class SupplementService {
     }
 
     public List<SupplementDto> getSupplementsByParam(SearchDto searchDto) {
+        List<Supplement> supplements = supplementRepository.findSupplementsByCriteria(
+                searchDto.getName(),
+                searchDto.getBrand(),
+                searchDto.getPrice(),
+                searchDto.getAverageRating(),
+                searchDto.getContains()
+        );
 
-        return
     }
 
     public List<SupplementDto> getSupplementsByBrandAndName(String brand, String name) {

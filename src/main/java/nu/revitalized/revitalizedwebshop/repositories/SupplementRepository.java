@@ -24,8 +24,8 @@ public interface SupplementRepository extends JpaRepository<Supplement, Long> {
     List<Supplement> findSupplementsByCriteria(
             @Param("brand") String brand,
             @Param("name") String name,
-            @Param("price") BigDecimal price,
-            @Param("averageRating") BigDecimal averageRating,
+            @Param("price") Double price,
+            @Param("averageRating") Double averageRating,
             @Param("contains") String contains
     );
 }
