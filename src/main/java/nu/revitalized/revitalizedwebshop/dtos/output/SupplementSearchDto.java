@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SupplementSearchDto {
-    // General
+    // Variables
     private String name;
     private String brand;
     private Double price;
