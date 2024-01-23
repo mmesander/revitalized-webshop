@@ -18,4 +18,6 @@ public class SearchDto {
 
 
     // Garments
+    private String size;
+    private String color;
 }

@@ -4,6 +4,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.cop
 
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
@@ -67,10 +68,9 @@ public class GarmentService {
         }
     }
 
-//    public List<GarmentDto> getGarmentsByColorAndOrSize(String color, String size) {}
-//    public List<GarmentDto> getGarmentsByColor(String color) {}
-//    public List<GarmentDto> getGarmentsBySize(String size) {}
-//    public List<GarmentDto> getGarmentsByPriceBefore(Double price) {}
+    public List<GarmentDto> getGarmentsByParam(SearchDto searchDto)
+
+
 
     // CRUD Methods --> POST Methods
     // CRUD Methods --> PUT/PATCH Methods
