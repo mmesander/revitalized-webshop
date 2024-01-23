@@ -111,6 +111,19 @@ public class GarmentService {
     }
 
     // CRUD Methods --> PUT/PATCH Methods
+    public GarmentDto updateGarment(Long id, GarmentInputDto inputDto) {
+        Optional<Garment> optionalGarment = garmentRepository.findById(id);
+
+        if (optionalGarment.isPresent()) {
+            Garment garment = optionalGarment.get();
+
+            copyProperties(inputDto, garment);
+
+            Garment updatedGarment = garmentRepository.save(garment);
+
+            return garmentToDto(updatedGarment);
+        }
+    }
     // CRUD Methods --> DELETE Methods
     // Relations Methods
 }
