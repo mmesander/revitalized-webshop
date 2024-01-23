@@ -166,6 +166,16 @@ public class GarmentService {
             throw new RecordNotFoundException("No garment found with id: " + id);
         }
     }
+
     // CRUD Methods --> DELETE Methods
+    public void deleteGarment(Long id) {
+        Optional<Garment> garment = garmentRepository.findById(id);
+
+        if (garment.isPresent()) {
+            garmentRepository.deleteById(id);
+        } else {
+            throw new RecordNotFoundException("No garment found with id: " + id);
+        }
+    }
     // Relations Methods
 }
