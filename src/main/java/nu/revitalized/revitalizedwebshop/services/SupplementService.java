@@ -2,6 +2,7 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 
+import nu.revitalized.revitalizedwebshop.dtos.input.SearchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
@@ -95,7 +96,7 @@ public class SupplementService {
         }
     }
 
-    public List<SupplementDto> getSupplementsByParam(SearchDto searchDto) {
+    public List<SupplementDto> getSupplementsByParam(SearchInputDto searchDto) {
         List<Supplement> supplements = supplementRepository.findSupplementsByCriteria(
                 searchDto.getName(),
                 searchDto.getBrand(),
