@@ -8,6 +8,6 @@ import java.util.List;
 public interface GarmentRepository extends JpaRepository<Garment, Long> {
     List<Garment> findGarmentsByColorContainsIgnoreCase(String color);
     List<Garment> findGarmentsBySizeContainsIgnoreCase(String size);
-    List<Garment> findGarmentsByColorContainsIgnoreCaseAndSizeContainsIgnoreCase(String color, String size)
+    List<Garment> findGarmentsByColorContainsIgnoreCaseAndSizeContainsIgnoreCase(String color, String size);
     List<Garment> findGarmentByPriceBefore(Double price);
 }
