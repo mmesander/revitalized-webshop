@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -92,6 +93,11 @@ public class SupplementService {
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
         }
+    }
+
+    public List<SupplementDto> getSupplementsByParam(SearchDto searchDto) {
+
+        return
     }
 
     public List<SupplementDto> getSupplementsByBrandAndName(String brand, String name) {

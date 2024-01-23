@@ -6,6 +6,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.PriceInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.SupplementService;
@@ -44,6 +45,13 @@ public class SupplementController {
 
         return ResponseEntity.ok().body(dto);
     }
+
+//    @GetMapping("/supplementen/zoeken")
+//    public ResponseEntity<List<SupplementDto>> getSupplementsByParam(SearchDto searchDto) {
+//
+//    }
+
+
 
     @GetMapping("/supplementen/zoeken")
     public ResponseEntity<List<SupplementDto>> getSupplementsByBrandAndOrName(
