@@ -1,15 +1,14 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -91,9 +90,26 @@ public class GarmentService {
         }
     }
 
-
-
     // CRUD Methods --> POST Methods
+    public GarmentDto createGarment(GarmentInputDto inputDto) {
+        Garment garment = dtoToGarment(inputDto);
+        List<GarmentDto> dtos = getAllGarments();
+        boolean isUnique = true;
+
+        for (GarmentDto garmentDto : dtos) {
+            if (garmentDto.getName().equalsIgnoreCase(inputDto.getName())) {
+                isUnique = false;
+            }
+        }
+
+        if (isUnique) {
+            garmentRepository.save(garment);
+            return garmentToDto(garment);
+        } else {
+            throw new InvalidInputException("Garment with name: " + inputDto.getName() + " already exists");
+        }
+    }
+
     // CRUD Methods --> PUT/PATCH Methods
     // CRUD Methods --> DELETE Methods
     // Relations Methods
