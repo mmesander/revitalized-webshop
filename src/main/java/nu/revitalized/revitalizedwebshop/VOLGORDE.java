@@ -24,4 +24,7 @@ public class VOLGORDE {
     // CRUD Methods --> PUT/PATCH Methods
     // CRUD Methods --> DELETE Methods
     // Relations Methods
+
+    //TODO: ROWAN
+    //TODO: hoe maak ik hem ignore case (in supplement en garment)
 }
