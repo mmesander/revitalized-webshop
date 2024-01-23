@@ -2,10 +2,10 @@ package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.PriceInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.SupplementService;
@@ -16,8 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
 public class SupplementController {
@@ -46,21 +44,22 @@ public class SupplementController {
     }
 
     @GetMapping("/supplementen/zoeken")
-    public ResponseEntity<List<SupplementDto>> getSupplementsByBrandAndOrName(
-            @RequestParam(value = "brand", required = false) Optional<String> brand,
-            @RequestParam(value = "name", required = false) Optional<String> name
+    public ResponseEntity<List<SupplementDto>> getSupplementsByParam(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) Double averageRating,
+            @RequestParam(required = false) String contains
     ) {
-        List<SupplementDto> dtos;
+        SearchDto searchDto = new SearchDto();
 
-        if (brand.isPresent() && name.isPresent()) {
-            dtos = supplementService.getSupplementsByBrandAndName(brand.get(), name.get());
-        } else if (brand.isPresent()) {
-            dtos = supplementService.getSupplementsByBrand(brand.get());
-        } else if (name.isPresent()) {
-            dtos = supplementService.getSupplementsByName(name.get());
-        } else {
-            throw new InvalidInputException("No supplements are found");
-        }
+        searchDto.setName(name);
+        searchDto.setBrand(brand);
+        searchDto.setPrice(price);
+        searchDto.setAverageRating(averageRating);
+        searchDto.setContains(contains);
+
+        List<SupplementDto> dtos = supplementService.getSupplementsByParam(searchDto);
 
         return ResponseEntity.ok().body(dtos);
     }

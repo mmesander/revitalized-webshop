@@ -1,9 +1,11 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
+import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -13,10 +15,6 @@ import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.stereotype.Service;
-
-import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
-import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
-
 import java.util.*;
 
 @Service
@@ -94,9 +92,14 @@ public class SupplementService {
         }
     }
 
-    public List<SupplementDto> getSupplementsByBrandAndName(String brand, String name) {
-        List<Supplement> supplements = supplementRepository.
-                findSupplementsByBrandContainsIgnoreCaseAndNameContainsIgnoreCase(brand, name);
+    public List<SupplementDto> getSupplementsByParam(SearchDto searchDto) {
+        List<Supplement> supplements = supplementRepository.findSupplementsByCriteria(
+                searchDto.getName(),
+                searchDto.getBrand(),
+                searchDto.getPrice(),
+                searchDto.getAverageRating(),
+                searchDto.getContains()
+        );
         List<SupplementDto> supplementDtos = new ArrayList<>();
 
         for (Supplement supplement : supplements) {
@@ -105,39 +108,7 @@ public class SupplementService {
         }
 
         if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with name: " + name + " and brand: " + brand);
-        } else {
-            return supplementDtos;
-        }
-    }
-
-    public List<SupplementDto> getSupplementsByBrand(String brand) {
-        List<Supplement> supplements = supplementRepository.findSupplementsByBrandContainsIgnoreCase(brand);
-        List<SupplementDto> supplementDtos = new ArrayList<>();
-
-        for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = supplementToDto(supplement);
-            supplementDtos.add(supplementDto);
-        }
-
-        if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with brand: " + brand);
-        } else {
-            return supplementDtos;
-        }
-    }
-
-    public List<SupplementDto> getSupplementsByName(String name) {
-        List<Supplement> supplements = supplementRepository.findSupplementByNameContainsIgnoreCase(name);
-        List<SupplementDto> supplementDtos = new ArrayList<>();
-
-        for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = supplementToDto(supplement);
-            supplementDtos.add(supplementDto);
-        }
-
-        if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with name: " + name);
+            throw new RecordNotFoundException("No supplements found with the specified criteria");
         } else {
             return supplementDtos;
         }
