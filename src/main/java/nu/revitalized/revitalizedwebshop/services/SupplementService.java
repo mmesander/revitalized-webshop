@@ -114,55 +114,6 @@ public class SupplementService {
         }
     }
 
-    public List<SupplementDto> getSupplementsByBrandAndName(String brand, String name) {
-        List<Supplement> supplements = supplementRepository.
-                findSupplementsByBrandContainsIgnoreCaseAndNameContainsIgnoreCase(brand, name);
-        List<SupplementDto> supplementDtos = new ArrayList<>();
-
-        for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = supplementToDto(supplement);
-            supplementDtos.add(supplementDto);
-        }
-
-        if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with name: " + name + " and brand: " + brand);
-        } else {
-            return supplementDtos;
-        }
-    }
-
-    public List<SupplementDto> getSupplementsByBrand(String brand) {
-        List<Supplement> supplements = supplementRepository.findSupplementsByBrandContainsIgnoreCase(brand);
-        List<SupplementDto> supplementDtos = new ArrayList<>();
-
-        for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = supplementToDto(supplement);
-            supplementDtos.add(supplementDto);
-        }
-
-        if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with brand: " + brand);
-        } else {
-            return supplementDtos;
-        }
-    }
-
-    public List<SupplementDto> getSupplementsByName(String name) {
-        List<Supplement> supplements = supplementRepository.findSupplementByNameContainsIgnoreCase(name);
-        List<SupplementDto> supplementDtos = new ArrayList<>();
-
-        for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = supplementToDto(supplement);
-            supplementDtos.add(supplementDto);
-        }
-
-        if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with name: " + name);
-        } else {
-            return supplementDtos;
-        }
-    }
-
     public List<SupplementDto> getSupplementsByPrice(Double price) {
         List<Supplement> supplements = supplementRepository.findSupplementsByPriceLessThanEqual(price);
         List<SupplementDto> supplementDtos = new ArrayList<>();
