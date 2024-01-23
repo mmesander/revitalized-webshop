@@ -103,7 +103,18 @@ public class SupplementService {
                 searchDto.getAverageRating(),
                 searchDto.getContains()
         );
+        List<SupplementDto> supplementDtos = new ArrayList<>();
 
+        for (Supplement supplement : supplements) {
+            SupplementDto supplementDto = supplementToDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with the specified criteria");
+        } else {
+            return supplementDtos;
+        }
     }
 
     public List<SupplementDto> getSupplementsByBrandAndName(String brand, String name) {
