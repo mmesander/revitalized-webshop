@@ -128,6 +128,44 @@ public class GarmentService {
             throw new RecordNotFoundException("No garment found with id: " + id);
         }
     }
+
+    public GarmentDto patchGarment(Long id, GarmentInputDto inputDto) {
+        Optional<Garment> optionalGarment = garmentRepository.findById(id);
+
+        if (optionalGarment.isPresent()) {
+            Garment garment = optionalGarment.get();
+
+            if (inputDto.getName() != null) {
+                garment.setName(inputDto.getName());
+            }
+
+            if (inputDto.getBrand() != null) {
+                garment.setBrand(inputDto.getBrand());
+            }
+
+            if (inputDto.getDescription() != null) {
+                garment.setDescription(inputDto.getDescription());
+            }
+
+            if (inputDto.getPrice() != null) {
+                garment.setPrice(inputDto.getPrice());
+            }
+
+            if (inputDto.getSize() != null) {
+                garment.setSize(inputDto.getSize());
+            }
+
+            if (inputDto.getColor() != null) {
+                garment.setColor(inputDto.getColor());
+            }
+
+            Garment patchedGarment = garmentRepository.save(garment);
+
+            return garmentToDto(patchedGarment);
+        } else {
+            throw new RecordNotFoundException("No garment found with id: " + id);
+        }
+    }
     // CRUD Methods --> DELETE Methods
     // Relations Methods
 }
