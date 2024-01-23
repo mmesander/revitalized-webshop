@@ -67,28 +67,6 @@ public class SupplementController {
         return ResponseEntity.ok().body(dtos);
     }
 
-
-
-//    @GetMapping("/supplementen/zoeken")
-//    public ResponseEntity<List<SupplementDto>> getSupplementsByBrandAndOrName(
-//            @RequestParam(value = "brand", required = false) Optional<String> brand,
-//            @RequestParam(value = "name", required = false) Optional<String> name
-//    ) {
-//        List<SupplementDto> dtos;
-//
-//        if (brand.isPresent() && name.isPresent()) {
-//            dtos = supplementService.getSupplementsByBrandAndName(brand.get(), name.get());
-//        } else if (brand.isPresent()) {
-//            dtos = supplementService.getSupplementsByBrand(brand.get());
-//        } else if (name.isPresent()) {
-//            dtos = supplementService.getSupplementsByName(name.get());
-//        } else {
-//            throw new InvalidInputException("No supplements are found");
-//        }
-//
-//        return ResponseEntity.ok().body(dtos);
-//    }
-
     @GetMapping("/supplementen/zoeken-op-prijs")
     public ResponseEntity<List<SupplementDto>> getSupplementsByPrice(
             @Valid @RequestBody PriceInputDto inputDto
