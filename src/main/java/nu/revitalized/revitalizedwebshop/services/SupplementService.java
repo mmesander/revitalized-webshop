@@ -5,7 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.cop
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SupplementSearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -92,7 +92,7 @@ public class SupplementService {
         }
     }
 
-    public List<SupplementDto> getSupplementsByParam(SearchDto searchDto) {
+    public List<SupplementDto> getSupplementsByParam(SupplementSearchDto searchDto) {
         List<Supplement> supplements = supplementRepository.findSupplementsByCriteria(
                 searchDto.getName(),
                 searchDto.getBrand(),

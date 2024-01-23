@@ -4,7 +4,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.cop
 
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SupplementSearchDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
@@ -68,7 +68,17 @@ public class GarmentService {
         }
     }
 
-    public List<GarmentDto> getGarmentsByParam(SearchDto searchDto)
+    public List<GarmentDto> getGarmentsByParam(SupplementSearchDto searchDto) {
+        List<Garment> garments = garmentRepository.findGarmentsByCriteria(
+                searchDto.getName(),
+                searchDto.getBrand(),
+                searchDto.getPrice(),
+                searchDto.getAverageRating(),
+                searchDto.getContains(),
+                searchDto.getSize(),
+                searchDto.getColor()
+        );
+    }
 
 
 

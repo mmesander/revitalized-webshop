@@ -5,19 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SearchDto {
+public class SupplementSearchDto {
     // General
     private String name;
     private String brand;
     private Double price;
     private Double averageRating;
-
-
-    // Supplements
     private String contains;
-
-
-    // Garments
-    private String size;
-    private String color;
 }
