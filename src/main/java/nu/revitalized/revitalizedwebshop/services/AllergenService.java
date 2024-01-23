@@ -1,16 +1,21 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import org.springframework.stereotype.Service;
+
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToShortDto;
 
 
@@ -106,10 +111,21 @@ public class AllergenService {
     // Create Methods
     public AllergenDto createAllergen(AllergenInputDto inputDto) {
         Allergen allergen = dtoToAllergen(inputDto);
+        List<AllergenDto> dtos = getAllAllergens();
+        boolean isUnique = true;
 
-        allergenRepository.save(allergen);
+        for (AllergenDto allergenDto : dtos) {
+            if (allergenDto.getName().equalsIgnoreCase(inputDto.getName())) {
+                isUnique = false;
+            }
+        }
 
-        return allergenToDto(allergen);
+        if (isUnique) {
+            allergenRepository.save(allergen);
+            return allergenToDto(allergen);
+        } else {
+            throw new InvalidInputException("Allergeen with name: " + inputDto.getName() + " already exists.");
+        }
     }
 
 
