@@ -15,21 +15,21 @@ VALUES
 -- Garments
 INSERT INTO garments (id, name, brand, description, price, average_rating, size, color)
 VALUES
-    (100101, 'Hoody xs', 'Energize', 'Legendarische trui', 49.99, null, 'XS', zwart),
-    (100102, 'Hoody s', 'Energize', 'Legendarische trui', 49.99, null, 'S', zwart),
-    (100103, 'Hoody m', 'Energize', 'Legendarische trui', 49.99, null, 'M', zwart),
-    (100104, 'Hoody l', 'Energize', 'Legendarische trui', 49.99, null, 'L', zwart),
-    (100105, 'Hoody xl', 'Energize', 'Legendarische trui', 49.99, null, 'XL', zwart),
-    (100201, 'Shirt xs zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'XS', zwart),
-    (100202, 'Shirt s zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'X', zwart),
-    (100203, 'Shirt m zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'M', zwart),
-    (100204, 'Shirt l zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'L', zwart),
-    (100205, 'Shirt xl zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'XL', zwart),
-    (100211, 'Shirt xs groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'XS', groen),
-    (100212, 'Shirt s groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'S', groen),
-    (100213, 'Shirt m groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'M', groen),
-    (100214, 'Shirt l groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'L', groen),
-    (100215, 'Shirt xl groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'XL', groen);
+    (100101, 'Hoody xs', 'Energize', 'Legendarische trui', 49.99, null, 'XS', 'zwart'),
+    (100102, 'Hoody s', 'Energize', 'Legendarische trui', 49.99, null, 'S', 'zwart'),
+    (100103, 'Hoody m', 'Energize', 'Legendarische trui', 49.99, null, 'M', 'zwart'),
+    (100104, 'Hoody l', 'Energize', 'Legendarische trui', 49.99, null, 'L', 'zwart'),
+    (100105, 'Hoody xl', 'Energize', 'Legendarische trui', 49.99, null, 'XL', 'zwart'),
+    (100201, 'Shirt xs zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'XS', 'zwart'),
+    (100202, 'Shirt s zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'X', 'zwart'),
+    (100203, 'Shirt m zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'M', 'zwart'),
+    (100204, 'Shirt l zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'L', 'zwart'),
+    (100205, 'Shirt xl zwart', 'Energize', 'Legendarisch shirt', 29.99, null, 'XL', 'zwart'),
+    (100211, 'Shirt xs groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'XS', 'groen'),
+    (100212, 'Shirt s groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'S', 'groen'),
+    (100213, 'Shirt m groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'M', 'groen'),
+    (100214, 'Shirt l groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'L', 'groen'),
+    (100215, 'Shirt xl groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'XL', 'groen');
 
 -- Allergens
 ALTER SEQUENCE allergens_seq RESTART 1001 INCREMENT BY 1;
