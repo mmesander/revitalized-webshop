@@ -15,4 +15,6 @@ public class VOLGORDE {
     // Put
     // Patch
     // Delete
+
+    //TODO: in product moet nog een img komen en reviews
 }
