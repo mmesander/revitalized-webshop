@@ -124,7 +124,7 @@ public class AllergenService {
             allergenRepository.save(allergen);
             return allergenToDto(allergen);
         } else {
-            throw new InvalidInputException("Allergeen with name: " + inputDto.getName() + " already exists.");
+            throw new InvalidInputException("Allergen with name: " + inputDto.getName() + " already exists.");
         }
     }
 
