@@ -2,6 +2,8 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
+import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ProductDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -68,8 +71,30 @@ public class ProductService {
         }
     }
 
-    // CRUD Methods --> POST Methods
-    // CRUD Methods --> PUT/PATCH Methods
+    public Object getProductById(Long id) {
+        Optional<Supplement> supplement = supplementRepository.findById(id);
+        Optional<Garment> garment = garmentRepository.findById(id);
+
+        if (supplement.isPresent()) {
+            return supplementToDto(supplement.get());
+        } else if (garment.isPresent()) {
+            return garmentToDto(garment.get());
+        } else {
+            throw new RecordNotFoundException("No products found with id: " + id);
+        }
+    }
+
     // CRUD Methods --> DELETE Methods
-    // Relations Methods
+    public void deleteProduct(Long id) {
+        Optional<Supplement> supplement = supplementRepository.findById(id);
+        Optional<Garment> garment = garmentRepository.findById(id);
+
+        if (supplement.isPresent()) {
+            supplementRepository.deleteById(id);
+        } else if (garment.isPresent()) {
+            garmentRepository.deleteById(id);
+        } else {
+            throw new RecordNotFoundException("No products found with id: " + id);
+        }
+    }
 }
