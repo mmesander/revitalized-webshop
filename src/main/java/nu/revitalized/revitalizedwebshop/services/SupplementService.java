@@ -134,7 +134,7 @@ public class SupplementService {
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
         Supplement supplement = dtoToSupplement(inputDto);
         List<SupplementDto> dtos = getAllSupplements();
-        Boolean isUnique = true;
+        boolean isUnique = true;
 
         for (SupplementDto supplementDto : dtos) {
             if (supplementDto.getName().equalsIgnoreCase(inputDto.getName())) {
