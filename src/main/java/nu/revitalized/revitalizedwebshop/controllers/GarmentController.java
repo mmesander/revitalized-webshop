@@ -107,6 +107,16 @@ public class GarmentController {
         return ResponseEntity.ok().body(dto);
     }
 
+    @PatchMapping("/producten/kleding/{id}")
+    public ResponseEntity<GarmentDto> patchGarment(
+            @PathVariable("id") Long id,
+            @RequestBody GarmentInputDto inputDto
+    ) {
+        GarmentDto dto = garmentService.patchGarment(id, inputDto);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
     // CRUD Requests -- DELETE Requests
     // Relations Requests
 }
