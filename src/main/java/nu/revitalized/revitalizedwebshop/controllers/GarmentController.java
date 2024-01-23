@@ -1,15 +1,19 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.GarmentService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -62,6 +66,26 @@ public class GarmentController {
     }
 
     // CRUD Requests -- POST Requests
+    @PostMapping("/kleding")
+    public ResponseEntity<GarmentDto> createGarment(
+            @Valid
+            @RequestBody GarmentInputDto inputDto,
+            BindingResult bindingResult
+            ) {
+        GarmentDto dto;
+
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            dto = garmentService.createGarment(inputDto);
+            URI uri = URI.create(
+                    ServletUriComponentsBuilder
+                            .fromCurrentRequest()
+                            .path("/" + dto.getId()).toUriString());
+            return ResponseEntity.created(uri).body(dto);
+        }
+    }
+
     // CRUD Requests -- PUT/PATCH Requests
     // CRUD Requests -- DELETE Requests
     // Relations Requests
