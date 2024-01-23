@@ -118,5 +118,14 @@ public class GarmentController {
     }
 
     // CRUD Requests -- DELETE Requests
+    @DeleteMapping("/producten/kleding/{id}")
+    public ResponseEntity<Object> deleteGarment(
+            @PathVariable("id") Long id
+    ) {
+        garmentService.deleteGarment(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
     // Relations Requests
 }
