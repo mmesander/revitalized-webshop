@@ -19,11 +19,13 @@ public interface SupplementRepository extends JpaRepository<Supplement, Long> {
             "(:brand is null or s.brand like %:brand%) and " +
             "(:name is null or s.name like %:name%) and " +
             "(:price is null or s.price = :price) and " +
+            "(:averageRating is null or s.averageRating = :averageRating) and " +
             "(:contains is null or s.contains like %:contains%)")
     List<Supplement> findSupplementsByCriteria(
             @Param("brand") String brand,
             @Param("name") String name,
             @Param("price") BigDecimal price,
+            @Param("averageRating") BigDecimal averageRating,
             @Param("contains") String contains
     );
 }

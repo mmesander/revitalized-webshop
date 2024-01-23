@@ -9,7 +9,6 @@ import lombok.Setter;
 public class SearchInputDto {
     private String name;
     private String brand;
-    private String description;
     private Double price;
     private Double averageRating;
     private String contains;
