@@ -1,7 +1,9 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
@@ -26,14 +28,14 @@ public class GarmentController {
 
 
     // CRUD Requests -- GET Requests
-    @GetMapping("/kleding")
+    @GetMapping("/producten/kleding")
     public ResponseEntity<List<GarmentDto>> getAllGarments() {
         List<GarmentDto> dtos = garmentService.getAllGarments();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/kleding/{id}")
+    @GetMapping("/producten/kleding/{id}")
     public ResponseEntity<GarmentDto> getGarmentById(
             @PathVariable("id") Long id
     ) {
@@ -42,7 +44,7 @@ public class GarmentController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/kleding/zoeken")
+    @GetMapping("/producten/kleding/zoeken")
     public ResponseEntity<List<GarmentDto>> getGarmentsByParam(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String brand,
@@ -66,12 +68,12 @@ public class GarmentController {
     }
 
     // CRUD Requests -- POST Requests
-    @PostMapping("/kleding")
+    @PostMapping("/producten/kleding")
     public ResponseEntity<GarmentDto> createGarment(
             @Valid
             @RequestBody GarmentInputDto inputDto,
             BindingResult bindingResult
-            ) {
+    ) {
         GarmentDto dto;
 
         if (bindingResult.hasFieldErrors()) {
@@ -87,6 +89,24 @@ public class GarmentController {
     }
 
     // CRUD Requests -- PUT/PATCH Requests
+    @PutMapping("/producten/kleding/{id}")
+    public ResponseEntity<GarmentDto> updateGarment(
+            @PathVariable("id") Long id,
+            @Valid
+            @RequestBody GarmentInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        GarmentDto dto;
+
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            dto = garmentService.updateGarment(id, inputDto);
+        }
+
+        return ResponseEntity.ok().body(dto);
+    }
+
     // CRUD Requests -- DELETE Requests
     // Relations Requests
 }
