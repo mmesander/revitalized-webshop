@@ -13,4 +13,6 @@ public class GarmentDto {
     private String description;
     private Double price;
     private Double averageRating;
+    private String size;
+    private String color;
 }
