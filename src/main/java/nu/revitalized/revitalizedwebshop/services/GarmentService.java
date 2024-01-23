@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -55,8 +56,10 @@ public class GarmentService {
         }
     }
 
-
+    // Transfer Methods
+    // CRUD Methods --> GET Methods
     // CRUD Methods --> POST Methods
     // CRUD Methods --> PUT/PATCH Methods
     // CRUD Methods --> DELETE Methods
+    // Relations Methods
 }

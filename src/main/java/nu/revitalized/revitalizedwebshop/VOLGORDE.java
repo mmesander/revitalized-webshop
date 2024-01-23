@@ -17,4 +17,11 @@ public class VOLGORDE {
     // Delete
 
     //TODO: in product moet nog een img komen en reviews
+
+    // Transfer Methods
+    // CRUD Methods --> GET Methods
+    // CRUD Methods --> POST Methods
+    // CRUD Methods --> PUT/PATCH Methods
+    // CRUD Methods --> DELETE Methods
+    // Relations Methods
 }
