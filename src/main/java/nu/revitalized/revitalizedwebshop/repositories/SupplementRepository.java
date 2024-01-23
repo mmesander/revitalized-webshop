@@ -16,14 +16,14 @@ public interface SupplementRepository extends JpaRepository<Supplement, Long> {
     List<Supplement> findSupplementsByPriceLessThanEqual(Double price);
 
     @Query("SELECT s FROM Supplement s WHERE " +
-            "(:brand is null or s.brand like %:brand%) and " +
-            "(:name is null or s.name like %:name%) and " +
-            "(:price is null or s.price = :price) and " +
-            "(:averageRating is null or s.averageRating = :averageRating) and " +
+            "(:name is null or lower(s.name) like %:name%) and " +
+            "(:brand is null or lower(s.brand) like %:brand%) and " +
+            "(:price is null or s.price <= :price) and " +
+            "(:averageRating is null or s.averageRating >= :averageRating) and " +
             "(:contains is null or s.contains like %:contains%)")
     List<Supplement> findSupplementsByCriteria(
-            @Param("brand") String brand,
             @Param("name") String name,
+            @Param("brand") String brand,
             @Param("price") Double price,
             @Param("averageRating") Double averageRating,
             @Param("contains") String contains

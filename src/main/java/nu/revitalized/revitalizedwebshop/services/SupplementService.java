@@ -1,8 +1,8 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
-import nu.revitalized.revitalizedwebshop.dtos.input.SearchInputDto;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
@@ -15,10 +15,6 @@ import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.stereotype.Service;
-
-import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
-import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
-
 import java.util.*;
 
 @Service
@@ -96,7 +92,7 @@ public class SupplementService {
         }
     }
 
-    public List<SupplementDto> getSupplementsByParam(SearchInputDto searchDto) {
+    public List<SupplementDto> getSupplementsByParam(SearchDto searchDto) {
         List<Supplement> supplements = supplementRepository.findSupplementsByCriteria(
                 searchDto.getName(),
                 searchDto.getBrand(),

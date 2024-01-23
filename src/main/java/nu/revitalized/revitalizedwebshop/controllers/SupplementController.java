@@ -5,7 +5,6 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.PriceInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.SearchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
@@ -48,8 +47,22 @@ public class SupplementController {
     }
 
     @GetMapping("/supplementen/zoeken")
-    public ResponseEntity<List<SupplementDto>> getSupplementsByParam(SearchInputDto inputDto) {
-        List<SupplementDto> dtos = supplementService.getSupplementsByParam(inputDto);
+    public ResponseEntity<List<SupplementDto>> getSupplementsByParam(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) Double averageRating,
+            @RequestParam(required = false) String contains
+    ) {
+        SearchDto searchDto = new SearchDto();
+
+        searchDto.setName(name);
+        searchDto.setBrand(brand);
+        searchDto.setPrice(price);
+        searchDto.setAverageRating(averageRating);
+        searchDto.setContains(contains);
+
+        List<SupplementDto> dtos = supplementService.getSupplementsByParam(searchDto);
 
         return ResponseEntity.ok().body(dtos);
     }
