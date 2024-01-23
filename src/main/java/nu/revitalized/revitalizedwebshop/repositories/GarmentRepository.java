@@ -21,7 +21,6 @@ public interface GarmentRepository extends JpaRepository<Garment, Long> {
             @Param("brand") String brand,
             @Param("price") Double price,
             @Param("averageRating") Double averageRating,
-            @Param("contains") String contains,
             @Param("size") String size,
             @Param("color") String color
     );

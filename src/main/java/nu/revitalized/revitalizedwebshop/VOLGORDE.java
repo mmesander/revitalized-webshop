@@ -27,4 +27,5 @@ public class VOLGORDE {
 
     //TODO: ROWAN
     //TODO: hoe maak ik hem ignore case (in supplement en garment)
+    //TODO: Kan ik die beide DTO's samenvoegen en alleen de juiste variabelen aanspreken? Is dat beste practise?
 }

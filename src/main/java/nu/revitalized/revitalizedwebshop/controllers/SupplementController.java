@@ -5,7 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.PriceInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SupplementSearchDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.SupplementService;
@@ -51,7 +51,7 @@ public class SupplementController {
             @RequestParam(required = false) Double averageRating,
             @RequestParam(required = false) String contains
     ) {
-        SupplementSearchDto searchDto = new SupplementSearchDto();
+        SearchDto searchDto = new SearchDto();
 
         searchDto.setName(name);
         searchDto.setBrand(brand);
