@@ -6,16 +6,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SearchDto {
-    // General
+    // General Variables
     private String name;
     private String brand;
     private Double price;
     private Double averageRating;
 
 
-    // Supplements
+    // Supplements Variables
     private String contains;
 
 
-    // Garments
+    // Garments Variables
+    private String size;
+    private String color;
 }
