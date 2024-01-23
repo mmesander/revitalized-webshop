@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
@@ -9,6 +10,7 @@ import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -122,6 +124,8 @@ public class GarmentService {
             Garment updatedGarment = garmentRepository.save(garment);
 
             return garmentToDto(updatedGarment);
+        } else {
+            throw new RecordNotFoundException("No garment found with id: " + id);
         }
     }
     // CRUD Methods --> DELETE Methods
