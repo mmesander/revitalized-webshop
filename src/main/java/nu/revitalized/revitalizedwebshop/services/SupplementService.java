@@ -152,14 +152,14 @@ public class SupplementService {
 
     // CRUD Methods --> PUT/PATCH Methods
     public SupplementDto updateSupplement(Long id, SupplementInputDto inputDto) {
-        Optional<Supplement> supplement = supplementRepository.findById(id);
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(id);
 
-        if (supplement.isPresent()) {
-            Supplement presentSupplement = supplement.get();
+        if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
 
-            copyProperties(inputDto, presentSupplement);
+            copyProperties(inputDto, supplement);
 
-            Supplement updatedSupplement = supplementRepository.save(presentSupplement);
+            Supplement updatedSupplement = supplementRepository.save(supplement);
 
             return supplementToDto(updatedSupplement);
         } else {
