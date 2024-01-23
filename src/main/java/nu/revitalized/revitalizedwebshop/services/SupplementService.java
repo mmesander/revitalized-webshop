@@ -168,28 +168,28 @@ public class SupplementService {
     }
 
     public SupplementDto patchSupplement(Long id, SupplementInputDto inputDto) {
-        Optional<Supplement> supplement = supplementRepository.findById(id);
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(id);
 
-        if (supplement.isPresent()) {
-            Supplement presentSupplement = supplement.get();
+        if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
 
             if (inputDto.getName() != null) {
-                presentSupplement.setName(inputDto.getName());
+                supplement.setName(inputDto.getName());
             }
             if (inputDto.getBrand() != null) {
-                presentSupplement.setBrand(inputDto.getBrand());
+                supplement.setBrand(inputDto.getBrand());
             }
             if (inputDto.getDescription() != null) {
-                presentSupplement.setDescription(inputDto.getDescription());
+                supplement.setDescription(inputDto.getDescription());
             }
             if (inputDto.getPrice() != null) {
-                presentSupplement.setPrice(inputDto.getPrice());
+                supplement.setPrice(inputDto.getPrice());
             }
             if (inputDto.getContains() != null) {
-                presentSupplement.setContains(inputDto.getContains());
+                supplement.setContains(inputDto.getContains());
             }
 
-            Supplement patchedSupplement = supplementRepository.save(presentSupplement);
+            Supplement patchedSupplement = supplementRepository.save(supplement);
 
             return supplementToDto(patchedSupplement);
         } else {
