@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
@@ -18,7 +17,6 @@ import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
-
 import java.util.*;
 
 @Service
