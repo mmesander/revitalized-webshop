@@ -97,7 +97,16 @@ public class SupplementService {
         }
     }
 
-    public List<SupplementDto> getSupplementsByParam(String brand, String name) {
+    public List<SupplementDto> getSupplementsByParam(
+            String brand,
+            String name,
+            Double price,
+            Double minPrice,
+            Double maxPrice,
+            Double averageRating,
+            Double minRating,
+            Double maxRating
+    ) {
         Specification<Supplement> params = Specification.where
                 (StringUtils.isBlank(brand) ? null : getSupplementBrandLikeFilter(brand))
                 .and(StringUtils.isBlank(name) ? null : getSupplementNameLikeFilter(name));

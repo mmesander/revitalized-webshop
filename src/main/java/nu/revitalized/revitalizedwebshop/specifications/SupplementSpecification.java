@@ -26,16 +26,16 @@ public class SupplementSpecification {
                 .equal(root.get("price"), priceLike)));
     }
 
-    // Request Filter: Supplement maxPrice
-    public static Specification<Supplement> getSupplementPriceLessThanFilter(Double priceLike) {
-        return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .lessThanOrEqualTo(root.get("price"), priceLike)));
-    }
-
     // Request Filter: Supplement minPrice
     public static Specification<Supplement> getSupplementPriceGreaterThanFilter(Double priceLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
                 .greaterThanOrEqualTo(root.get("price"), priceLike)));
+    }
+
+    // Request Filter: Supplement maxPrice
+    public static Specification<Supplement> getSupplementPriceLessThanFilter(Double priceLike) {
+        return (((root, query, criteriaBuilder) -> criteriaBuilder
+                .lessThanOrEqualTo(root.get("price"), priceLike)));
     }
 
     // Request Filter: Supplement averageRating
@@ -44,16 +44,16 @@ public class SupplementSpecification {
                 .equal(root.get("averageRating"), averageRatingLike)));
     }
 
-    // Request Filter: Supplement maxAverageRating
-    public static Specification<Supplement> getSupplementAverageRatingLessThanFilter(Double averageRatingLike) {
-        return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .lessThanOrEqualTo(root.get("averageRating"), averageRatingLike)));
-    }
-
-    // Request Filter: Supplement minAverageRating
+    // Request Filter: Supplement minRating
     public static Specification<Supplement> getSupplementAverageRatingMoreThanFilter(Double averageRatingLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
                 .greaterThanOrEqualTo(root.get("averageRating"), averageRatingLike)));
+    }
+
+    // Request Filter: Supplement maxRating
+    public static Specification<Supplement> getSupplementAverageRatingLessThanFilter(Double averageRatingLike) {
+        return (((root, query, criteriaBuilder) -> criteriaBuilder
+                .lessThanOrEqualTo(root.get("averageRating"), averageRatingLike)));
     }
 
     // Request Filter: Supplement contains
