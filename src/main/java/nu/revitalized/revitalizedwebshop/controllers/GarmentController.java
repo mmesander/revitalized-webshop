@@ -44,28 +44,30 @@ public class GarmentController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/producten/kleding/zoeken")
-    public ResponseEntity<List<GarmentDto>> getGarmentsByParam(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String brand,
-            @RequestParam(required = false) Double price,
-            @RequestParam(required = false) Double averageRating,
-            @RequestParam(required = false) String size,
-            @RequestParam(required = false) String color
-    ) {
-        SearchDto searchDto = new SearchDto();
 
-        searchDto.setName(name);
-        searchDto.setBrand(brand);
-        searchDto.setPrice(price);
-        searchDto.setAverageRating(averageRating);
-        searchDto.setSize(size);
-        searchDto.setColor(color);
 
-        List<GarmentDto> dtos = garmentService.getGarmentsByParam(searchDto);
-
-        return ResponseEntity.ok().body(dtos);
-    }
+//    @GetMapping("/producten/kleding/zoeken")
+//    public ResponseEntity<List<GarmentDto>> getGarmentsByParam(
+//            @RequestParam(required = false) String name,
+//            @RequestParam(required = false) String brand,
+//            @RequestParam(required = false) Double price,
+//            @RequestParam(required = false) Double averageRating,
+//            @RequestParam(required = false) String size,
+//            @RequestParam(required = false) String color
+//    ) {
+//        SearchDto searchDto = new SearchDto();
+//
+//        searchDto.setName(name);
+//        searchDto.setBrand(brand);
+//        searchDto.setPrice(price);
+//        searchDto.setAverageRating(averageRating);
+//        searchDto.setSize(size);
+//        searchDto.setColor(color);
+//
+//        List<GarmentDto> dtos = garmentService.getGarmentsByParam(searchDto);
+//
+//        return ResponseEntity.ok().body(dtos);
+//    }
 
     // CRUD Requests -- POST Requests
     @PostMapping("/producten/kleding")

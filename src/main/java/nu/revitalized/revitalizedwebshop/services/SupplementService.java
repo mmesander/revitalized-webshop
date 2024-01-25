@@ -140,6 +140,7 @@ public class SupplementService {
         for (SupplementDto supplementDto : dtos) {
             if (supplementDto.getName().equalsIgnoreCase(inputDto.getName())) {
                 isUnique = false;
+                break;
             }
         }
 
