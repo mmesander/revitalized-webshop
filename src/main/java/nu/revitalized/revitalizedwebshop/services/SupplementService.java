@@ -106,8 +106,8 @@ public class SupplementService {
             String contains
     ) {
         Specification<Supplement> params = Specification.where
-                (StringUtils.isBlank(name) ? null : getSupplementBrandLikeFilter(name))
-                .and(StringUtils.isBlank(brand) ? null : getSupplementNameLikeFilter(brand))
+                (StringUtils.isBlank(name) ? null : getSupplementNameLikeFilter(name))
+                .and(StringUtils.isBlank(brand) ? null : getSupplementBrandLikeFilter(brand))
                 .and(price == null ? null : getSupplementPriceLikeFilter(price))
                 .and(minPrice == null ? null : getSupplementPriceMoreThanFilter(minPrice))
                 .and(maxPrice == null ? null : getSupplementPriceLessThanFilter(maxPrice))
