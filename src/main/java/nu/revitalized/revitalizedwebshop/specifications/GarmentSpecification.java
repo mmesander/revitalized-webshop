@@ -1,5 +1,6 @@
 package nu.revitalized.revitalizedwebshop.specifications;
 
+// Imports
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -60,13 +61,13 @@ public class GarmentSpecification {
     public static Specification<Garment> getGarmentSizeLikeFilter(String sizeLike) {
         String formattedSizeLike = "%" + sizeLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("brand")), formattedSizeLike));
+                .like(criteriaBuilder.lower(root.get("size")), formattedSizeLike));
     }
 
     // Request Filter: Garment color
     public static Specification<Garment> getGarmentColorLike(String colorLike) {
         String formattedColorLike = "%" + colorLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("brand")), formattedColorLike));
+                .like(criteriaBuilder.lower(root.get("color")), formattedColorLike));
     }
 }
