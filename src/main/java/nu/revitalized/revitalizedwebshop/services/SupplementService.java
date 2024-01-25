@@ -3,8 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
-import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.getSupplementBrandLikeFilter;
-import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.getSupplementNameLikeFilter;
+import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
@@ -105,11 +104,19 @@ public class SupplementService {
             Double maxPrice,
             Double averageRating,
             Double minRating,
-            Double maxRating
+            Double maxRating,
+            String contains
     ) {
         Specification<Supplement> params = Specification.where
                 (StringUtils.isBlank(brand) ? null : getSupplementBrandLikeFilter(brand))
-                .and(StringUtils.isBlank(name) ? null : getSupplementNameLikeFilter(name));
+                .and(StringUtils.isBlank(name) ? null : getSupplementNameLikeFilter(name))
+                .and(price == null ? null : getSupplementPriceLikeFilter(price))
+                .and(minPrice == null ? null : getSupplementPriceMoreThanFilter(minPrice))
+                .and(maxPrice == null ? null : getSupplementPriceLessThanFilter(maxPrice))
+                .and(averageRating == null ? null : getSupplementAverageRatingLikeFilter(averageRating))
+                .and(minRating == null ? null : getSupplementAverageRatingMoreThanFilter(maxRating))
+                .and(maxRating == null ? null :getSupplementAverageRatingLessThanFilter(maxRating))
+                .and(StringUtils.isBlank(contains) ? null : getSupplementContainsLikeFilter(contains));
 
         List<Supplement> filteredSupplements = supplementRepository.findAll(params);
         List<SupplementDto> supplementDtos = new ArrayList<>();

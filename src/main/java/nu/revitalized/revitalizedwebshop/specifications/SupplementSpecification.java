@@ -27,7 +27,7 @@ public class SupplementSpecification {
     }
 
     // Request Filter: Supplement minPrice
-    public static Specification<Supplement> getSupplementPriceGreaterThanFilter(Double priceLike) {
+    public static Specification<Supplement> getSupplementPriceMoreThanFilter(Double priceLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
                 .greaterThanOrEqualTo(root.get("price"), priceLike)));
     }
