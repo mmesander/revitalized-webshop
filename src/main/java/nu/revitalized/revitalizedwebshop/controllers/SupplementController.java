@@ -46,22 +46,18 @@ public class SupplementController {
     @GetMapping("/producten/supplementen/zoeken")
     public ResponseEntity<List<SupplementDto>> getSupplementsByParam(
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String brand
-//            @RequestParam(required = false) Double price,
-//            @RequestParam(required = false) Double averageRating,
-//            @RequestParam(required = false) String contains
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Double averageRating,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Double maxRating,
+            @RequestParam(required = false) String contains
     ) {
-//        SearchDto searchDto = new SearchDto();
-//
-//        searchDto.setName(name);
-//        searchDto.setBrand(brand);
-//        searchDto.setPrice(price);
-//        searchDto.setAverageRating(averageRating);
-//        searchDto.setContains(contains);
-
-        List<SupplementDto> dtos = supplementService.getSupplementsByParam(brand, name);
-
-//        List<SupplementDto> dtos = supplementService.getSupplementsByParam(searchDto);
+        List<SupplementDto> dtos = supplementService.getSupplementsByParam(
+                brand, name, price, minPrice, maxPrice, averageRating, minRating,
+                maxRating, contains);
 
         return ResponseEntity.ok().body(dtos);
     }
