@@ -66,15 +66,6 @@ public class SupplementController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/supplementen/zoeken-op-prijs")
-    public ResponseEntity<List<SupplementDto>> getSupplementsByPrice(
-            @Valid @RequestBody PriceInputDto inputDto
-    ) {
-        List<SupplementDto> dtos = supplementService.getSupplementsByPrice(inputDto.getPrice());
-
-        return ResponseEntity.ok().body(dtos);
-    }
-
     // CRUD Requests -- POST Requests
     @PostMapping("/producten/supplementen")
     public ResponseEntity<SupplementDto> createSupplement(
