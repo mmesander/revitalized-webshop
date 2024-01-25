@@ -54,7 +54,7 @@ public class SupplementController {
             @RequestParam(required = false) String contains
     ) {
         List<SupplementDto> dtos = supplementService.getSupplementsByParam(
-                brand, name, price, minPrice, maxPrice, averageRating, minRating,
+                name, brand, price, minPrice, maxPrice, averageRating, minRating,
                 maxRating, contains);
 
         return ResponseEntity.ok().body(dtos);
