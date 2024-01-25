@@ -60,13 +60,13 @@ public class GarmentSpecification {
     public static Specification<Garment> getGarmentSizeLikeFilter(String sizeLike) {
         String formattedSizeLike = "%" + sizeLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("brand")), sizeLike));
+                .like(criteriaBuilder.lower(root.get("brand")), formattedSizeLike));
     }
 
     // Request Filter: Garment color
     public static Specification<Garment> getGarmentColorLike(String colorLike) {
         String formattedColorLike = "%" + colorLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("brand")), colorLike));
+                .like(criteriaBuilder.lower(root.get("brand")), formattedColorLike));
     }
 }
