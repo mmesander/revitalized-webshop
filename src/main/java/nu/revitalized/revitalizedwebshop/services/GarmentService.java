@@ -118,6 +118,7 @@ public class GarmentService {
         for (GarmentDto garmentDto : dtos) {
             if (garmentDto.getName().equalsIgnoreCase(inputDto.getName())) {
                 isUnique = false;
+                break;
             }
         }
 
