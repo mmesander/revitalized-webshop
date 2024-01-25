@@ -1,6 +1,9 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+import static nu.revitalized.revitalizedwebshop.specifications.GarmentSpecification.*;
+import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
+import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.getSupplementAverageRatingLessThanFilter;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
@@ -9,6 +12,8 @@ import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,7 +74,46 @@ public class GarmentService {
         }
     }
 
-    public List<GarmentDto> getGarmentsByParam(SearchDto searchDto) {
+    public List<GarmentDto> getGarmentsByParam(
+            String name,
+            String brand,
+            Double price,
+            Double minPrice,
+            Double maxPrice,
+            Double averageRating,
+            Double minRating,
+            Double maxRating,
+            String size,
+            String color
+    ) {
+        Specification<Garment> params = Specification.where
+                (StringUtils.isBlank(name) ? null : getGarmentNameLikeFilter(name))
+                .and(StringUtils.isBlank(brand) ? null : getGarmentBrandLikeFilter(brand))
+                .and(price == null ? null : getGarmentPriceLikeFilter(price))
+                .and(minPrice == null ? null : getGarmentPriceMoreThanFilter(minPrice))
+                .and(maxPrice == null ? null : getGarmentPriceLessThanFilter(maxPrice))
+                .and(averageRating == null ? null : getGarmentAverageRatingLikeFilter(averageRating))
+                .and(minRating == null ? null : getGarmentAverageRatingMoreThanFilter(maxRating))
+                .and(maxRating == null ? null :getGarmentAverageRatingLessThanFilter(maxRating))
+                .and(StringUtils.isBlank(size) ? null : getGarmentSizeLikeFilter(size))
+                .and(StringUtils.isBlank(color) ? null : getGarmentColorLike(color));
+
+        List<Garment> filteredGarments = garmentRepository.findAll(params);
+        List<GarmentDto> garmentDtos = new ArrayList<>();
+
+        for (Garment garment : filteredGarments) {
+            GarmentDto garmentDto = garmentToDto(garment);
+            garmentDtos.add(garmentDto);
+        }
+
+        if (garmentDtos.isEmpty()) {
+            throw new RecordNotFoundException("No garments found with the specified filters");
+        } else {
+            return garmentDtos;
+        }
+    }
+
+    public List<GarmentDto> getGarmentsByParam2(SearchDto searchDto) {
         List<Garment> garments = garmentRepository.findGarmentsByCriteria(
                 searchDto.getName(),
                 searchDto.getBrand(),
