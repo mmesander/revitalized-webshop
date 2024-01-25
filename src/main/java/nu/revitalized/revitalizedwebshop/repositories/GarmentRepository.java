@@ -3,9 +3,7 @@ package nu.revitalized.revitalizedwebshop.repositories;
 // Imports
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface GarmentRepository extends JpaRepository<Garment, Long> {
+public interface GarmentRepository extends JpaRepository<Garment, Long>, JpaSpecificationExecutor<Garment> {
 }
