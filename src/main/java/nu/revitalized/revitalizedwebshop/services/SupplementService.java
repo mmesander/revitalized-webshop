@@ -95,8 +95,8 @@ public class SupplementService {
     }
 
     public List<SupplementDto> getSupplementsByParam(
-            String brand,
             String name,
+            String brand,
             Double price,
             Double minPrice,
             Double maxPrice,
@@ -106,8 +106,8 @@ public class SupplementService {
             String contains
     ) {
         Specification<Supplement> params = Specification.where
-                (StringUtils.isBlank(brand) ? null : getSupplementBrandLikeFilter(brand))
-                .and(StringUtils.isBlank(name) ? null : getSupplementNameLikeFilter(name))
+                (StringUtils.isBlank(name) ? null : getSupplementBrandLikeFilter(name))
+                .and(StringUtils.isBlank(brand) ? null : getSupplementNameLikeFilter(brand))
                 .and(price == null ? null : getSupplementPriceLikeFilter(price))
                 .and(minPrice == null ? null : getSupplementPriceMoreThanFilter(minPrice))
                 .and(maxPrice == null ? null : getSupplementPriceLessThanFilter(maxPrice))
