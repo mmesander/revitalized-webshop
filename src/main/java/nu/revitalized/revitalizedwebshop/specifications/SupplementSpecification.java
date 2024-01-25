@@ -13,15 +13,17 @@ public class SupplementSpecification {
     }
 
     // Request filter: Supplement name
-    public static Specification<Supplement> supplementNameLike(String nameLike) {
+    public static Specification<Supplement> getSupplementNameLikeFilter(String nameLike) {
         String formattedNameLike = "%" + nameLike.toLowerCase() + "%";
         return ((root, query, builder) -> builder.like(builder.lower(root.get("name")), formattedNameLike));
     }
 
     // Request Filter: Supplement price
+    public static Specification<Supplement>
 
     // Request Filter: Supplement averageRating
-    // Request Filter: Supplement contains
 
+
+    // Request Filter: Supplement contains
 
 }

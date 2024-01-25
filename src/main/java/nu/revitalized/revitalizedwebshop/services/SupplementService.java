@@ -4,7 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.getSupplementBrandLikeFilter;
-import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.supplementNameLike;
+import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.getSupplementNameLikeFilter;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
@@ -100,7 +100,7 @@ public class SupplementService {
     public List<SupplementDto> getSupplementsByParam(String brand, String name) {
         Specification<Supplement> params = Specification.where
                 (StringUtils.isBlank(brand) ? null : getSupplementBrandLikeFilter(brand))
-                .and(StringUtils.isBlank(name) ? null : supplementNameLike(name));
+                .and(StringUtils.isBlank(name) ? null : getSupplementNameLikeFilter(name));
 
         List<Supplement> filteredSupplements = supplementRepository.findAll(params);
         List<SupplementDto> supplementDtos = new ArrayList<>();
