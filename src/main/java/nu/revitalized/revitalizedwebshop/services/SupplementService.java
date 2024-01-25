@@ -3,6 +3,9 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
+import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.supplementBrandLike;
+import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.supplementNameLike;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
@@ -14,7 +17,11 @@ import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 
 @Service
@@ -89,6 +96,26 @@ public class SupplementService {
             return supplementToDto(supplement.get());
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
+        }
+    }
+
+    public List<SupplementDto> getSupplementsByFilter(String brand, String name) {
+        Specification<Supplement> filters = Specification.where
+                (StringUtils.isBlank(brand) ? null : supplementBrandLike(brand))
+                .and(StringUtils.isBlank(name) ? null : supplementNameLike(name));
+
+        List<Supplement> filteredSupplements = supplementRepository.findAll(filters);
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : filteredSupplements) {
+            SupplementDto supplementDto = supplementToDto(supplement);
+            supplementDtos.add(supplementDto);
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements found with the specified filters");
+        } else {
+            return supplementDtos;
         }
     }
 
