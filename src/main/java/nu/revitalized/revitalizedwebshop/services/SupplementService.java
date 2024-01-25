@@ -133,22 +133,6 @@ public class SupplementService {
         }
     }
 
-    public List<SupplementDto> getSupplementsByPrice(Double price) {
-        List<Supplement> supplements = supplementRepository.findSupplementsByPriceLessThanEqual(price);
-        List<SupplementDto> supplementDtos = new ArrayList<>();
-
-        for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = supplementToDto(supplement);
-            supplementDtos.add(supplementDto);
-        }
-
-        if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with a price lower or equal to " + price);
-        } else {
-            return supplementDtos;
-        }
-    }
-
     // CRUD Methods --> POST Methods
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
         Supplement supplement = dtoToSupplement(inputDto);
