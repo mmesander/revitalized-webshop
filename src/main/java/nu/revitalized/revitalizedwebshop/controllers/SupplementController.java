@@ -3,9 +3,7 @@ package nu.revitalized.revitalizedwebshop.controllers;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.PriceInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.SupplementService;
