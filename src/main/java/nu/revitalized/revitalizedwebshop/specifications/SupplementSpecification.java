@@ -6,17 +6,22 @@ import org.springframework.data.jpa.domain.Specification;
 public class SupplementSpecification {
     private SupplementSpecification() {}
 
-    // Request parameter filter: Supplement brand
-    public static Specification<Supplement> supplementBrandLike(String brandLike) {
+    // Request filter: Supplement brand
+    public static Specification<Supplement> getSupplementBrandLikeFilter(String brandLike) {
         String formattedBrandLike = "%" + brandLike.toLowerCase() + "%";
         return ((root, query, builder) -> builder.like(builder.lower(root.get("brand")), formattedBrandLike));
     }
 
-    // Request parameter filter: Supplement name
+    // Request filter: Supplement name
     public static Specification<Supplement> supplementNameLike(String nameLike) {
         String formattedNameLike = "%" + nameLike.toLowerCase() + "%";
         return ((root, query, builder) -> builder.like(builder.lower(root.get("name")), formattedNameLike));
     }
+
+    // Request Filter: Supplement price
+
+    // Request Filter: Supplement averageRating
+    // Request Filter: Supplement contains
 
 
 }
