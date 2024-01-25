@@ -133,28 +133,6 @@ public class SupplementService {
         }
     }
 
-//    public List<SupplementDto> getSupplementsByParam(SearchDto searchDto) {
-//        List<Supplement> supplements = supplementRepository.findSupplementsByCriteria(
-//                searchDto.getName(),
-//                searchDto.getBrand(),
-//                searchDto.getPrice(),
-//                searchDto.getAverageRating(),
-//                searchDto.getContains()
-//        );
-//        List<SupplementDto> supplementDtos = new ArrayList<>();
-//
-//        for (Supplement supplement : supplements) {
-//            SupplementDto supplementDto = supplementToDto(supplement);
-//            supplementDtos.add(supplementDto);
-//        }
-//
-//        if (supplementDtos.isEmpty()) {
-//            throw new RecordNotFoundException("No supplements found with the specified criteria");
-//        } else {
-//            return supplementDtos;
-//        }
-//    }
-
     public List<SupplementDto> getSupplementsByPrice(Double price) {
         List<Supplement> supplements = supplementRepository.findSupplementsByPriceLessThanEqual(price);
         List<SupplementDto> supplementDtos = new ArrayList<>();
