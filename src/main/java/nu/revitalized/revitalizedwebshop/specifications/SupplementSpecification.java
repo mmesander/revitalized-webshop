@@ -1,23 +1,24 @@
 package nu.revitalized.revitalizedwebshop.specifications;
 
+// Imports
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import org.springframework.data.jpa.domain.Specification;
 
 public class SupplementSpecification {
     private SupplementSpecification() {}
 
-    // Request filter: Supplement brand
-    public static Specification<Supplement> getSupplementBrandLikeFilter(String brandLike) {
-        String formattedBrandLike = "%" + brandLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("brand")), formattedBrandLike));
-    }
-
     // Request filter: Supplement name
     public static Specification<Supplement> getSupplementNameLikeFilter(String nameLike) {
         String formattedNameLike = "%" + nameLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
                 .like(criteriaBuilder.lower(root.get("name")), formattedNameLike));
+    }
+
+    // Request filter: Supplement brand
+    public static Specification<Supplement> getSupplementBrandLikeFilter(String brandLike) {
+        String formattedBrandLike = "%" + brandLike.toLowerCase() + "%";
+        return ((root, query, criteriaBuilder) -> criteriaBuilder
+                .like(criteriaBuilder.lower(root.get("brand")), formattedBrandLike));
     }
 
     // Request Filter: Supplement price
@@ -27,15 +28,15 @@ public class SupplementSpecification {
     }
 
     // Request Filter: Supplement minPrice
-    public static Specification<Supplement> getSupplementPriceMoreThanFilter(Double priceLike) {
+    public static Specification<Supplement> getSupplementPriceMoreThanFilter(Double minPriceLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .greaterThanOrEqualTo(root.get("price"), priceLike)));
+                .greaterThanOrEqualTo(root.get("price"), minPriceLike)));
     }
 
     // Request Filter: Supplement maxPrice
-    public static Specification<Supplement> getSupplementPriceLessThanFilter(Double priceLike) {
+    public static Specification<Supplement> getSupplementPriceLessThanFilter(Double maxPriceLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .lessThanOrEqualTo(root.get("price"), priceLike)));
+                .lessThanOrEqualTo(root.get("price"), maxPriceLike)));
     }
 
     // Request Filter: Supplement averageRating
@@ -45,15 +46,15 @@ public class SupplementSpecification {
     }
 
     // Request Filter: Supplement minRating
-    public static Specification<Supplement> getSupplementAverageRatingMoreThanFilter(Double averageRatingLike) {
+    public static Specification<Supplement> getSupplementAverageRatingMoreThanFilter(Double minRatingLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .greaterThanOrEqualTo(root.get("averageRating"), averageRatingLike)));
+                .greaterThanOrEqualTo(root.get("averageRating"), minRatingLike)));
     }
 
     // Request Filter: Supplement maxRating
-    public static Specification<Supplement> getSupplementAverageRatingLessThanFilter(Double averageRatingLike) {
+    public static Specification<Supplement> getSupplementAverageRatingLessThanFilter(Double maxRatingLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .lessThanOrEqualTo(root.get("averageRating"), averageRatingLike)));
+                .lessThanOrEqualTo(root.get("averageRating"), maxRatingLike)));
     }
 
     // Request Filter: Supplement contains
