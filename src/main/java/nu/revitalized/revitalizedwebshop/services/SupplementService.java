@@ -3,9 +3,9 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
+import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -14,7 +14,9 @@ import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 @Service
@@ -92,39 +94,38 @@ public class SupplementService {
         }
     }
 
-    public List<SupplementDto> getSupplementsByParam(SearchDto searchDto) {
-        List<Supplement> supplements = supplementRepository.findSupplementsByCriteria(
-                searchDto.getName(),
-                searchDto.getBrand(),
-                searchDto.getPrice(),
-                searchDto.getAverageRating(),
-                searchDto.getContains()
-        );
+    public List<SupplementDto> getSupplementsByParam(
+            String name,
+            String brand,
+            Double price,
+            Double minPrice,
+            Double maxPrice,
+            Double averageRating,
+            Double minRating,
+            Double maxRating,
+            String contains
+    ) {
+        Specification<Supplement> params = Specification.where
+                (StringUtils.isBlank(name) ? null : getSupplementBrandLikeFilter(name))
+                .and(StringUtils.isBlank(brand) ? null : getSupplementNameLikeFilter(brand))
+                .and(price == null ? null : getSupplementPriceLikeFilter(price))
+                .and(minPrice == null ? null : getSupplementPriceMoreThanFilter(minPrice))
+                .and(maxPrice == null ? null : getSupplementPriceLessThanFilter(maxPrice))
+                .and(averageRating == null ? null : getSupplementAverageRatingLikeFilter(averageRating))
+                .and(minRating == null ? null : getSupplementAverageRatingMoreThanFilter(maxRating))
+                .and(maxRating == null ? null :getSupplementAverageRatingLessThanFilter(maxRating))
+                .and(StringUtils.isBlank(contains) ? null : getSupplementContainsLikeFilter(contains));
+
+        List<Supplement> filteredSupplements = supplementRepository.findAll(params);
         List<SupplementDto> supplementDtos = new ArrayList<>();
 
-        for (Supplement supplement : supplements) {
+        for (Supplement supplement : filteredSupplements) {
             SupplementDto supplementDto = supplementToDto(supplement);
             supplementDtos.add(supplementDto);
         }
 
         if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with the specified criteria");
-        } else {
-            return supplementDtos;
-        }
-    }
-
-    public List<SupplementDto> getSupplementsByPrice(Double price) {
-        List<Supplement> supplements = supplementRepository.findSupplementsByPriceLessThanEqual(price);
-        List<SupplementDto> supplementDtos = new ArrayList<>();
-
-        for (Supplement supplement : supplements) {
-            SupplementDto supplementDto = supplementToDto(supplement);
-            supplementDtos.add(supplementDto);
-        }
-
-        if (supplementDtos.isEmpty()) {
-            throw new RecordNotFoundException("No supplements found with a price lower or equal to " + price);
+            throw new RecordNotFoundException("No supplements found with the specified filters");
         } else {
             return supplementDtos;
         }
@@ -139,6 +140,7 @@ public class SupplementService {
         for (SupplementDto supplementDto : dtos) {
             if (supplementDto.getName().equalsIgnoreCase(inputDto.getName())) {
                 isUnique = false;
+                break;
             }
         }
 

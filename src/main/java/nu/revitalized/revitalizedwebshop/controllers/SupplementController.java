@@ -3,9 +3,7 @@ package nu.revitalized.revitalizedwebshop.controllers;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.PriceInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SearchDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.SupplementService;
@@ -48,27 +46,16 @@ public class SupplementController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) Double price,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) Double averageRating,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Double maxRating,
             @RequestParam(required = false) String contains
     ) {
-        SearchDto searchDto = new SearchDto();
-
-        searchDto.setName(name);
-        searchDto.setBrand(brand);
-        searchDto.setPrice(price);
-        searchDto.setAverageRating(averageRating);
-        searchDto.setContains(contains);
-
-        List<SupplementDto> dtos = supplementService.getSupplementsByParam(searchDto);
-
-        return ResponseEntity.ok().body(dtos);
-    }
-
-    @GetMapping("/producten/supplementen/zoeken-op-prijs")
-    public ResponseEntity<List<SupplementDto>> getSupplementsByPrice(
-            @Valid @RequestBody PriceInputDto inputDto
-    ) {
-        List<SupplementDto> dtos = supplementService.getSupplementsByPrice(inputDto.getPrice());
+        List<SupplementDto> dtos = supplementService.getSupplementsByParam(
+                name, brand, price, minPrice, maxPrice, averageRating, minRating,
+                maxRating, contains);
 
         return ResponseEntity.ok().body(dtos);
     }
