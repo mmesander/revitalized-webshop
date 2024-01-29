@@ -1,10 +1,8 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUri;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -13,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
 
