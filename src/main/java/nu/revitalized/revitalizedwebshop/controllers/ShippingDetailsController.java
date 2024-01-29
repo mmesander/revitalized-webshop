@@ -1,15 +1,19 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
-import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUri;
+import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+
+import jakarta.validation.Valid;
+import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
+import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -40,14 +44,14 @@ public class ShippingDetailsController {
 
     @GetMapping("/shipping-details/search")
     public ResponseEntity<List<ShippingDetailsDto>> getShippingDetailsByParam(
-         @RequestParam(required = false) String detailsName,
-         @RequestParam(required = false) String name,
-         @RequestParam(required = false) String country,
-         @RequestParam(required = false) String city,
-         @RequestParam(required = false) String zipCode,
-         @RequestParam(required = false) String street,
-         @RequestParam(required = false) String houseNumber,
-         @RequestParam(required = false) String email
+            @RequestParam(required = false) String detailsName,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String zipCode,
+            @RequestParam(required = false) String street,
+            @RequestParam(required = false) String houseNumber,
+            @RequestParam(required = false) String email
     ) {
         List<ShippingDetailsDto> dtos = shippingDetailsService.getShippingDetailsByParam(
                 detailsName, name, country, city, zipCode, street, houseNumber, email);
@@ -55,5 +59,23 @@ public class ShippingDetailsController {
         return ResponseEntity.ok().body(dtos);
     }
 
+    // CRUD Requests -- POST Requests
+    @PostMapping("/shipping-details")
+    public ResponseEntity<ShippingDetailsDto> createShippingDetails(
+            @Valid
+            @RequestBody ShippingDetailsInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        ShippingDetailsDto dto;
 
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            dto = shippingDetailsService.createShippingDetails(inputDto);
+
+            URI uri = buildUri(dto);
+
+            return ResponseEntity.created(uri).body(dto);
+        }
+    }
 }

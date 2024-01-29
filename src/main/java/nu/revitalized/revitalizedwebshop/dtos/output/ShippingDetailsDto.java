@@ -3,10 +3,11 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 // Imports
 import lombok.Getter;
 import lombok.Setter;
+import nu.revitalized.revitalizedwebshop.interfaces.Identifiable;
 
 @Getter
 @Setter
-public class ShippingDetailsDto {
+public class ShippingDetailsDto implements Identifiable {
     // Variables
     private Long id;
     private String detailsName;
