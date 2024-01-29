@@ -26,7 +26,7 @@ public class ShippingDetailsInputDto {
     private String street;
     @NotNull(message = "House number is required")
     @Positive(message = "House number can't be negative")
-    private int houseNumber;
+    private Integer houseNumber;
     @Pattern(regexp = "[^0-9]*", message = "House number addition should not contain digits")
     @Null(message = "House number addition should be null or contain only letters and symbols")
     private String houseNumberAddition;

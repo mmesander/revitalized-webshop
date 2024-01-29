@@ -207,8 +207,8 @@ public class ShippingDetailsService {
                 shippingDetails.setStreet(formatName(inputDto.getStreet()));
             }
 
-            if ((inputDto.getHouseNumber() == 0 && inputDto.getHouseNumberAddition() != null) ||
-            inputDto.getHouseNumber() == 0) {
+            if ((inputDto.getHouseNumber() != null && inputDto.getHouseNumberAddition() != null) ||
+            inputDto.getHouseNumber() != null) {
                 shippingDetails.setHouseNumber(buildHouseNumber(inputDto));
             }
 
