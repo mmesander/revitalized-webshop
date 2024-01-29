@@ -206,4 +206,8 @@ public class ShippingDetailsService {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
         }
     }
+
+    public ShippingDetailsDto patchShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+    }
 }
