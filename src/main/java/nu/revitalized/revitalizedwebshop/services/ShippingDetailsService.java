@@ -1,11 +1,14 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
@@ -105,7 +108,7 @@ public class ShippingDetailsService {
             String email
     ) {
         Specification<ShippingDetails> params = Specification.where
-                (StringUtils.isBlank(detailsName) ? null : getShippingDetailsDetailsNameLikeFilter(detailsName))
+                        (StringUtils.isBlank(detailsName) ? null : getShippingDetailsDetailsNameLikeFilter(detailsName))
                 .and(StringUtils.isBlank(name) ? null : getShippingDetailsNameLikeFilter(name))
                 .and(StringUtils.isBlank(country) ? null : getShippingDetailsCountryLikeFilter(country))
                 .and(StringUtils.isBlank(city) ? null : getShippingDetailsCityLikeFilter(city))
@@ -126,6 +129,40 @@ public class ShippingDetailsService {
             throw new RecordNotFoundException("No shipping details found with the specified filters");
         } else {
             return shippingDetailsDtos;
+        }
+    }
+
+    // CRUD Methods --> POST Methods
+    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto) {
+        ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
+        List<ShippingDetailsDto> dtos = getAllShippingDetails();
+        boolean isUnique = true;
+
+        for (ShippingDetailsDto shippingDetailsDto : dtos) {
+            if (inputDto.getHouseNumberAddition() != null) {
+                if (shippingDetailsDto.getStreet().equalsIgnoreCase(inputDto.getStreet())
+                        && shippingDetailsDto.getHouseNumber().equalsIgnoreCase(inputDto.getHouseNumber()
+                        + inputDto.getHouseNumberAddition())) {
+                    isUnique = false;
+                    break;
+                }
+            } else {
+                if (shippingDetailsDto.getStreet().equalsIgnoreCase(inputDto.getStreet())
+                        && shippingDetailsDto
+                        .getHouseNumber()
+                        .equalsIgnoreCase(String.valueOf(inputDto.getHouseNumber()))) {
+                    isUnique = false;
+                    break;
+                }
+            }
+        }
+
+        if (isUnique) {
+            shippingDetailsRepository.save(shippingDetails);
+            return shippingDetailsToDto(shippingDetails);
+        } else {
+            throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
+                    + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition() + " already exists.");
         }
     }
 }
