@@ -3,11 +3,14 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -91,5 +94,38 @@ public class ShippingDetailsService {
         }
     }
 
+    public List<ShippingDetailsDto> getShippingDetailsByParam(
+            String detailsName,
+            String name,
+            String country,
+            String city,
+            String zipCode,
+            String street,
+            String houseNumber,
+            String email
+    ) {
+        Specification<ShippingDetails> params = Specification.where
+                (StringUtils.isBlank(detailsName) ? null : getShippingDetailsDetailsNameLikeFilter(detailsName))
+                .and(StringUtils.isBlank(name) ? null : getShippingDetailsNameLikeFilter(name))
+                .and(StringUtils.isBlank(country) ? null : getShippingDetailsCountryLikeFilter(country))
+                .and(StringUtils.isBlank(city) ? null : getShippingDetailsCityLikeFilter(city))
+                .and(StringUtils.isBlank(zipCode) ? null : getShippingDetailsZipCodeLikeFilter(zipCode))
+                .and(StringUtils.isBlank(street) ? null : getShippingDetailsStreetLikeFilter(street))
+                .and(StringUtils.isBlank(houseNumber) ? null : getShippingDetailsHouseNumberLikeFilter(houseNumber))
+                .and(StringUtils.isBlank(email) ? null : getShippingDetailsEmailLikeFilter(email));
 
+        List<ShippingDetails> filteredShippingDetails = shippingDetailsRepository.findAll(params);
+        List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
+
+        for (ShippingDetails shippingDetails : filteredShippingDetails) {
+            ShippingDetailsDto shippingDetailsDto = shippingDetailsToDto(shippingDetails);
+            shippingDetailsDtos.add(shippingDetailsDto);
+        }
+
+        if (shippingDetailsDtos.isEmpty()) {
+            throw new RecordNotFoundException("No shipping details found with the specified filters");
+        } else {
+            return shippingDetailsDtos;
+        }
+    }
 }
