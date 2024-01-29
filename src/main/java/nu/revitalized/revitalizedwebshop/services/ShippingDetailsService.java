@@ -5,9 +5,14 @@ import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
+import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShippingDetailsService {
@@ -58,4 +63,33 @@ public class ShippingDetailsService {
 
         return shippingDetailsDto;
     }
+
+    // CRUD Methods --> GET Methods
+    public List<ShippingDetailsDto> getAllShippingDetails() {
+        List<ShippingDetails> shippingDetailsList = shippingDetailsRepository.findAll();
+        List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
+
+        for (ShippingDetails shippingDetails : shippingDetailsList) {
+            ShippingDetailsDto shippingDetailsDto = shippingDetailsToDto(shippingDetails);
+            shippingDetailsDtos.add(shippingDetailsDto);
+        }
+
+        if (shippingDetailsDtos.isEmpty()) {
+            throw new RecordNotFoundException("No shipping details found");
+        } else {
+            return shippingDetailsDtos;
+        }
+    }
+
+    public ShippingDetailsDto getShippingDetailsById(Long id) {
+        Optional<ShippingDetails> shippingDetails = shippingDetailsRepository.findById(id);
+
+        if (shippingDetails.isPresent()) {
+            return shippingDetailsToDto(shippingDetails.get());
+        } else {
+            throw new RecordNotFoundException("No shipping details found with id: " + id);
+        }
+    }
+
+
 }
