@@ -1,11 +1,13 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -15,6 +17,7 @@ import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -143,8 +146,13 @@ public class ShippingDetailsService {
             shippingDetailsRepository.save(shippingDetails);
             return shippingDetailsToDto(shippingDetails);
         } else {
-            throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
-                    + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition() + " already exists.");
+            if (inputDto.getHouseNumberAddition() != null) {
+                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
+                        + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition() + " already exists.");
+            } else {
+                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
+                        + inputDto.getHouseNumber() + " already exists.");
+            }
         }
     }
 
@@ -204,7 +212,7 @@ public class ShippingDetailsService {
             }
 
             if ((inputDto.getHouseNumber() != null && inputDto.getHouseNumberAddition() != null) ||
-            inputDto.getHouseNumber() != null) {
+                    inputDto.getHouseNumber() != null) {
                 shippingDetails.setHouseNumber(buildHouseNumber(inputDto));
             }
 
