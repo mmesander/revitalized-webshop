@@ -1,10 +1,7 @@
 package nu.revitalized.revitalizedwebshop.dtos.input;
 
 // Imports
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +27,8 @@ public class ShippingDetailsInputDto {
     @NotNull(message = "House number is required")
     @Positive(message = "House number can't be negative")
     private int houseNumber;
+    @Pattern(regexp = "[^0-9]*", message = "House number addition should not contain digits")
+    @Null(message = "House number addition should be null or contain only letters and symbols")
     private String houseNumberAddition;
     @NotNull(message = "Email is required")
     @Email(message = "Enter a valid email")
