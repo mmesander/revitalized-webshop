@@ -8,6 +8,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +77,23 @@ public class ShippingDetailsController {
             URI uri = buildUri(dto);
 
             return ResponseEntity.created(uri).body(dto);
+        }
+    }
+
+    // CRUD Requests -- PUT/PATCH Requests
+    @PutMapping("/shipping-details/{id}")
+    public ResponseEntity<ShippingDetailsDto> updateShippingDetails(
+            @PathVariable("id") Long id,
+            @Valid
+            @RequestBody ShippingDetailsInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            ShippingDetailsDto dto = shippingDetailsService.updateShippingDetails(id, inputDto);
+
+            return ResponseEntity.ok().body(dto);
         }
     }
 }
