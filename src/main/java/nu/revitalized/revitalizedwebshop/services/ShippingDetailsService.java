@@ -2,7 +2,9 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.nameFormatter.formatName;
+import static nu.revitalized.revitalizedwebshop.helpers.PropertiesCopier.copyProperties;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,13 @@ public class ShippingDetailsService {
         ShippingDetails shippingDetails = new ShippingDetails();
 
         shippingDetails.setShippingDetailsName(inputDto.getShippingDetailsName().toUpperCase());
+        shippingDetails.setCountry(formatName(inputDto.getCountry()));
+        shippingDetails.setCity(formatName(inputDto.getCity()));
+        shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
+        shippingDetails.setStreet(formatName(inputDto.getStreet()));
+        shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
 
+        // Set name
         if (inputDto.getMiddleName() != null) {
             shippingDetails.setName(formatName(inputDto.getFirstName())
                     + " " + inputDto.getMiddleName().toLowerCase()
@@ -31,11 +39,7 @@ public class ShippingDetailsService {
                     + " " + formatName(inputDto.getLastName()));
         }
 
-        shippingDetails.setCountry(formatName(inputDto.getCountry()));
-        shippingDetails.setCity(formatName(inputDto.getCity()));
-        shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
-        shippingDetails.setStreet(formatName(inputDto.getStreet()));
-
+        // Set houseNumber
         if (inputDto.getHouseNumberAddition() != null) {
             String houseNumber = inputDto.getHouseNumber() +
                     inputDto.getHouseNumberAddition().toUpperCase();
@@ -44,10 +48,12 @@ public class ShippingDetailsService {
             shippingDetails.setHouseNumber(String.valueOf(inputDto.getHouseNumber()));
         }
 
-        shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
-
         return shippingDetails;
     }
 
+    public static ShippingDetailsDto shippingDetailsToDto(ShippingDetails shippingDetails) {
+        ShippingDetailsDto shippingDetailsDto = new ShippingDetailsDto();
 
+
+    }
 }

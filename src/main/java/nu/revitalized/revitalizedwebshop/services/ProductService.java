@@ -1,7 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.PropertiesCopier.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ProductDto;
