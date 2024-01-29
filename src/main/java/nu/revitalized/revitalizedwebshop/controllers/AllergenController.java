@@ -1,16 +1,21 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.AllergenService;
+
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUri;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
+
 import java.net.URI;
 import java.util.List;
 
@@ -56,16 +61,13 @@ public class AllergenController {
             @RequestBody AllergenInputDto inputDto,
             BindingResult bindingResult
     ) {
-        AllergenDto dto;
-
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            dto = allergenService.createAllergen(inputDto);
-            URI uri = URI.create(
-                    ServletUriComponentsBuilder
-                            .fromCurrentRequest()
-                            .path("/" + dto.getId()).toUriString());
+            AllergenDto dto = allergenService.createAllergen(inputDto);
+
+            URI uri = buildUri(dto);
+
             return ResponseEntity.created(uri).body(dto);
         }
     }
@@ -77,15 +79,13 @@ public class AllergenController {
             @RequestBody AllergenInputDto inputDto,
             BindingResult bindingResult
     ) {
-        AllergenDto dto;
-
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            dto = allergenService.updateAllergen(id, inputDto);
-        }
+            AllergenDto dto = allergenService.updateAllergen(id, inputDto);
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping("/producten/supplementen/allergenen/{id}")
