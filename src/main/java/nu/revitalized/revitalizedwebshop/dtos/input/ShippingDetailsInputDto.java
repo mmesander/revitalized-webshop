@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ShippingDetailsInputDto {
+    @NotNull(message = "Address name is required")
     private String shippingDetailsName;
     @NotNull(message = "First name is required")
     private String firstName;
