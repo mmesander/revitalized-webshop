@@ -1,7 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.CopyPropertiesHelper.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
@@ -130,7 +130,6 @@ public class SupplementService {
             return supplementDtos;
         }
     }
-    // test test
 
     // CRUD Methods --> POST Methods
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
