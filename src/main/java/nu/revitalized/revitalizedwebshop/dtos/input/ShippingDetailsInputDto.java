@@ -27,8 +27,7 @@ public class ShippingDetailsInputDto {
     @NotNull(message = "House number is required")
     @Positive(message = "House number can't be negative")
     private Integer houseNumber;
-    @Pattern(regexp = "[^0-9]*", message = "House number addition should not contain digits")
-    @Null(message = "House number addition should be null or contain only letters and symbols")
+//    @Pattern(regexp = "[^0-9]*", message = "House number addition should not contain digits")
     private String houseNumberAddition;
     @NotNull(message = "Email is required")
     @Email(message = "Enter a valid email")
