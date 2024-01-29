@@ -1,10 +1,13 @@
 package nu.revitalized.revitalizedwebshop.specifications;
 
+// Imports
+
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ShippingDetailsSpecification {
-    private ShippingDetailsSpecification() {}
+    private ShippingDetailsSpecification() {
+    }
 
     // Request filter: Shipping Details detailsName
     public static Specification<ShippingDetails> getShippingDetailsDetailsNameLikeFilter(String detailsNameLike) {
