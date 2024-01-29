@@ -2,6 +2,8 @@ package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUri;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
@@ -67,16 +69,13 @@ public class SupplementController {
             @RequestBody SupplementInputDto inputDto,
             BindingResult bindingResult
     ) {
-        SupplementDto dto;
-
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            dto = supplementService.createSupplement(inputDto);
-            URI uri = URI.create(
-                    ServletUriComponentsBuilder
-                            .fromCurrentRequest()
-                            .path("/" + dto.getId()).toUriString());
+            SupplementDto dto = supplementService.createSupplement(inputDto);
+
+            URI uri = buildUri(dto);
+
             return ResponseEntity.created(uri).body(dto);
         }
     }
