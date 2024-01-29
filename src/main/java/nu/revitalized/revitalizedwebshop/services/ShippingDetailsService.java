@@ -160,30 +160,13 @@ public class ShippingDetailsService {
             ShippingDetails shippingDetails = optionalShippingDetails.get();
 
             shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
+            shippingDetails.setName(buildFullName(inputDto));
             shippingDetails.setCountry(formatName(inputDto.getCountry()));
             shippingDetails.setCity(formatName(inputDto.getCity()));
             shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
             shippingDetails.setStreet(formatName(inputDto.getStreet()));
+            shippingDetails.setHouseNumber(buildHouseNumber(inputDto));
             shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
-
-            // Set name
-            if (inputDto.getMiddleName() != null) {
-                shippingDetails.setName(formatName(inputDto.getFirstName())
-                        + " " + inputDto.getMiddleName().toLowerCase()
-                        + " " + formatName(inputDto.getLastName()));
-            } else {
-                shippingDetails.setName(formatName(inputDto.getFirstName())
-                        + " " + formatName(inputDto.getLastName()));
-            }
-
-            // Set houseNumber
-            if (inputDto.getHouseNumberAddition() != null) {
-                String houseNumber = inputDto.getHouseNumber() +
-                        inputDto.getHouseNumberAddition().toUpperCase();
-                shippingDetails.setHouseNumber(houseNumber);
-            } else {
-                shippingDetails.setHouseNumber(String.valueOf(inputDto.getHouseNumber()));
-            }
 
             ShippingDetails updatedShippingDetails = shippingDetailsRepository.save(shippingDetails);
 
@@ -192,4 +175,6 @@ public class ShippingDetailsService {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
         }
     }
+
+
 }
