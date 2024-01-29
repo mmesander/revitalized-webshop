@@ -2,6 +2,7 @@ package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUri;
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
@@ -68,16 +68,13 @@ public class GarmentController {
             @RequestBody GarmentInputDto inputDto,
             BindingResult bindingResult
     ) {
-        GarmentDto dto;
-
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            dto = garmentService.createGarment(inputDto);
-            URI uri = URI.create(
-                    ServletUriComponentsBuilder
-                            .fromCurrentRequest()
-                            .path("/" + dto.getId()).toUriString());
+            GarmentDto dto = garmentService.createGarment(inputDto);
+
+            URI uri = buildUri(dto);
+
             return ResponseEntity.created(uri).body(dto);
         }
     }
@@ -90,15 +87,13 @@ public class GarmentController {
             @RequestBody GarmentInputDto inputDto,
             BindingResult bindingResult
     ) {
-        GarmentDto dto;
-
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            dto = garmentService.updateGarment(id, inputDto);
-        }
+            GarmentDto dto = garmentService.updateGarment(id, inputDto);
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @PatchMapping("/producten/kleding/{id}")
@@ -120,6 +115,4 @@ public class GarmentController {
 
         return ResponseEntity.noContent().build();
     }
-
-    // Relations Requests
 }
