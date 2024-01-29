@@ -96,4 +96,14 @@ public class ShippingDetailsController {
             return ResponseEntity.ok().body(dto);
         }
     }
+
+    @PatchMapping("/shipping-details/{id}")
+    public ResponseEntity<ShippingDetailsDto> patchShippingDetails(
+            @PathVariable("id") Long id,
+            @RequestBody ShippingDetailsInputDto inputDto
+    ) {
+        ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
+
+        return ResponseEntity.ok().body(dto);
+    }
 }
