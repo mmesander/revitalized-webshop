@@ -2,10 +2,11 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 
 import lombok.Getter;
 import lombok.Setter;
+import nu.revitalized.revitalizedwebshop.interfaces.Identifiable;
 
 @Getter
 @Setter
-public class GarmentDto {
+public class GarmentDto implements Identifiable {
     // Variables
     private Long id;
     private String name;
