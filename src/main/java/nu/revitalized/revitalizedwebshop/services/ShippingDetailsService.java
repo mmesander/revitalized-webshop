@@ -223,4 +223,15 @@ public class ShippingDetailsService {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
         }
     }
+
+    // CRUD Methods --> DELETE Methods
+    public void deleteShippingDetails(Long id) {
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+
+        if (optionalShippingDetails.isPresent()) {
+            shippingDetailsRepository.deleteById(id);
+        } else {
+            throw new RecordNotFoundException("No shipping details found with id: " + id);
+        }
+    }
 }
