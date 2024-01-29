@@ -14,7 +14,7 @@ public class ShippingDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String shippingDetailsName;
+    private String detailsName;
     private String name;
     private String country;
     private String city;

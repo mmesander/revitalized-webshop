@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class ShippingDetailsInputDto {
     @NotNull(message = "Address name is required")
-    private String shippingDetailsName;
+    private String detailsName;
     @NotNull(message = "First name is required")
     private String firstName;
     private String middleName;

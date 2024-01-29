@@ -6,7 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class ShippingDetailsSpecification {
     private ShippingDetailsSpecification() {}
 
-    // Request filter: Shipping Details shippingDetailsName
+    // Request filter: Shipping Details detailsName
     public static Specification<ShippingDetails> getShippingDetailsShippingDetailsNameLikeFilter(String shi)
 
     // Request filter: Shipping Details name

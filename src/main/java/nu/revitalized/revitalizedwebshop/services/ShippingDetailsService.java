@@ -27,7 +27,7 @@ public class ShippingDetailsService {
     public static ShippingDetails dtoToShippingDetails(ShippingDetailsInputDto inputDto) {
         ShippingDetails shippingDetails = new ShippingDetails();
 
-        shippingDetails.setShippingDetailsName(inputDto.getShippingDetailsName().toUpperCase());
+        shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
         shippingDetails.setCountry(formatName(inputDto.getCountry()));
         shippingDetails.setCity(formatName(inputDto.getCity()));
         shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
