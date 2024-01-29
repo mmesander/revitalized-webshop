@@ -4,7 +4,8 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.b
+import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
 
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 
@@ -36,31 +37,13 @@ public class ShippingDetailsService {
         ShippingDetails shippingDetails = new ShippingDetails();
 
         shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
-        shippingDetails.setName();
+        shippingDetails.setName(buildFullName(inputDto));
         shippingDetails.setCountry(formatName(inputDto.getCountry()));
         shippingDetails.setCity(formatName(inputDto.getCity()));
         shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
         shippingDetails.setStreet(formatName(inputDto.getStreet()));
+        shippingDetails.setHouseNumber(buildHouseNumber(inputDto));
         shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
-
-        // Set name
-        if (inputDto.getMiddleName() != null) {
-            shippingDetails.setName(formatName(inputDto.getFirstName())
-                    + " " + inputDto.getMiddleName().toLowerCase()
-                    + " " + formatName(inputDto.getLastName()));
-        } else {
-            shippingDetails.setName(formatName(inputDto.getFirstName())
-                    + " " + formatName(inputDto.getLastName()));
-        }
-
-        // Set houseNumber
-        if (inputDto.getHouseNumberAddition() != null) {
-            String houseNumber = inputDto.getHouseNumber() +
-                    inputDto.getHouseNumberAddition().toUpperCase();
-            shippingDetails.setHouseNumber(houseNumber);
-        } else {
-            shippingDetails.setHouseNumber(String.valueOf(inputDto.getHouseNumber()));
-        }
 
         return shippingDetails;
     }
