@@ -4,6 +4,8 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.b
+
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
@@ -34,6 +36,7 @@ public class ShippingDetailsService {
         ShippingDetails shippingDetails = new ShippingDetails();
 
         shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
+        shippingDetails.setName();
         shippingDetails.setCountry(formatName(inputDto.getCountry()));
         shippingDetails.setCity(formatName(inputDto.getCity()));
         shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
@@ -205,9 +208,5 @@ public class ShippingDetailsService {
         } else {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
         }
-    }
-
-    public ShippingDetailsDto patchShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
     }
 }

@@ -6,7 +6,7 @@ import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import org.apache.commons.lang3.StringUtils;
 
 public class BuildFullName {
-    public String buildFullName(ShippingDetailsInputDto inputDto) {
+    public static String buildFullName(ShippingDetailsInputDto inputDto) {
         if (StringUtils.isNotBlank(inputDto.getMiddleName())) {
             return formatName(inputDto.getFirstName() + " " +
                     inputDto.getMiddleName().toLowerCase() + " " +
