@@ -106,4 +106,14 @@ public class ShippingDetailsController {
 
         return ResponseEntity.ok().body(dto);
     }
+
+    // CRUD Requests -- DELETE Requests
+    @DeleteMapping("/shipping-details/{id}")
+    public ResponseEntity<Object> deleteShippingDetails(
+            @PathVariable("id") Long id
+    ) {
+        shippingDetailsService.deleteShippingDetailsById(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

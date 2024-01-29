@@ -221,7 +221,7 @@ public class ShippingDetailsService {
     }
 
     // CRUD Methods --> DELETE Methods
-    public void deleteShippingDetails(Long id) {
+    public void deleteShippingDetailsById(Long id) {
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
 
         if (optionalShippingDetails.isPresent()) {
