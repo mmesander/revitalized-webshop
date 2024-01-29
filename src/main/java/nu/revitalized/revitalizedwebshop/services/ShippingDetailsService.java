@@ -176,5 +176,51 @@ public class ShippingDetailsService {
         }
     }
 
+    public ShippingDetailsDto patchShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
 
+        if (optionalShippingDetails.isPresent()) {
+            ShippingDetails shippingDetails = optionalShippingDetails.get();
+
+            if (inputDto.getDetailsName() != null) {
+                shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
+            }
+
+            if ((inputDto.getFirstName() != null && inputDto.getMiddleName() != null && inputDto.getLastName() != null)
+                    || (inputDto.getFirstName() != null && inputDto.getLastName() != null)) {
+                shippingDetails.setDetailsName(buildFullName(inputDto));
+            }
+
+            if (inputDto.getCountry() != null) {
+                shippingDetails.setCountry(formatName(inputDto.getCountry()));
+            }
+
+            if (inputDto.getCity() != null) {
+                shippingDetails.setCity(formatName(inputDto.getCity()));
+            }
+
+            if (inputDto.getZipCode() != null) {
+                shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
+            }
+
+            if (inputDto.getStreet() != null) {
+                shippingDetails.setStreet(formatName(inputDto.getStreet()));
+            }
+
+            if ((inputDto.getHouseNumber() == 0 && inputDto.getHouseNumberAddition() != null) ||
+            inputDto.getHouseNumber() == 0) {
+                shippingDetails.setHouseNumber(buildHouseNumber(inputDto));
+            }
+
+            if (inputDto.getEmail() != null) {
+                shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
+            }
+
+            ShippingDetails patchedShippingDetails = shippingDetailsRepository.save(shippingDetails);
+
+            return shippingDetailsToDto(patchedShippingDetails);
+        } else {
+            throw new RecordNotFoundException("No shipping details found with id: " + id);
+        }
+    }
 }
