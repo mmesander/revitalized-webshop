@@ -1,8 +1,8 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.nameFormatter.formatName;
-import static nu.revitalized.revitalizedwebshop.helpers.PropertiesCopier.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
