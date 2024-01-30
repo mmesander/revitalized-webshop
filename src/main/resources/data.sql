@@ -1,6 +1,3 @@
--- Products
-ALTER SEQUENCE products_seq RESTART 100462 INCREMENT BY 2137;
-
 -- Supplements
 INSERT INTO supplements (id, name, brand, description, price, average_rating, contains)
 VALUES
@@ -32,7 +29,6 @@ VALUES
     (100215, 'Shirt xl groen', 'Energize', 'Legendarisch shirt', 29.99, null, 'XL', 'groen');
 
 -- Allergens
-ALTER SEQUENCE allergens_seq RESTART 1001 INCREMENT BY 1;
 INSERT INTO allergens (id, name)
 VALUES
     (nextval('allergens_seq'), 'gluten (tarwe, rogge, gerst, haver en spelt)'),
@@ -53,14 +49,13 @@ VALUES
 -- Supplement and Allergens relations
 INSERT INTO supplement_allergens (supplement_id, allergen_id)
 VALUES
-    (111147, 1006),
-    (111147, 1007),
-    (113284, 1005),
-    (113284, 1006),
-    (113284, 1007);
+    (1011147, 1006),
+    (1011147, 1007),
+    (1013284, 1005),
+    (1013284, 1006),
+    (1013284, 1007);
 
 -- Shipping Details
-ALTER SEQUENCE shipping_details_seq RESTART WITH 1 INCREMENT BY 1;
 INSERT INTO shipping_details (id, details_name, name, country, city, zip_code, street, house_number, email)
 VALUES
     (nextval('shipping_details_seq'), 'Thuisadres', 'Mark Mesander', 'Nederland', 'Haarlem', '1234AB', 'Test de Testlaan', 28, 'mark@test.nl'),

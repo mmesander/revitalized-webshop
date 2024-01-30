@@ -16,8 +16,9 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Product {
     // Variables
+    @SequenceGenerator(name = "products_seq", allocationSize = 2137, initialValue = 1000462)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_seq")
     private Long id;
 
     @Column(nullable = false, unique = true)

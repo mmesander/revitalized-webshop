@@ -11,8 +11,9 @@ import lombok.Setter;
 @Table(name = "shipping_details")
 public class ShippingDetails {
     // Variables
+    @SequenceGenerator(name = "shipping_details_seq", allocationSize = 1, initialValue = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shipping_details_seq")
     private Long id;
     private String detailsName;
     private String name;

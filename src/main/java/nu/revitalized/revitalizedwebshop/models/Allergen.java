@@ -13,8 +13,9 @@ import java.util.Set;
 @Table(name = "allergens")
 public class Allergen {
     // Variables
+    @SequenceGenerator(name = "allergens_seq", allocationSize = 1, initialValue = 1001)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "allergens_seq")
     private Long id;
     @Column(unique = true)
     private String name;
