@@ -110,27 +110,19 @@ public class AllergenService {
 
     // Create Methods
     public AllergenDto createAllergen(AllergenInputDto inputDto) {
-        Allergen newAllergen = dtoToAllergen(inputDto);
+        Allergen allergen = dtoToAllergen(inputDto);
+        List<AllergenDto> dtos = getAllAllergens();
         boolean isUnique = true;
 
-        List<Allergen> savedAllergens = allergenRepository.findAll();
-        List<AllergenDto> savedAllergenDtos = new ArrayList<>();
-
-        for (Allergen allergen : savedAllergens) {
-            AllergenDto allergenDto = allergenToDto(allergen);
-            savedAllergenDtos.add(allergenDto);
-        }
-
-        for (AllergenDto allergenDto : savedAllergenDtos) {
+        for (AllergenDto allergenDto : dtos) {
             if (allergenDto.getName().equalsIgnoreCase(inputDto.getName())) {
                 isUnique = false;
-                break;
             }
         }
 
         if (isUnique) {
-            allergenRepository.save(newAllergen);
-            return allergenToDto(newAllergen);
+            allergenRepository.save(allergen);
+            return allergenToDto(allergen);
         } else {
             throw new InvalidInputException("Allergen with name: " + inputDto.getName() + " already exists.");
         }
