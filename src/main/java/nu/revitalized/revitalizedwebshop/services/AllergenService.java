@@ -1,6 +1,8 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToShortDto;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
@@ -8,16 +10,10 @@ import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
-
-import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import org.springframework.stereotype.Service;
-
-import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToShortDto;
-
 
 import java.util.*;
 
@@ -64,7 +60,7 @@ public class AllergenService {
     }
 
 
-    // Get Methods
+    // CRUD Methods --> GET Methods
     public List<AllergenDto> getAllAllergens() {
         List<Allergen> allergens = allergenRepository.findAll();
         List<AllergenDto> allergenDtos = new ArrayList<>();
@@ -107,8 +103,7 @@ public class AllergenService {
         }
     }
 
-
-    // Create Methods
+    // CRUD Methods --> POST Methods
     public AllergenDto createAllergen(AllergenInputDto inputDto) {
         Allergen allergen = dtoToAllergen(inputDto);
         boolean exists = allergenRepository.existsByNameIgnoreCase(inputDto.getName());
@@ -121,8 +116,7 @@ public class AllergenService {
         }
     }
 
-
-    // Update Methods
+    // CRUD Methods --> PUT/PATCH Methods
     public AllergenDto updateAllergen(Long id, AllergenInputDto inputDto) {
         Optional<Allergen> allergen = allergenRepository.findById(id);
 
@@ -139,8 +133,7 @@ public class AllergenService {
         }
     }
 
-
-    // Delete methods
+    // CRUD Methods --> DELETE Methods
     public void deleteAllergen(Long id) {
         Optional<Allergen> allergen = allergenRepository.findById(id);
 
