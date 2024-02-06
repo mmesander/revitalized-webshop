@@ -1,5 +1,5 @@
 -- Supplements
-INSERT INTO supplements (id, name, brand, description, price, average_rating, contains)
+INSERT INTO supplements (id, name, brand, description, price, stock, average_rating, contains)
 VALUES
     (nextval('products_seq'), 'B12 Combi 6000', 'Vitakruid', 'De actieve vormen', 34.90, 15, null, '60 smelttabletten'),
     (nextval('products_seq'), 'Magnesium Malaat', 'Vitakruid', 'Voor energie', 24.90, 6, null, '120 gram'),
