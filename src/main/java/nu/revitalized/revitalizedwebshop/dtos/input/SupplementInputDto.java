@@ -20,7 +20,6 @@ public class SupplementInputDto {
     @NotNull
     @Positive(message = "Price must be higher than zero")
     private Double price;
-    private Double averageRating;
     @NotNull(message = "Contains is required")
     private String contains;
 }
