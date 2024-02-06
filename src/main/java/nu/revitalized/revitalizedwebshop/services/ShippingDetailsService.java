@@ -136,45 +136,6 @@ public class ShippingDetailsService {
         }
     }
 
-
-    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto) {
-        ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
-        List<ShippingDetailsDto> dtos = getAllShippingDetails();
-        boolean isUnique = true;
-
-        for (ShippingDetailsDto shippingDetailsDto : dtos) {
-            if (inputDto.getHouseNumberAddition() != null) {
-                if (shippingDetailsDto.getStreet().equalsIgnoreCase(inputDto.getStreet())
-                        && shippingDetailsDto.getHouseNumber().equalsIgnoreCase(inputDto.getHouseNumber()
-                        + inputDto.getHouseNumberAddition())) {
-                    isUnique = false;
-                    break;
-                }
-            } else {
-                if (shippingDetailsDto.getStreet().equalsIgnoreCase(inputDto.getStreet())
-                        && shippingDetailsDto
-                        .getHouseNumber()
-                        .equalsIgnoreCase(String.valueOf(inputDto.getHouseNumber()))) {
-                    isUnique = false;
-                    break;
-                }
-            }
-        }
-
-        if (isUnique) {
-            shippingDetailsRepository.save(shippingDetails);
-            return shippingDetailsToDto(shippingDetails);
-        } else {
-            if (inputDto.getHouseNumberAddition() != null) {
-                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
-                        + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition() + " already exists.");
-            } else {
-                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
-                        + inputDto.getHouseNumber() + " already exists.");
-            }
-        }
-    }
-
     // CRUD Methods --> PUT/PATCH Methods
     public ShippingDetailsDto updateShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
