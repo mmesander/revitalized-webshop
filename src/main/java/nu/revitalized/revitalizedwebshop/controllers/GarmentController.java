@@ -47,6 +47,9 @@ public class GarmentController {
             @RequestParam(required = false) Double price,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Integer stock,
+            @RequestParam(required = false) Integer minStock,
+            @RequestParam(required = false) Integer maxStock,
             @RequestParam(required = false) Double averageRating,
             @RequestParam(required = false) Double minRating,
             @RequestParam(required = false) Double maxRating,
@@ -54,8 +57,8 @@ public class GarmentController {
             @RequestParam(required = false) String color
     ) {
         List<GarmentDto> dtos = garmentService.getGarmentsByParam(
-                name, brand, price, minPrice, maxPrice, averageRating, minRating,
-                maxRating, size, color
+                name, brand, price, minPrice, maxPrice, stock, minStock, maxStock,
+                averageRating, minRating, maxRating, size, color
         );
 
         return ResponseEntity.ok().body(dtos);
