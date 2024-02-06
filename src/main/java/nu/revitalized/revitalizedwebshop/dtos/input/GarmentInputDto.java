@@ -21,7 +21,6 @@ public class GarmentInputDto {
     @NotNull
     @Positive(message = "Price must be higher than zero")
     private Double price;
-    private Double averageRating;
     @NotNull(message = "Size is required")
     private String size;
     @NotNull(message = "Color is required")
