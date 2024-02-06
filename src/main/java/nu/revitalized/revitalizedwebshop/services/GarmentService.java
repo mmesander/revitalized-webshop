@@ -76,6 +76,9 @@ public class GarmentService {
             Double price,
             Double minPrice,
             Double maxPrice,
+            Integer stock,
+            Integer minStock,
+            Integer maxStock,
             Double averageRating,
             Double minRating,
             Double maxRating,
@@ -88,6 +91,9 @@ public class GarmentService {
                 .and(price == null ? null : getGarmentPriceLikeFilter(price))
                 .and(minPrice == null ? null : getGarmentPriceMoreThanFilter(minPrice))
                 .and(maxPrice == null ? null : getGarmentPriceLessThanFilter(maxPrice))
+                .and(stock == null ? null : getGarmentStockLikeFilter(stock))
+                .and(minStock == null ? null : getGarmentStockMoreThanFilter(minStock))
+                .and(maxStock == null ? null : getGarmentStockLessThanFilter(maxStock))
                 .and(averageRating == null ? null : getGarmentAverageRatingLikeFilter(averageRating))
                 .and(minRating == null ? null : getGarmentAverageRatingMoreThanFilter(maxRating))
                 .and(maxRating == null ? null :getGarmentAverageRatingLessThanFilter(maxRating))
