@@ -140,6 +140,7 @@ public class SupplementService {
             throw new InvalidInputException("Supplement with name: " + inputDto.getName() + " already exists.");
         } else {
             supplementRepository.save(supplement);
+
             return supplementToDto(supplement);
         }
     }

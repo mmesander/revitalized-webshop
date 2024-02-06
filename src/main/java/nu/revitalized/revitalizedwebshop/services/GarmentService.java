@@ -118,6 +118,7 @@ public class GarmentService {
             throw new InvalidInputException("Garment with name: " + inputDto.getName() + " already exists");
         } else {
             garmentRepository.save(garment);
+
             return garmentToDto(garment);
         }
     }
@@ -187,7 +188,4 @@ public class GarmentService {
             throw new RecordNotFoundException("No garment found with id: " + id);
         }
     }
-
-
-    // Relations Methods
 }
