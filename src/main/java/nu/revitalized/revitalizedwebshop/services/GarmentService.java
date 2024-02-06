@@ -112,21 +112,13 @@ public class GarmentService {
     // CRUD Methods --> POST Methods
     public GarmentDto createGarment(GarmentInputDto inputDto) {
         Garment garment = dtoToGarment(inputDto);
-        List<GarmentDto> dtos = getAllGarments();
-        boolean isUnique = true;
+        boolean exists = garmentRepository.existsByNameIgnoreCase(inputDto.getName());
 
-        for (GarmentDto garmentDto : dtos) {
-            if (garmentDto.getName().equalsIgnoreCase(inputDto.getName())) {
-                isUnique = false;
-                break;
-            }
-        }
-
-        if (isUnique) {
+        if (exists) {
+            throw new InvalidInputException("Garment with name: " + inputDto.getName() + " already exists");
+        } else {
             garmentRepository.save(garment);
             return garmentToDto(garment);
-        } else {
-            throw new InvalidInputException("Garment with name: " + inputDto.getName() + " already exists");
         }
     }
 
