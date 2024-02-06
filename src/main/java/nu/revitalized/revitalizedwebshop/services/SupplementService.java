@@ -134,21 +134,13 @@ public class SupplementService {
     // CRUD Methods --> POST Methods
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
         Supplement supplement = dtoToSupplement(inputDto);
-        List<SupplementDto> dtos = getAllSupplements();
-        boolean isUnique = true;
+        boolean exists = supplementRepository.existsByNameIgnoreCase(inputDto.getName());
 
-        for (SupplementDto supplementDto : dtos) {
-            if (supplementDto.getName().equalsIgnoreCase(inputDto.getName())) {
-                isUnique = false;
-                break;
-            }
-        }
-
-        if (isUnique) {
+        if (exists) {
+            throw new InvalidInputException("Supplement with name: " + inputDto.getName() + " already exists.");
+        } else {
             supplementRepository.save(supplement);
             return supplementToDto(supplement);
-        } else {
-            throw new InvalidInputException("Supplement with name: " + inputDto.getName() + " already exists.");
         }
     }
 
