@@ -112,21 +112,14 @@ public class GarmentService {
     // CRUD Methods --> POST Methods
     public GarmentDto createGarment(GarmentInputDto inputDto) {
         Garment garment = dtoToGarment(inputDto);
-        List<GarmentDto> dtos = getAllGarments();
-        boolean isUnique = true;
+        boolean exists = garmentRepository.existsByNameIgnoreCase(inputDto.getName());
 
-        for (GarmentDto garmentDto : dtos) {
-            if (garmentDto.getName().equalsIgnoreCase(inputDto.getName())) {
-                isUnique = false;
-                break;
-            }
-        }
-
-        if (isUnique) {
-            garmentRepository.save(garment);
-            return garmentToDto(garment);
-        } else {
+        if (exists) {
             throw new InvalidInputException("Garment with name: " + inputDto.getName() + " already exists");
+        } else {
+            garmentRepository.save(garment);
+
+            return garmentToDto(garment);
         }
     }
 
@@ -195,7 +188,4 @@ public class GarmentService {
             throw new RecordNotFoundException("No garment found with id: " + id);
         }
     }
-
-
-    // Relations Methods
 }

@@ -58,5 +58,5 @@ VALUES
 -- Shipping Details
 INSERT INTO shipping_details (id, details_name, name, country, city, zip_code, street, house_number, email)
 VALUES
-    (nextval('shipping_details_seq'), 'Thuisadres', 'Mark Mesander', 'Nederland', 'Haarlem', '1234AB', 'Test de Testlaan', 28, 'mark@test.nl'),
-    (nextval('shipping_details_seq'), 'Werkadres', 'Mark Mesander', 'Nederland', 'Noordwijk', '3456CD', 'Test de Teststraat', 42, 'mark@test.nl');
+    (nextval('shipping_details_seq'), 'THUISADRES', 'Mark Mesander', 'Nederland', 'Haarlem', '1234AB', 'Test de Testlaan', 28, 'mark@test.nl'),
+    (nextval('shipping_details_seq'), 'WERKADRES', 'Mark Mesander', 'Nederland', 'Noordwijk', '3456CD', 'Test de Teststraat', 42, 'mark@test.nl');

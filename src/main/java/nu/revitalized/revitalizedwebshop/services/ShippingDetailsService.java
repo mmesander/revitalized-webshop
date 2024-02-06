@@ -117,32 +117,12 @@ public class ShippingDetailsService {
     // CRUD Methods --> POST Methods
     public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto) {
         ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
-        List<ShippingDetailsDto> dtos = getAllShippingDetails();
-        boolean isUnique = true;
 
-        for (ShippingDetailsDto shippingDetailsDto : dtos) {
-            if (inputDto.getHouseNumberAddition() != null) {
-                if (shippingDetailsDto.getStreet().equalsIgnoreCase(inputDto.getStreet())
-                        && shippingDetailsDto.getHouseNumber().equalsIgnoreCase(inputDto.getHouseNumber()
-                        + inputDto.getHouseNumberAddition())) {
-                    isUnique = false;
-                    break;
-                }
-            } else {
-                if (shippingDetailsDto.getStreet().equalsIgnoreCase(inputDto.getStreet())
-                        && shippingDetailsDto
-                        .getHouseNumber()
-                        .equalsIgnoreCase(String.valueOf(inputDto.getHouseNumber()))) {
-                    isUnique = false;
-                    break;
-                }
-            }
-        }
+        boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumber(
+                inputDto.getStreet(), buildHouseNumber(inputDto)
+        );
 
-        if (isUnique) {
-            shippingDetailsRepository.save(shippingDetails);
-            return shippingDetailsToDto(shippingDetails);
-        } else {
+        if (exists) {
             if (inputDto.getHouseNumberAddition() != null) {
                 throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
                         + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition() + " already exists.");
@@ -150,6 +130,10 @@ public class ShippingDetailsService {
                 throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
                         + inputDto.getHouseNumber() + " already exists.");
             }
+        } else {
+            shippingDetailsRepository.save(shippingDetails);
+
+            return shippingDetailsToDto(shippingDetails);
         }
     }
 
