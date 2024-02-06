@@ -168,6 +168,10 @@ public class GarmentService {
                 garment.setPrice(inputDto.getPrice());
             }
 
+            if (inputDto.getStock() != null) {
+                garment.setStock(inputDto.getStock());
+            }
+
             if (inputDto.getSize() != null) {
                 garment.setSize(inputDto.getSize());
             }
