@@ -26,6 +26,7 @@ public abstract class Product {
     private String brand;
     private String description;
     private Double price;
+    private Integer stock;
     @Column(name = "average_rating")
     private Double averageRating;
 }
