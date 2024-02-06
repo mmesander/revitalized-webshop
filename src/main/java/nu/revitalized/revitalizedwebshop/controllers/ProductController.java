@@ -37,6 +37,20 @@ public class ProductController {
         return ResponseEntity.ok().body(dto);
     }
 
+    @GetMapping("/producten/niet-op-voorraad")
+    public ResponseEntity<List<ProductDto>> getOutOfStockProducts() {
+        List<ProductDto> dtos = productService.getOutOfStockProducts();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping("/producten/op-voorraad")
+    public ResponseEntity<List<ProductDto>> getInStockProducts() {
+        List<ProductDto> dtos = productService.getInStockProducts();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
     // CRUD Requests -- DELETE Requests
     @DeleteMapping("/producten/{id}")
     public ResponseEntity<Object> deleteProduct(

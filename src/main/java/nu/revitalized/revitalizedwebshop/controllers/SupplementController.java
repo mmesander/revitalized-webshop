@@ -63,6 +63,20 @@ public class SupplementController {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @GetMapping("/producten/suppplement/niet-op-voorraad")
+    public ResponseEntity<List<SupplementDto>> getOutOfStockSupplements() {
+        List<SupplementDto> dtos = supplementService.getOutOfStockSupplements();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping("/producten/suppplement/op-voorraad")
+    public ResponseEntity<List<SupplementDto>> getInStockSupplements() {
+        List<SupplementDto> dtos = supplementService.getInStockSupplements();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
     // CRUD Requests -- POST Requests
     @PostMapping("/producten/supplementen")
     public ResponseEntity<SupplementDto> createSupplement(

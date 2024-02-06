@@ -64,6 +64,20 @@ public class GarmentController {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @GetMapping("/producten/kleding/niet-op-voorraad")
+    public ResponseEntity<List<GarmentDto>> getOutOfStockGarments() {
+        List<GarmentDto> dtos = garmentService.getOutOfStockGarments();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping("/producten/kleding/op-voorraad")
+    public ResponseEntity<List<GarmentDto>> getInStockGarments() {
+        List<GarmentDto> dtos = garmentService.getInOfStockGarments();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
     // CRUD Requests -- POST Requests
     @PostMapping("/producten/kleding")
     public ResponseEntity<GarmentDto> createGarment(
