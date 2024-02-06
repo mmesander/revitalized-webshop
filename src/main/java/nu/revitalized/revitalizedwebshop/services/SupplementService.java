@@ -137,6 +137,41 @@ public class SupplementService {
         }
     }
 
+    public List<SupplementDto> getOutOfStockSupplements() {
+        List<Supplement> supplements = supplementRepository.findAll();
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            if (supplement.getStock() == 0) {
+                SupplementDto supplementDto = supplementToDto(supplement);
+                supplementDtos.add(supplementDto);
+            }
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements out of stock found");
+        } else {
+            return supplementDtos;
+        }
+    }
+    public List<SupplementDto> getInStockSupplements() {
+        List<Supplement> supplements = supplementRepository.findAll();
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            if (supplement.getStock() > 0) {
+                SupplementDto supplementDto = supplementToDto(supplement);
+                supplementDtos.add(supplementDto);
+            }
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements in stock found");
+        } else {
+            return supplementDtos;
+        }
+    }
+
     // CRUD Methods --> POST Methods
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
         Supplement supplement = dtoToSupplement(inputDto);
