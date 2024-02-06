@@ -100,6 +100,9 @@ public class SupplementService {
             Double price,
             Double minPrice,
             Double maxPrice,
+            Integer stock,
+            Integer minStock,
+            Integer maxStock,
             Double averageRating,
             Double minRating,
             Double maxRating,
@@ -111,6 +114,9 @@ public class SupplementService {
                 .and(price == null ? null : getSupplementPriceLikeFilter(price))
                 .and(minPrice == null ? null : getSupplementPriceMoreThanFilter(minPrice))
                 .and(maxPrice == null ? null : getSupplementPriceLessThanFilter(maxPrice))
+                .and(stock == null ? null : getSupplementStockLikeFilter(stock))
+                .and(minStock == null ? null : getSupplementStockMoreThanFilter(minStock))
+                .and(maxStock == null ? null : getSupplementStockLessThanFilter(maxStock))
                 .and(averageRating == null ? null : getSupplementAverageRatingLikeFilter(averageRating))
                 .and(minRating == null ? null : getSupplementAverageRatingMoreThanFilter(maxRating))
                 .and(maxRating == null ? null : getSupplementAverageRatingLessThanFilter(maxRating))
@@ -126,6 +132,41 @@ public class SupplementService {
 
         if (supplementDtos.isEmpty()) {
             throw new RecordNotFoundException("No supplements found with the specified filters");
+        } else {
+            return supplementDtos;
+        }
+    }
+
+    public List<SupplementDto> getOutOfStockSupplements() {
+        List<Supplement> supplements = supplementRepository.findAll();
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            if (supplement.getStock() == 0) {
+                SupplementDto supplementDto = supplementToDto(supplement);
+                supplementDtos.add(supplementDto);
+            }
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements out of stock found");
+        } else {
+            return supplementDtos;
+        }
+    }
+    public List<SupplementDto> getInStockSupplements() {
+        List<Supplement> supplements = supplementRepository.findAll();
+        List<SupplementDto> supplementDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            if (supplement.getStock() > 0) {
+                SupplementDto supplementDto = supplementToDto(supplement);
+                supplementDtos.add(supplementDto);
+            }
+        }
+
+        if (supplementDtos.isEmpty()) {
+            throw new RecordNotFoundException("No supplements in stock found");
         } else {
             return supplementDtos;
         }
@@ -179,6 +220,9 @@ public class SupplementService {
             }
             if (inputDto.getPrice() != null) {
                 supplement.setPrice(inputDto.getPrice());
+            }
+            if (inputDto.getStock() != null) {
+                supplement.setStock(inputDto.getStock());
             }
             if (inputDto.getContains() != null) {
                 supplement.setContains(inputDto.getContains());

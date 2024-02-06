@@ -1,9 +1,11 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
+
 import nu.revitalized.revitalizedwebshop.dtos.output.ProductDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
@@ -81,6 +83,58 @@ public class ProductService {
             return garmentToDto(garment.get());
         } else {
             throw new RecordNotFoundException("No products found with id: " + id);
+        }
+    }
+
+    public List<ProductDto> getOutOfStockProducts() {
+        List<Supplement> supplements = supplementRepository.findAll();
+        List<Garment> garments = garmentRepository.findAll();
+        List<ProductDto> productDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            if (supplement.getStock() == 0) {
+                ProductDto productDto = supplementToProductDto(supplement);
+                productDtos.add(productDto);
+            }
+        }
+
+        for (Garment garment : garments) {
+            if (garment.getStock() == 0) {
+                ProductDto productDto = garmentToProductDto(garment);
+                productDtos.add(productDto);
+            }
+        }
+
+        if (productDtos.isEmpty()) {
+            throw new RecordNotFoundException("No products out of stock found");
+        } else {
+            return productDtos;
+        }
+    }
+
+    public List<ProductDto> getInStockProducts() {
+        List<Supplement> supplements = supplementRepository.findAll();
+        List<Garment> garments = garmentRepository.findAll();
+        List<ProductDto> productDtos = new ArrayList<>();
+
+        for (Supplement supplement : supplements) {
+            if (supplement.getStock() > 0) {
+                ProductDto productDto = supplementToProductDto(supplement);
+                productDtos.add(productDto);
+            }
+        }
+
+        for (Garment garment : garments) {
+            if (garment.getStock() > 0) {
+                ProductDto productDto = garmentToProductDto(garment);
+                productDtos.add(productDto);
+            }
+        }
+
+        if (productDtos.isEmpty()) {
+            throw new RecordNotFoundException("No products in stock found");
+        } else {
+            return productDtos;
         }
     }
 

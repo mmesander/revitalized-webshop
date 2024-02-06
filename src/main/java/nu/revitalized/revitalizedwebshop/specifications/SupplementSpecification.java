@@ -39,6 +39,24 @@ public class SupplementSpecification {
                 .lessThanOrEqualTo(root.get("price"), maxPriceLike)));
     }
 
+    // Request Filter: Supplement stock
+    public static Specification<Supplement> getSupplementStockLikeFilter(Integer stockLike) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder
+                .equal(root.get("stock"), stockLike));
+    }
+
+    // Request Filter: Supplement minStock
+    public static Specification<Supplement> getSupplementStockMoreThanFilter(Integer minStockLike) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder
+                .greaterThanOrEqualTo(root.get("stock"), minStockLike));
+    }
+
+    // Request Filter: Supplement maxStock
+    public static Specification<Supplement> getSupplementStockLessThanFilter(Integer maxStockLike) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder
+                .lessThanOrEqualTo(root.get("stock"), maxStockLike));
+    }
+
     // Request Filter: Supplement averageRating
     public static Specification<Supplement> getSupplementAverageRatingLikeFilter(Double averageRatingLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder

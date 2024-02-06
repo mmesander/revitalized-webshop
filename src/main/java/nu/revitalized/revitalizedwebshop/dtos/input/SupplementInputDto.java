@@ -17,10 +17,12 @@ public class SupplementInputDto {
     @NotNull
     @Size(min = 10, max = 200, message = "Description must be between 2 and 200 characters")
     private String description;
-    @NotNull
+    @NotNull(message = "Price is required")
     @Positive(message = "Price must be higher than zero")
     private Double price;
-    private Double averageRating;
+    @NotNull(message = "Stock is required")
+    @Positive(message = "Stock can't be negative")
+    private Integer stock;
     @NotNull(message = "Contains is required")
     private String contains;
 }

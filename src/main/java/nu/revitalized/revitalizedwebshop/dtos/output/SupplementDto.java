@@ -16,6 +16,7 @@ public class SupplementDto implements Identifiable {
     private String brand;
     private String description;
     private Double price;
+    private Integer stock;
     private Double averageRating;
     private String contains;
 

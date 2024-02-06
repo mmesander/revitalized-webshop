@@ -76,6 +76,9 @@ public class GarmentService {
             Double price,
             Double minPrice,
             Double maxPrice,
+            Integer stock,
+            Integer minStock,
+            Integer maxStock,
             Double averageRating,
             Double minRating,
             Double maxRating,
@@ -88,6 +91,9 @@ public class GarmentService {
                 .and(price == null ? null : getGarmentPriceLikeFilter(price))
                 .and(minPrice == null ? null : getGarmentPriceMoreThanFilter(minPrice))
                 .and(maxPrice == null ? null : getGarmentPriceLessThanFilter(maxPrice))
+                .and(stock == null ? null : getGarmentStockLikeFilter(stock))
+                .and(minStock == null ? null : getGarmentStockMoreThanFilter(minStock))
+                .and(maxStock == null ? null : getGarmentStockLessThanFilter(maxStock))
                 .and(averageRating == null ? null : getGarmentAverageRatingLikeFilter(averageRating))
                 .and(minRating == null ? null : getGarmentAverageRatingMoreThanFilter(maxRating))
                 .and(maxRating == null ? null :getGarmentAverageRatingLessThanFilter(maxRating))
@@ -104,6 +110,42 @@ public class GarmentService {
 
         if (garmentDtos.isEmpty()) {
             throw new RecordNotFoundException("No garments found with the specified filters");
+        } else {
+            return garmentDtos;
+        }
+    }
+
+    public List<GarmentDto> getOutOfStockGarments() {
+        List<Garment> garments = garmentRepository.findAll();
+        List<GarmentDto> garmentDtos = new ArrayList<>();
+
+        for (Garment garment : garments) {
+            if (garment.getStock() == 0) {
+                GarmentDto garmentDto = garmentToDto(garment);
+                garmentDtos.add(garmentDto);
+            }
+        }
+
+        if (garmentDtos.isEmpty()) {
+            throw new RecordNotFoundException("No garments out of stock found");
+        } else {
+            return garmentDtos;
+        }
+    }
+
+    public List<GarmentDto> getInOfStockGarments() {
+        List<Garment> garments = garmentRepository.findAll();
+        List<GarmentDto> garmentDtos = new ArrayList<>();
+
+        for (Garment garment : garments) {
+            if (garment.getStock() > 0) {
+                GarmentDto garmentDto = garmentToDto(garment);
+                garmentDtos.add(garmentDto);
+            }
+        }
+
+        if (garmentDtos.isEmpty()) {
+            throw new RecordNotFoundException("No garments out of stock found");
         } else {
             return garmentDtos;
         }
@@ -160,6 +202,10 @@ public class GarmentService {
 
             if (inputDto.getPrice() != null) {
                 garment.setPrice(inputDto.getPrice());
+            }
+
+            if (inputDto.getStock() != null) {
+                garment.setStock(inputDto.getStock());
             }
 
             if (inputDto.getSize() != null) {

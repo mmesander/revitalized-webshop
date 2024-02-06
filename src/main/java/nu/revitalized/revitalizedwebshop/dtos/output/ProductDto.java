@@ -13,5 +13,6 @@ public class ProductDto {
     private String brand;
     private String description;
     private Double price;
+    private Integer stock;
     private Double averageRating;
 }
