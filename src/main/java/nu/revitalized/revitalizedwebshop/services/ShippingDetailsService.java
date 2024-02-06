@@ -117,6 +117,28 @@ public class ShippingDetailsService {
     // CRUD Methods --> POST Methods
     public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto) {
         ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
+
+        boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumber(
+                inputDto.getStreet(), buildHouseNumber(inputDto)
+        );
+
+        if (exists) {
+            if (inputDto.getHouseNumberAddition() != null) {
+                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
+                        + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition() + " already exists.");
+            } else {
+                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
+                        + inputDto.getHouseNumber() + " already exists.");
+            }
+        } else {
+            shippingDetailsRepository.save(shippingDetails);
+            return shippingDetailsToDto(shippingDetails);
+        }
+    }
+
+
+    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto) {
+        ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
         List<ShippingDetailsDto> dtos = getAllShippingDetails();
         boolean isUnique = true;
 
