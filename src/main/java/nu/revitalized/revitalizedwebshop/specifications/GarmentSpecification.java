@@ -48,13 +48,13 @@ public class GarmentSpecification {
     // Request Filter: Garment minStock
     public static Specification<Garment> getGarmentStockMoreThanFilter(Integer minStockLike) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .greaterThanOrEqualTo(root.get("minStock"), minStockLike));
+                .greaterThanOrEqualTo(root.get("stock"), minStockLike));
     }
 
     // Request Filter: Garment maxStock
     public static Specification<Garment> getGarmentStockLessThanFilter(Integer maxStockLike) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .lessThanOrEqualTo(root.get("maxStock"), maxStockLike));
+                .lessThanOrEqualTo(root.get("stock"), maxStockLike));
     }
 
     // Request Filter: Garment averageRating
