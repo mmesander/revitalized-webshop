@@ -106,7 +106,7 @@ public class ProductService {
         }
 
         if (productDtos.isEmpty()) {
-            throw new RecordNotFoundException("No products found");
+            throw new RecordNotFoundException("No products out of stock found");
         } else {
             return productDtos;
         }
@@ -132,7 +132,7 @@ public class ProductService {
         }
 
         if (productDtos.isEmpty()) {
-            throw new RecordNotFoundException("No products found");
+            throw new RecordNotFoundException("No products in stock found");
         } else {
             return productDtos;
         }
