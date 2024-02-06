@@ -115,6 +115,42 @@ public class GarmentService {
         }
     }
 
+    public List<GarmentDto> getOutOfStockGarments() {
+        List<Garment> garments = garmentRepository.findAll();
+        List<GarmentDto> garmentDtos = new ArrayList<>();
+
+        for (Garment garment : garments) {
+            if (garment.getStock() == 0) {
+                GarmentDto garmentDto = garmentToDto(garment);
+                garmentDtos.add(garmentDto);
+            }
+        }
+
+        if (garmentDtos.isEmpty()) {
+            throw new RecordNotFoundException("No garments out of stock found");
+        } else {
+            return garmentDtos;
+        }
+    }
+
+    public List<GarmentDto> getInOfStockGarments() {
+        List<Garment> garments = garmentRepository.findAll();
+        List<GarmentDto> garmentDtos = new ArrayList<>();
+
+        for (Garment garment : garments) {
+            if (garment.getStock() > 0) {
+                GarmentDto garmentDto = garmentToDto(garment);
+                garmentDtos.add(garmentDto);
+            }
+        }
+
+        if (garmentDtos.isEmpty()) {
+            throw new RecordNotFoundException("No garments out of stock found");
+        } else {
+            return garmentDtos;
+        }
+    }
+
     // CRUD Methods --> POST Methods
     public GarmentDto createGarment(GarmentInputDto inputDto) {
         Garment garment = dtoToGarment(inputDto);
