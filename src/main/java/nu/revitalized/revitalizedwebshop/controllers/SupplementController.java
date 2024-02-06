@@ -25,14 +25,14 @@ public class SupplementController {
 
 
     // CRUD Requests -- GET Requests
-    @GetMapping("/producten/supplementen")
+    @GetMapping("/products/supplements")
     public ResponseEntity<List<SupplementDto>> getAllSupplements() {
         List<SupplementDto> dtos = supplementService.getAllSupplements();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/supplementen/{id}")
+    @GetMapping("/products/supplements/{id}")
     public ResponseEntity<SupplementDto> getSupplementById(
             @PathVariable(value = "id") Long id
     ) {
@@ -41,7 +41,7 @@ public class SupplementController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/producten/supplementen/zoeken")
+    @GetMapping("/products/supplements/search")
     public ResponseEntity<List<SupplementDto>> getSupplementsByParam(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String brand,
@@ -63,14 +63,14 @@ public class SupplementController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/suppplement/niet-op-voorraad")
+    @GetMapping("/products/supplements/out-of-stock")
     public ResponseEntity<List<SupplementDto>> getOutOfStockSupplements() {
         List<SupplementDto> dtos = supplementService.getOutOfStockSupplements();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/suppplement/op-voorraad")
+    @GetMapping("/products/supplements/in-stock")
     public ResponseEntity<List<SupplementDto>> getInStockSupplements() {
         List<SupplementDto> dtos = supplementService.getInStockSupplements();
 
@@ -78,7 +78,7 @@ public class SupplementController {
     }
 
     // CRUD Requests -- POST Requests
-    @PostMapping("/producten/supplementen")
+    @PostMapping("/products/supplements")
     public ResponseEntity<SupplementDto> createSupplement(
             @Valid
             @RequestBody SupplementInputDto inputDto,
@@ -96,7 +96,7 @@ public class SupplementController {
     }
 
     // CRUD Requests -- PUT/PATCH Requests
-    @PutMapping("/producten/supplementen/{id}")
+    @PutMapping("/products/supplements/{id}")
     public ResponseEntity<SupplementDto> updateSupplement(
             @PathVariable("id") Long id,
             @Valid
@@ -112,7 +112,7 @@ public class SupplementController {
         }
     }
 
-    @PatchMapping("/producten/supplementen/{id}")
+    @PatchMapping("/products/supplements/{id}")
     public ResponseEntity<SupplementDto> patchSupplement(
             @PathVariable("id") Long id,
             @RequestBody SupplementInputDto inputDto
@@ -123,7 +123,7 @@ public class SupplementController {
     }
 
     // CRUD Requests -- DELETE Requests
-    @DeleteMapping("/producten/supplementen/{id}")
+    @DeleteMapping("/products/supplements/{id}")
     public ResponseEntity<Object> deleteSupplement(
             @PathVariable("id") Long id
     ) {
@@ -134,7 +134,7 @@ public class SupplementController {
 
 
     // Relations Requests
-    @PostMapping(value = "/producten/supplementen/{id}/allergenen")
+    @PostMapping(value = "/products/supplements/{id}/allergens")
     public ResponseEntity<Object> addAllergenToSupplement(
             @PathVariable("id") Long id,
             @Valid @RequestBody IdInputDto inputDto
@@ -144,7 +144,7 @@ public class SupplementController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @DeleteMapping(value = "/producten/supplementen/{id}/allergenen")
+    @DeleteMapping(value = "/products/supplements/{id}/allergens")
     public ResponseEntity<Object> removeAllergenFromSupplement(
             @PathVariable("id") Long id,
             @Valid @RequestBody IdInputDto inputDto

@@ -21,14 +21,14 @@ public class ProductController {
 
 
     // CRUD Requests -- GET Requests
-    @GetMapping("/producten")
+    @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<ProductDto> dtos = productService.getAllProducts();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<Object> getProductById(
             @PathVariable("id") Long id
     ) {
@@ -37,14 +37,14 @@ public class ProductController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/producten/niet-op-voorraad")
+    @GetMapping("/products/out-of-stock")
     public ResponseEntity<List<ProductDto>> getOutOfStockProducts() {
         List<ProductDto> dtos = productService.getOutOfStockProducts();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/op-voorraad")
+    @GetMapping("/products/in-stock")
     public ResponseEntity<List<ProductDto>> getInStockProducts() {
         List<ProductDto> dtos = productService.getInStockProducts();
 
@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     // CRUD Requests -- DELETE Requests
-    @DeleteMapping("/producten/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<Object> deleteProduct(
             @PathVariable("id") Long id
     ) {

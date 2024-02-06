@@ -24,14 +24,14 @@ public class GarmentController {
 
 
     // CRUD Requests -- GET Requests
-    @GetMapping("/producten/kleding")
+    @GetMapping("/products/garments")
     public ResponseEntity<List<GarmentDto>> getAllGarments() {
         List<GarmentDto> dtos = garmentService.getAllGarments();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/kleding/{id}")
+    @GetMapping("/products/garments/{id}")
     public ResponseEntity<GarmentDto> getGarmentById(
             @PathVariable("id") Long id
     ) {
@@ -40,7 +40,7 @@ public class GarmentController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/producten/kleding/zoeken")
+    @GetMapping("/products/garments/zoeken")
     public ResponseEntity<List<GarmentDto>> getGarmentsByParam(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String brand,
@@ -64,14 +64,14 @@ public class GarmentController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/kleding/niet-op-voorraad")
+    @GetMapping("/products/garments/out-of-stock")
     public ResponseEntity<List<GarmentDto>> getOutOfStockGarments() {
         List<GarmentDto> dtos = garmentService.getOutOfStockGarments();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/producten/kleding/op-voorraad")
+    @GetMapping("/products/garments/in-stock")
     public ResponseEntity<List<GarmentDto>> getInStockGarments() {
         List<GarmentDto> dtos = garmentService.getInOfStockGarments();
 
@@ -79,7 +79,7 @@ public class GarmentController {
     }
 
     // CRUD Requests -- POST Requests
-    @PostMapping("/producten/kleding")
+    @PostMapping("/products/garments")
     public ResponseEntity<GarmentDto> createGarment(
             @Valid
             @RequestBody GarmentInputDto inputDto,
@@ -97,7 +97,7 @@ public class GarmentController {
     }
 
     // CRUD Requests -- PUT/PATCH Requests
-    @PutMapping("/producten/kleding/{id}")
+    @PutMapping("/products/garments/{id}")
     public ResponseEntity<GarmentDto> updateGarment(
             @PathVariable("id") Long id,
             @Valid
@@ -113,7 +113,7 @@ public class GarmentController {
         }
     }
 
-    @PatchMapping("/producten/kleding/{id}")
+    @PatchMapping("/products/garments/{id}")
     public ResponseEntity<GarmentDto> patchGarment(
             @PathVariable("id") Long id,
             @RequestBody GarmentInputDto inputDto
@@ -124,7 +124,7 @@ public class GarmentController {
     }
 
     // CRUD Requests -- DELETE Requests
-    @DeleteMapping("/producten/kleding/{id}")
+    @DeleteMapping("/products/garments/{id}")
     public ResponseEntity<Object> deleteGarment(
             @PathVariable("id") Long id
     ) {
