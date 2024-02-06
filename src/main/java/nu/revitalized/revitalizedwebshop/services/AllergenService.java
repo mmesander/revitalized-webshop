@@ -117,7 +117,6 @@ public class AllergenService {
         for (AllergenDto allergenDto : dtos) {
             if (allergenDto.getName().equalsIgnoreCase(inputDto.getName())) {
                 isUnique = false;
-                break;
             }
         }
 
