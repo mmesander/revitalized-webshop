@@ -40,7 +40,7 @@ public class GarmentController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/products/garments/zoeken")
+    @GetMapping("/products/garments/search")
     public ResponseEntity<List<GarmentDto>> getGarmentsByParam(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String brand,
