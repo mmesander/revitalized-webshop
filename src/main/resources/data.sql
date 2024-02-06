@@ -1,13 +1,13 @@
 -- Supplements
 INSERT INTO supplements (id, name, brand, description, price, average_rating, contains)
 VALUES
-    (nextval('products_seq'), 'B12 Combi 6000', 'Vitakruid', 'De actieve vormen', 34.90, null, '60 smelttabletten'),
-    (nextval('products_seq'), 'Magnesium Malaat', 'Vitakruid', 'Voor energie', 24.90, null, '120 gram'),
-    (nextval('products_seq'), 'Magnesium Tauraat', 'Vitakruid', 'Voor slapen', 26.90, null, '100 vega capsules'),
-    (nextval('products_seq'), 'Vitamine D3 & K2', 'Vitakruid', 'Actieve vormen', 24.90, null, '10 milliliter'),
-    (nextval('products_seq'), 'Creatine Monohydraat', 'Gym Essentials', 'Pure vorm', 26.99, null, '500 gram'),
-    (nextval('products_seq'), 'Protein Bar Killa Fudged Up', 'Grenade', 'Niet teveel eten ivm flatulentie', 3.29, null, '60 gram'),
-    (nextval('products_seq'), 'Protein Bar White Chocolate Salted Peanut', 'Grenade', 'Absurd lekker', 3.29, null, '60 gram');
+    (nextval('products_seq'), 'B12 Combi 6000', 'Vitakruid', 'De actieve vormen', 34.90, 15, null, '60 smelttabletten'),
+    (nextval('products_seq'), 'Magnesium Malaat', 'Vitakruid', 'Voor energie', 24.90, 6, null, '120 gram'),
+    (nextval('products_seq'), 'Magnesium Tauraat', 'Vitakruid', 'Voor slapen', 26.90, 1, null, '100 vega capsules'),
+    (nextval('products_seq'), 'Vitamine D3 & K2', 'Vitakruid', 'Actieve vormen', 24.90, 5, null, '10 milliliter'),
+    (nextval('products_seq'), 'Creatine Monohydraat', 'Gym Essentials', 'Pure vorm', 26.99, 10, null, '500 gram'),
+    (nextval('products_seq'), 'Protein Bar Killa Fudged Up', 'Grenade', 'Niet teveel eten ivm flatulentie', 3.29, 4, null, '60 gram'),
+    (nextval('products_seq'), 'Protein Bar White Chocolate Salted Peanut', 'Grenade', 'Absurd lekker', 3.29, 3, null, '60 gram');
 
 -- Garments
 INSERT INTO garments (id, name, brand, description, price, stock, average_rating, size, color)
