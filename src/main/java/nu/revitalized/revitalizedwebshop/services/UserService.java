@@ -1,10 +1,13 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.User;
@@ -78,7 +81,7 @@ public class UserService {
             String email
     ) {
         Specification<User> params = Specification.where
-                (StringUtils.isBlank(username) ? null : getUserUsernameLikeFilter(username))
+                        (StringUtils.isBlank(username) ? null : getUserUsernameLikeFilter(username))
                 .and(StringUtils.isBlank(email) ? null : getUserEmailLike(email));
 
         List<User> filteredUsers = userRepository.findAll(params);
@@ -97,13 +100,32 @@ public class UserService {
     }
 
     // CRUD Methods --> POST Methods
+    public UserDto createUser(UserInputDto inputDto) {
+        User user = dtoToUser(inputDto);
 
+        boolean usernameExists = userRepository.existsByUsernameIgnoreCase(inputDto.getUsername());
+        boolean emailExists = userRepository.existsByEmailIgnoreCase(inputDto.getEmail());
+
+        if (usernameExists && emailExists) {
+            throw new InvalidInputException("Username: " + inputDto.getUsername().toLowerCase() + " and email: "
+                    + inputDto.getEmail().toLowerCase() + " are already in use");
+        } else if (usernameExists) {
+            throw new InvalidInputException("Username: " + inputDto.getUsername().toLowerCase()
+                    + " is already in use");
+        } else if (emailExists) {
+            throw new InvalidInputException("Email: " + inputDto.getEmail().toLowerCase()
+                    + " is already in use");
+        } else {
+            userRepository.save(user);
+
+            return userToDto(user);
+        }
+    }
 
     // CRUD Methods --> PUT/PATCH Methods
 
 
     // CRUD Methods --> DELETE Methods
-
 
 
     // Relations Methods
