@@ -1,7 +1,7 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUri;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
@@ -65,7 +65,9 @@ public class UserController {
         } else {
             UserDto dto = userService.createUser(inputDto);
 
-            URI uri = buildUri(dto);
+            URI uri = buildUriUsername(dto);
+
+            return ResponseEntity.created(uri).body(dto);
         }
     }
 
