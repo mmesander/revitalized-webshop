@@ -27,4 +27,5 @@ public class Checklist {
     //TODO: input dto's upgraden met de nieuwe interfaces
     //TODO: alle contains veranderen naar containing in repo's en services of omzetten naar specifications
     //TODO: in alle delete requests een string teruggeven dat iets verwijderd is
+    //TODO: Namen in methods veranderen in controller (voorbeeld bij usercontroller)
 }
