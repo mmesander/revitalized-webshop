@@ -1,9 +1,12 @@
 package nu.revitalized.revitalizedwebshop.dtos.output;
 
 // Imports
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableUsername;
+import nu.revitalized.revitalizedwebshop.security.Authority;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,4 +17,6 @@ public class UserDto implements IdentifiableUsername {
     private String email;
 
     // Relations
+    @JsonSerialize
+    private Set<Authority> authorities;
 }

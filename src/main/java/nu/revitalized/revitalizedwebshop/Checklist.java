@@ -1,24 +1,7 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    //TODO: GlobalCorsConfiguration
-    //TODO: SpringSecurityConfig
-    //TODO: AuthenticationController
-    //TODO: JwtRequestFilter
-    //TODO: Authority
-    //TODO: AuthorityKey
-    //TODO: AuthenticationRequest
-    //TODO: AuthenticationResponse
-    //TODO: AuthorityRespository
-    //TODO: CustomUserDetailService
-    //TODO: JwtUtil
-    //TODO: RandomStringGenerator??
-
     // Security
-    //TODO: Relations in de input & Output dto's van user
-    //TODO: De password generator in de transfer method in userservice
-    //TODO: De relations toevoegen in de userservice (authority)
-    //TODO: De authorities in de transfer methods zetten (userToDto)
     //TODO: De bonus uit userController techItEasy erin in de userController zetten
     //TODO: Op die bonus ook alle mogelijkheden zetten zoals shipping details en de rest
     //TODO: De delete user uitbreiden dat de laatste admin niet verwijderd kan worden

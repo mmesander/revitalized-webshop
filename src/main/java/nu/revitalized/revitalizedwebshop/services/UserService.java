@@ -1,7 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
+import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
 
@@ -11,7 +11,9 @@ import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.User;
+import nu.revitalized.revitalizedwebshop.repositories.AuthorityRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
+import nu.revitalized.revitalizedwebshop.security.Authority;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,19 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(
+            UserRepository userRepository,
+            AuthorityRepository authorityRepository
+    ) {
         this.userRepository = userRepository;
+        this.authorityRepository = authorityRepository;
     }
 
 
@@ -34,7 +42,7 @@ public class UserService {
         User user = new User();
 
         user.setUsername(inputDto.getUsername().toLowerCase());
-        user.setPassword(inputDto.getPassword());
+        user.setPassword(passwordEncoder().encode(inputDto.getPassword()));
         user.setEmail(inputDto.getEmail());
 
         return user;
@@ -145,6 +153,7 @@ public class UserService {
 
         if (user.isPresent()) {
             userRepository.deleteById(username);
+
             return "User: " + username + " is deleted";
         } else {
             throw new UsernameNotFoundException(username);
@@ -152,5 +161,42 @@ public class UserService {
     }
 
     // Relations Methods
+    public Set<Authority> getAuthorities(String username) {
+        Optional<User> user = userRepository.findById(username);
 
+        if (user.isPresent()) {
+            UserDto userDto = userToDto(user.get());
+
+            return userDto.getAuthorities();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
+    public UserDto addAuthority(String username, String authority) {
+        Optional<User> user = userRepository.findById(username);
+        Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCase(authority);
+
+        if (user.isPresent() && optionalAuthority.isPresent()) {
+            user.get().addAuthority(new Authority(username, authority));
+
+            return userToDto(user.get());
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
+    public void removeAuthority(String username, String authority) {
+        Optional<User> user = userRepository.findById(username);
+
+        if (user.isPresent()) {
+            Authority toRemove = user.get().getAuthorities().stream().filter((a) ->
+                    a.getAuthority().equalsIgnoreCase(authority)).findAny().get();
+
+            user.get().removeAuthority(toRemove);
+            userRepository.save(user.get());
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
 }
