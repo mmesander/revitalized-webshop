@@ -18,4 +18,5 @@ public class Checklist {
     //TODO: RandomStringGenerator??
     //TODO: return string in shipping details naar uppercase als hij al bestaat
     //TODO: input dto's upgraden met de nieuwe interfaces
+    //TODO: alle contains veranderen naar containing in repo's en services
 }
