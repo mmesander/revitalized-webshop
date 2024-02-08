@@ -72,11 +72,30 @@ public class UserController {
     }
 
     // CRUD Requests -- PUT/PATCH Requests
+    @PutMapping("/{username}")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody UserInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.updateUser(username, inputDto);
 
+            return ResponseEntity.ok().body(dto);
+        }
+    }
 
     // CRUD Requests -- DELETE Requests
+    public ResponseEntity<Object> deleteUser(
+            @PathVariable("username") String username
+    ) {
+        userService.deleteUser(username);
 
-
+        return ResponseEntity.noContent().build();
+    }
 
     // Relations Requests
 
