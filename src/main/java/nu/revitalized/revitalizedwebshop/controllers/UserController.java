@@ -75,7 +75,6 @@ public class UserController {
     @PutMapping("/{username}")
     public ResponseEntity<UserDto> updateUser(
             @PathVariable("username") String username,
-            @Valid
             @RequestBody UserInputDto inputDto,
             BindingResult bindingResult
     ) {
@@ -89,12 +88,13 @@ public class UserController {
     }
 
     // CRUD Requests -- DELETE Requests
-    public ResponseEntity<Object> deleteUser(
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteUser(
             @PathVariable("username") String username
     ) {
-        userService.deleteUser(username);
+        String confirmation = userService.deleteUser(username);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(confirmation);
     }
 
     // Relations Requests
