@@ -3,13 +3,13 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 // Imports
 import lombok.Getter;
 import lombok.Setter;
-import nu.revitalized.revitalizedwebshop.interfaces.Identifiable;
+import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
 
 import java.util.Set;
 
 @Getter
 @Setter
-public class SupplementDto implements Identifiable {
+public class SupplementDto implements IdentifiableId {
     // Variables
     private Long id;
     private String name;

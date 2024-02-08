@@ -1,11 +1,18 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUri;
+import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import jakarta.validation.Valid;
+import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @CrossOrigin
@@ -47,7 +54,20 @@ public class UserController {
     }
 
     // CRUD Requests -- POST Requests
+    @PostMapping("")
+    public ResponseEntity<UserDto> createUser(
+            @Valid
+            @RequestBody UserInputDto inputDto,
+            BindingResult bindingResult
+            ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.createUser(inputDto);
 
+            URI uri = buildUri(dto);
+        }
+    }
 
     // CRUD Requests -- PUT/PATCH Requests
 

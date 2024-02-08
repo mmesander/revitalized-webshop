@@ -1,5 +1,5 @@
 package nu.revitalized.revitalizedwebshop.interfaces;
 
-public interface Identifiable {
+public interface IdentifiableId {
     Long getId();
 }
