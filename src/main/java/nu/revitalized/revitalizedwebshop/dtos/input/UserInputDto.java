@@ -6,11 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidPassword;
+import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 
 @Getter
 @Setter
 public class UserInputDto {
     @NotNull(message = "Username is required")
+    @ValidText(fieldName = "Username")
     private String username;
     @ValidPassword
     private String password;
