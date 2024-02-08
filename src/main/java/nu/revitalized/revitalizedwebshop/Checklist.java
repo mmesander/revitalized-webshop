@@ -1,18 +1,14 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    //TODO: GlobalCorsConfiguration
-    //TODO: SpringSecurityConfig
-    //TODO: AuthenticationController
-    //TODO: JwtRequestFilter
-    //TODO: Authority
-    //TODO: AuthorityKey
-    //TODO: AuthenticationRequest
-    //TODO: AuthenticationResponse
     //TODO: AuthorityRespository
     //TODO: CustomUserDetailService
     //TODO: JwtUtil
-    //TODO: RandomStringGenerator??
+    //TODO: SpringSecurityConfig
+    //TODO: AuthenticationController
+    //TODO: JwtRequestFilter
+    //TODO: AuthenticationRequest
+    //TODO: AuthenticationResponse
 
     // Security
     //TODO: Relations in de input & Output dto's van user
