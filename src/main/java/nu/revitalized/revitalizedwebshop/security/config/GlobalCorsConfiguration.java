@@ -1,4 +1,4 @@
-package nu.revitalized.revitalizedwebshop.security;
+package nu.revitalized.revitalizedwebshop.security.config;
 
 // Imports
 import org.springframework.context.annotation.Bean;

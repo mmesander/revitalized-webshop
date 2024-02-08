@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    //TODO: JwtUtil
     //TODO: SpringSecurityConfig
     //TODO: AuthenticationController
     //TODO: JwtRequestFilter
