@@ -123,10 +123,33 @@ public class UserService {
     }
 
     // CRUD Methods --> PUT/PATCH Methods
+    public UserDto updateUser(String username, UserInputDto inputDto) {
+        Optional<User> optionalUser = userRepository.findById(username);
 
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            user.setEmail(inputDto.getEmail());
+
+            User updatedUser = userRepository.save(user);
+
+            return userToDto(updatedUser);
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
 
     // CRUD Methods --> DELETE Methods
+    public String deleteUser(String username) {
+        Optional<User> user = userRepository.findById(username);
 
+        if (user.isPresent()) {
+            userRepository.deleteById(username);
+            return "User: " + username + " is deleted";
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
 
     // Relations Methods
 
