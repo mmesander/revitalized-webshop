@@ -93,7 +93,7 @@ public class UserService {
         }
 
         if (userDtos.isEmpty()) {
-            throw new RecordNotFoundException("No users found with the specified filters")
+            throw new RecordNotFoundException("No users found with the specified filters");
         } else {
             return userDtos;
         }
