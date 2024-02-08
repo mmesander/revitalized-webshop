@@ -1,7 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
+import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
 
@@ -42,7 +42,7 @@ public class UserService {
         User user = new User();
 
         user.setUsername(inputDto.getUsername().toLowerCase());
-        user.setPassword(inputDto.getPassword());
+        user.setPassword(passwordEncoder().encode(inputDto.getPassword()));
         user.setEmail(inputDto.getEmail());
 
         return user;

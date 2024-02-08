@@ -1,9 +1,6 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    //TODO: SpringSecurityConfig
-    //TODO: AuthenticationController
-
     // Security
     //TODO: De password generator in de transfer method in userservice
     //TODO: De bonus uit userController techItEasy erin in de userController zetten
