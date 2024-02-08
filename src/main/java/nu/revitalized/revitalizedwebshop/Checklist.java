@@ -13,7 +13,7 @@ public class Checklist {
     //TODO: AuthenticationResponse
     //TODO: AuthorityRespository
     //TODO: CustomUserDetailService
-    //TODO: USerService
+    //TODO: UserService
     //TODO: JwtUtil
     //TODO: RandomStringGenerator??
     //TODO: return string in shipping details naar uppercase als hij al bestaat
