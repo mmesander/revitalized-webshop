@@ -5,7 +5,6 @@ public class Checklist {
     //TODO: SpringSecurityConfig
     //TODO: AuthenticationController
     //TODO: UserController
-    //TODO: User Input & Output Dto's relations
     //TODO: JwtRequestFilter
     //TODO: Authority
     //TODO: AuthorityKey
@@ -16,7 +15,14 @@ public class Checklist {
     //TODO: UserService
     //TODO: JwtUtil
     //TODO: RandomStringGenerator??
+
+    //TODO: Relations in de input & Output dto's van user
+    //TODO: De password generator in de transfer method in userservice
+    //TODO: De relations toevoegen in de userservice (authority)
+    //TODO: De authorities in de transfer methods zetten (userToDto)
+
+
     //TODO: return string in shipping details naar uppercase als hij al bestaat
     //TODO: input dto's upgraden met de nieuwe interfaces
-    //TODO: alle contains veranderen naar containing in repo's en services
+    //TODO: alle contains veranderen naar containing in repo's en services of omzetten naar specifications
 }
