@@ -6,7 +6,7 @@ import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.AllergenService;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUri;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +61,7 @@ public class AllergenController {
         } else {
             AllergenDto dto = allergenService.createAllergen(inputDto);
 
-            URI uri = buildUri(dto);
+            URI uri = buildUriId(dto);
 
             return ResponseEntity.created(uri).body(dto);
         }

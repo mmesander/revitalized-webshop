@@ -61,3 +61,8 @@ INSERT INTO shipping_details (id, details_name, name, country, city, zip_code, s
 VALUES
     (nextval('shipping_details_seq'), 'THUISADRES', 'Mark Mesander', 'Nederland', 'Haarlem', '1234AB', 'Test de Testlaan', 28, 'mark@test.nl'),
     (nextval('shipping_details_seq'), 'WERKADRES', 'Mark Mesander', 'Nederland', 'Noordwijk', '3456CD', 'Test de Teststraat', 42, 'mark@test.nl');
+
+-- Users
+INSERT INTO users (username, password, email)
+VALUES ('mmesander', 'test1234test1234!', 'mark@test.nl'),
+       ('rplooij', 'test1234test1234!', 'rowan@test.nl');

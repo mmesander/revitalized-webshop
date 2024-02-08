@@ -125,7 +125,7 @@ public class ShippingDetailsService {
         if (exists) {
             if (inputDto.getHouseNumberAddition() != null) {
                 throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
-                        + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition() + " already exists.");
+                        + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition().toUpperCase() + " already exists.");
             } else {
                 throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
                         + inputDto.getHouseNumber() + " already exists.");
