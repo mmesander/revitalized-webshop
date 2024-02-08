@@ -2,7 +2,6 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // Security
-    //TODO: De password generator in de transfer method in userservice
     //TODO: De bonus uit userController techItEasy erin in de userController zetten
     //TODO: Op die bonus ook alle mogelijkheden zetten zoals shipping details en de rest
     //TODO: De delete user uitbreiden dat de laatste admin niet verwijderd kan worden

@@ -64,5 +64,9 @@ VALUES
 
 -- Users
 INSERT INTO users (username, password, email)
-VALUES ('mmesander', 'test1234test1234!', 'mark@test.nl'),
-       ('rplooij', 'test1234test1234!', 'rowan@test.nl');
+VALUES ('mmesander', '$2a$12$RfLgBdcAj/9o/XkMZNm.Zerka9oTm3WRp5nm5rkPg/G5mwVQftbzq', 'mark@test.nl'),
+       ('rplooij', '$2a$12$RfLgBdcAj/9o/XkMZNm.Zerka9oTm3WRp5nm5rkPg/G5mwVQftbzq', 'rowan@test.nl');
+
+INSERT INTO authorities (username, authority)
+VALUES ('mmesander', 'ROLE_ADMIN'),
+       ('rplooij', 'ROLE_USER');
