@@ -3,9 +3,6 @@ package nu.revitalized.revitalizedwebshop;
 public class Checklist {
     //TODO: SpringSecurityConfig
     //TODO: AuthenticationController
-    //TODO: JwtRequestFilter
-    //TODO: AuthenticationRequest
-    //TODO: AuthenticationResponse
 
     // Security
     //TODO: De password generator in de transfer method in userservice
