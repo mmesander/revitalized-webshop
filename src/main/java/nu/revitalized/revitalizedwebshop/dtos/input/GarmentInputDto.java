@@ -23,8 +23,6 @@ public class GarmentInputDto {
     @Size(min = 10, max = 200, message = "Description must be between 2 and 200 characters")
     private String description;
 
-    @NotNull(message = "Price is required")
-    @Positive(message = "Price must be higher than zero")
     @ValidPrice
     private Double price;
 

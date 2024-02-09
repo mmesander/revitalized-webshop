@@ -4,8 +4,13 @@ package nu.revitalized.revitalizedwebshop.interfaces;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.lang.annotation.*;
 
+@NotNull(message = "Price is required")
+@Positive(message = "Price must be higher than zero")
 @Digits(integer = 10, fraction = 2, message = "Price should contain only digits followed by two decimals")
 @Constraint(validatedBy = {})
 @Target(ElementType.FIELD)
