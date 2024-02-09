@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AllergenInputDto {
-    @NotNull(message = "Name is required")
-    private String name;
+public class AuthorityInputDto {
+    @NotNull(message = "Authority is required")
+    private String authority;
 }

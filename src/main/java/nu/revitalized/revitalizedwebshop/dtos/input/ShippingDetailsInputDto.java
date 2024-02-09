@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.dtos.input;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import nu.revitalized.revitalizedwebshop.interfaces.ValidNumber;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 
 @Getter
@@ -43,10 +42,9 @@ public class ShippingDetailsInputDto {
 
     @NotNull(message = "House number is required")
     @Positive(message = "House number can't be negative")
-    @ValidNumber(fieldName = "House number")
     private Integer houseNumber;
 
-    @ValidNumber(fieldName = "House number addition")
+    @ValidText(fieldName = "House number addition")
     private String houseNumberAddition;
 
     @NotNull(message = "Email is required")

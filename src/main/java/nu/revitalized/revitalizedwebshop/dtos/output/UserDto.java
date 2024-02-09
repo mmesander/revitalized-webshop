@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableUsername;
-import nu.revitalized.revitalizedwebshop.security.Authority;
+import nu.revitalized.revitalizedwebshop.models.Authority;
 import java.util.Set;
 
 @Getter

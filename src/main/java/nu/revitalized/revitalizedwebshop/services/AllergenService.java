@@ -13,6 +13,7 @@ import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -73,6 +74,7 @@ public class AllergenService {
         if (allergenDtos.isEmpty()) {
             throw new RecordNotFoundException("No allergens found");
         } else {
+            allergenDtos.sort(Comparator.comparing(AllergenDto::getId));
             return allergenDtos;
         }
     }

@@ -1,7 +1,7 @@
 package nu.revitalized.revitalizedwebshop.repositories;
 
 // Imports
-import nu.revitalized.revitalizedwebshop.security.Authority;
+import nu.revitalized.revitalizedwebshop.models.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

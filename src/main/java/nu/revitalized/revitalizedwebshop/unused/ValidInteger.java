@@ -1,17 +1,16 @@
-package nu.revitalized.revitalizedwebshop.interfaces;
+package nu.revitalized.revitalizedwebshop.unused;
 
 // Imports
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import jakarta.validation.constraints.Pattern;
+
 import java.lang.annotation.*;
 
-@Pattern(regexp = "\\d+", message = "{fieldName} should contain only digits")
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {ValidIntegerValidator.class})
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ValidNumber {
+public @interface ValidInteger {
     String message() default "{fieldName} should contain only digits";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
