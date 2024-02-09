@@ -6,7 +6,7 @@ import jakarta.validation.Payload;
 import jakarta.validation.constraints.Pattern;
 import java.lang.annotation.*;
 
-@Pattern(regexp = "[a-zA-Z]+", message = "{fieldName} should contain only letters")
+@Pattern(regexp = "[a-zA-Z ]+", message = "{fieldName} should contain only letters")
 @Constraint(validatedBy = {})
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

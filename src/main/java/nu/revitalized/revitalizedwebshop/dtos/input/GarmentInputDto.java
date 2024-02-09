@@ -27,12 +27,11 @@ public class GarmentInputDto {
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be higher than zero")
-    @ValidNumber(fieldName = "Price")
     private Double price;
 
     @NotNull(message = "Stock is required")
     @Positive(message = "Stock can't be negative")
-    @ValidNumber(fieldName = "Stock")
+//    @ValidNumber(fieldName = "Stock")
     private Integer stock;
 
     @NotNull(message = "Size is required")
