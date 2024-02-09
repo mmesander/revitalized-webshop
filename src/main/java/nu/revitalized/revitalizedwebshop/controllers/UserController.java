@@ -1,11 +1,14 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +62,7 @@ public class UserController {
             @Valid
             @RequestBody UserInputDto inputDto,
             BindingResult bindingResult
-            ) {
+    ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
@@ -98,5 +101,33 @@ public class UserController {
     }
 
     // Relations Requests
+    @GetMapping(value = "/{username}/authorities")
+    public ResponseEntity<Object> getUserAuthorities(
+            @PathVariable("username") String username
+    ) {
+        return ResponseEntity.ok().body(userService.getAuthorities(username));
+    }
 
+    @PostMapping(value = "/{username}/authorities")
+    public ResponseEntity<Object> addUserAuthority(
+            @PathVariable("username") String username,
+            @RequestBody String authority
+    ) {
+        try {
+            userService.addAuthority(username, authority);
+
+            return ResponseEntity.noContent().build();
+        } catch (Exception exception) {
+            throw new BadRequestException();
+        }
+    }
+
+    @DeleteMapping(value = "/{username}/authorities/{authority}")
+    public ResponseEntity<Object> deleteUserAuthority(
+            @PathVariable("username") String username,
+            @PathVariable("authority") String authority
+    ) {
+        userService.removeAuthority(username, authority);
+        return ResponseEntity.noContent().build();
+    }
 }

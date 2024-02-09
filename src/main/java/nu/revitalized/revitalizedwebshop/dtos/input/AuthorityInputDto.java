@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class IdInputDto {
-    @NotNull(message = "Id is required")
-    private Long id;
+public class AuthorityInputDto {
+    @NotNull(message = "Authority is required")
+    private String authority;
 }
