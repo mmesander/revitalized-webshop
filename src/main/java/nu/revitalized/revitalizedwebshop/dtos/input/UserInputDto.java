@@ -19,8 +19,10 @@ public class UserInputDto {
     @NotNull(message = "Username is required")
     @ValidText(fieldName = "Username")
     private String username;
+
     @ValidPassword
     private String password;
+
     @NotNull(message = "Email is required")
     @Email(message = "Please enter a valid email")
     private String email;
