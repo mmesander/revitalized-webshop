@@ -1,5 +1,6 @@
 package nu.revitalized.revitalizedwebshop.helpers;
 
+// Imports
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
@@ -17,7 +18,7 @@ public class ValidTextValidator implements ConstraintValidator<ValidText, String
         context.disableDefaultConstraintViolation();
 
         if (value == null || value.trim().isEmpty()) {
-            return true; // Let @NotNull handle null values
+            return true;
         }
 
         if (!value.matches("[a-zA-Z ]+")) {

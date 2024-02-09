@@ -5,18 +5,18 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.lang.annotation.*;
 
-@NotNull(message = "Price is required")
-@Positive(message = "Price must be higher than zero")
-@Digits(integer = 10, fraction = 2, message = "Price should contain only digits followed by two decimals")
+@NotNull(message = "Stock is required")
+@PositiveOrZero(message = "Stock can't be negative")
+@Digits(integer = 10, fraction = 0, message = "Stock should contain only digits without decimals")
 @Constraint(validatedBy = {})
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ValidPrice {
-    String message() default "Price should contain only digits followed by two decimals";
+public @interface ValidStock {
+    String message() default "Stock should contain only digits";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     String fieldName() default "Field";

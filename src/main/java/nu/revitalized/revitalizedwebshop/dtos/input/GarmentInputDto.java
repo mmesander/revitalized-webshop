@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidPrice;
+import nu.revitalized.revitalizedwebshop.interfaces.ValidStock;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 
 @Getter
@@ -26,14 +27,13 @@ public class GarmentInputDto {
     @ValidPrice
     private Double price;
 
-    @NotNull(message = "Stock is required")
-    @PositiveOrZero(message = "Stock can't be negative")
+    @ValidStock
     private Integer stock;
 
     @NotNull(message = "Size is required")
     private String size;
 
-    @ValidText(fieldName = "Color")
     @NotNull(message = "Color is required")
+    @ValidText(fieldName = "Color")
     private String color;
 }
