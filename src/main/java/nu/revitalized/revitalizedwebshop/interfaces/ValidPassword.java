@@ -3,7 +3,6 @@ package nu.revitalized.revitalizedwebshop.interfaces;
 // Imports
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import jakarta.validation.ReportAsSingleViolation;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -21,7 +20,6 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ReportAsSingleViolation
 public @interface ValidPassword {
     String message() default "Invalid password";
     Class<?>[] groups() default {};
