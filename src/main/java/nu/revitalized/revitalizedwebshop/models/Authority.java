@@ -1,9 +1,10 @@
-package nu.revitalized.revitalizedwebshop.security;
+package nu.revitalized.revitalizedwebshop.models;
 
 // Imports
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
 
 @Getter

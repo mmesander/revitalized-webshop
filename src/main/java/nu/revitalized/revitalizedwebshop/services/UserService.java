@@ -13,7 +13,7 @@ import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.AuthorityRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
-import nu.revitalized.revitalizedwebshop.security.Authority;
+import nu.revitalized.revitalizedwebshop.models.Authority;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

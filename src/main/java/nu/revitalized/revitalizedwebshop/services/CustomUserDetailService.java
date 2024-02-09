@@ -1,7 +1,7 @@
-package nu.revitalized.revitalizedwebshop.security;
+package nu.revitalized.revitalizedwebshop.services;
 
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
-import nu.revitalized.revitalizedwebshop.services.UserService;
+import nu.revitalized.revitalizedwebshop.models.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

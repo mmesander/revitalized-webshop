@@ -1,4 +1,4 @@
-package nu.revitalized.revitalizedwebshop.security;
+package nu.revitalized.revitalizedwebshop.models;
 
 // Imports
 import java.io.Serializable;

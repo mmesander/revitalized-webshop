@@ -1,7 +1,7 @@
 package nu.revitalized.revitalizedwebshop.security.config;
 
 // Imports
-import nu.revitalized.revitalizedwebshop.security.CustomUserDetailService;
+import nu.revitalized.revitalizedwebshop.services.CustomUserDetailService;
 import nu.revitalized.revitalizedwebshop.security.filter.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
