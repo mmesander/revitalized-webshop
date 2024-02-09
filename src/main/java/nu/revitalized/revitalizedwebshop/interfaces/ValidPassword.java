@@ -14,7 +14,7 @@ import java.lang.annotation.*;
         @Pattern(regexp = ".*\\d.*", message = "Password must contain a digit"),
         @Pattern(regexp = ".*[a-z].*", message = "Password must contain a lowercase letter"),
         @Pattern(regexp = ".*[A-Z].*", message = "Password must contain an uppercase letter"),
-        @Pattern(regexp = ".*[@#$%^&+=].*", message = "Password must contain a special character")
+        @Pattern(regexp = ".*[@#$%^&+=!?].*", message = "Password must contain a special character")
 })
 @Constraint(validatedBy = {})
 @Target({ElementType.FIELD})

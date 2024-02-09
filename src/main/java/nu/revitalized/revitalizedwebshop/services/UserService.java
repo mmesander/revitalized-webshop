@@ -18,10 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -70,6 +67,7 @@ public class UserService {
         if (userDtos.isEmpty()) {
             throw new RecordNotFoundException("No users found");
         } else {
+            userDtos.sort(Comparator.comparing(UserDto::getUsername));
             return userDtos;
         }
     }

@@ -53,6 +53,7 @@ public class SpringSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/users/**").hasRole("ADMIN")
@@ -64,7 +65,7 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/shipping-details/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/shipping-details/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.DELETE, "/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/products/garments").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/products/garments/**").hasRole("ADMIN")
@@ -72,6 +73,7 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/products/garments/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/products/supplements").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/products/supplements/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/products/supplements/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/products/supplements/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/products/supplements/**").hasRole("ADMIN")

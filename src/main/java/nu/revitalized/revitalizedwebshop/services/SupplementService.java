@@ -80,6 +80,7 @@ public class SupplementService {
         if (supplementDtos.isEmpty()) {
             throw new RecordNotFoundException("No supplements are found");
         } else {
+            supplementDtos.sort(Comparator.comparing(SupplementDto::getId));
             return supplementDtos;
         }
     }

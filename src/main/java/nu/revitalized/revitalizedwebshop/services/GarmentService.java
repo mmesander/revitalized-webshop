@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +57,7 @@ public class GarmentService {
         if (garmentDtos.isEmpty()) {
             throw new RecordNotFoundException("No garments are found");
         } else {
+            garmentDtos.sort(Comparator.comparing(GarmentDto::getId));
             return garmentDtos;
         }
     }
