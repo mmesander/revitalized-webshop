@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import nu.revitalized.revitalizedwebshop.interfaces.ValidNumber;
+import nu.revitalized.revitalizedwebshop.interfaces.ValidInteger;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 
 @Getter
@@ -25,12 +25,12 @@ public class SupplementInputDto {
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be higher than zero")
-    @ValidNumber(fieldName = "Price")
+    @ValidInteger(fieldName = "Price")
     private Double price;
 
     @NotNull(message = "Stock is required")
     @Positive(message = "Stock can't be negative")
-    @ValidNumber(fieldName = "Stock")
+    @ValidInteger(fieldName = "Stock")
     private Integer stock;
 
     @NotNull(message = "Contains is required")
