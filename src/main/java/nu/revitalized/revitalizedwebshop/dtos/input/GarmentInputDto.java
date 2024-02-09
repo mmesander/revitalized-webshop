@@ -1,12 +1,9 @@
 package nu.revitalized.revitalizedwebshop.dtos.input;
 
 // Imports
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import nu.revitalized.revitalizedwebshop.interfaces.ValidInteger;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidPrice;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 
@@ -28,12 +25,11 @@ public class GarmentInputDto {
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be higher than zero")
-    @ValidPrice(fieldName = "Price")
+    @ValidPrice
     private Double price;
 
     @NotNull(message = "Stock is required")
-    @Positive(message = "Stock can't be negative")
-    @ValidInteger(fieldName = "Stock")
+    @PositiveOrZero(message = "Stock can't be negative")
     private Integer stock;
 
     @NotNull(message = "Size is required")
