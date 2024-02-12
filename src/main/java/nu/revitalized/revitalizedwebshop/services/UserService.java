@@ -8,6 +8,7 @@ import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification
 
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
@@ -123,6 +124,11 @@ public class UserService {
             throw new InvalidInputException("Email: " + inputDto.getEmail().toLowerCase()
                     + " is already in use");
         } else {
+
+            userRepository.save(user);
+
+            user.addAuthority(new Authority(user.getUsername(), "ROLE_USER"));
+
             userRepository.save(user);
 
             return userToDto(user);
@@ -176,12 +182,19 @@ public class UserService {
         Optional<User> user = userRepository.findById(username);
         Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCase(authority);
 
+
         if (user.isPresent() && optionalAuthority.isPresent()) {
-            user.get().addAuthority(new Authority(username, authority));
+            if (user.get().getUsername().equalsIgnoreCase("rplooij")
+                    && authority.equalsIgnoreCase("ROLE_ADMIN")
+            ) {
+                throw new BadRequestException("User: " + user.get().getUsername() + " should not have admin rights!");
+            } else {
+                user.get().addAuthority(new Authority(username, authority));
 
-            userRepository.save(user.get());
+                userRepository.save(user.get());
 
-            return userToDto(user.get());
+                return userToDto(user.get());
+            }
         } else {
             throw new UsernameNotFoundException(username);
         }
@@ -192,9 +205,10 @@ public class UserService {
 
         if (user.isPresent()) {
             if (user.get().getUsername().equalsIgnoreCase("mmesander")
-                    && authority.equalsIgnoreCase("ROLE_ADMIN")) {
+                    && authority.equalsIgnoreCase("ROLE_ADMIN")
+            ) {
                 return "Forbidden to remove admin rights from user " + user.get().getUsername()
-                        + ", to remove contact developer";
+                        + ", to remove please contact developer";
             } else {
                 Authority toRemove = user.get().getAuthorities().stream().filter((a) ->
                         a.getAuthority().equalsIgnoreCase(authority)).findAny().get();
