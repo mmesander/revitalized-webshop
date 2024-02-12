@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
@@ -190,14 +191,20 @@ public class UserService {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
-            Authority toRemove = user.get().getAuthorities().stream().filter((a) ->
-                    a.getAuthority().equalsIgnoreCase(authority)).findAny().get();
+            if (user.get().getUsername().equalsIgnoreCase("mmesander")
+                    && authority.equalsIgnoreCase("ROLE_ADMIN")) {
+                return "Forbidden to remove admin rights from user " + user.get().getUsername()
+                        + ", to remove contact developer";
+            } else {
+                Authority toRemove = user.get().getAuthorities().stream().filter((a) ->
+                        a.getAuthority().equalsIgnoreCase(authority)).findAny().get();
 
-            user.get().removeAuthority(toRemove);
+                user.get().removeAuthority(toRemove);
 
-            userRepository.save(user.get());
+                userRepository.save(user.get());
 
-            return "Authority: " + authority + " is removed from user: " + username;
+                return "Authority: " + authority + " is removed from user: " + username;
+            }
         } else {
             throw new UsernameNotFoundException(username);
         }
