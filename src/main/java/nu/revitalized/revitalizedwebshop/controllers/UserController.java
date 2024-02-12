@@ -106,7 +106,7 @@ public class UserController {
     public ResponseEntity<Object> getUserAuthorities(
             @PathVariable("username") String username
     ) {
-        return ResponseEntity.ok().body(userService.getAuthorities(username));
+        return ResponseEntity.ok().body(userService.getUserAuthorities(username));
     }
 
     @PostMapping(value = "/{username}/authorities")
