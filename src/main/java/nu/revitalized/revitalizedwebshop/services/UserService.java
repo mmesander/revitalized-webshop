@@ -186,7 +186,7 @@ public class UserService {
         }
     }
 
-    public void removeAuthority(String username, String authority) {
+    public String removeAuthority(String username, String authority) {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
@@ -194,7 +194,10 @@ public class UserService {
                     a.getAuthority().equalsIgnoreCase(authority)).findAny().get();
 
             user.get().removeAuthority(toRemove);
+
             userRepository.save(user.get());
+
+            return "Authority: " + authority + " is removed from user: " + username;
         } else {
             throw new UsernameNotFoundException(username);
         }

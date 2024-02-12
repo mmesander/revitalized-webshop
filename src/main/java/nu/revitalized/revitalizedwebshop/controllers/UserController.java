@@ -134,7 +134,9 @@ public class UserController {
             @PathVariable("username") String username,
             @PathVariable("authority") String authority
     ) {
-        userService.removeAuthority(username, authority);
-        return ResponseEntity.noContent().build();
+        String confirmation = userService.removeAuthority(username, authority);
+
+
+        return ResponseEntity.ok().body(confirmation);
     }
 }
