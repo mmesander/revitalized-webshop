@@ -178,13 +178,15 @@ public class UserService {
         if (user.isPresent() && optionalAuthority.isPresent()) {
             user.get().addAuthority(new Authority(username, authority));
 
+            userRepository.save(user.get());
+
             return userToDto(user.get());
         } else {
             throw new UsernameNotFoundException(username);
         }
     }
 
-    public void removeAuthority(String username, String authority) {
+    public String removeAuthority(String username, String authority) {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
@@ -192,7 +194,10 @@ public class UserService {
                     a.getAuthority().equalsIgnoreCase(authority)).findAny().get();
 
             user.get().removeAuthority(toRemove);
+
             userRepository.save(user.get());
+
+            return "Authority: " + authority + " is removed from user: " + username;
         } else {
             throw new UsernameNotFoundException(username);
         }
