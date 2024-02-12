@@ -166,7 +166,7 @@ public class UserService {
     }
 
     // Relations Methods
-    public Set<Authority> getAuthorities(String username) {
+    public Set<Authority> getUserAuthorities(String username) {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
@@ -177,6 +177,8 @@ public class UserService {
             throw new UsernameNotFoundException(username);
         }
     }
+
+
 
     public UserDto addAuthority(String username, String authority) {
         Optional<User> user = userRepository.findById(username);
