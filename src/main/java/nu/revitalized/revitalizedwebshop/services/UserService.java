@@ -178,6 +178,8 @@ public class UserService {
         if (user.isPresent() && optionalAuthority.isPresent()) {
             user.get().addAuthority(new Authority(username, authority));
 
+            userRepository.save(user.get());
+
             return userToDto(user.get());
         } else {
             throw new UsernameNotFoundException(username);

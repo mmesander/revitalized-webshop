@@ -6,6 +6,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsern
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 
 import jakarta.validation.Valid;
+import nu.revitalized.revitalizedwebshop.dtos.input.AuthorityInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
@@ -111,14 +112,20 @@ public class UserController {
     @PostMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> addUserAuthority(
             @PathVariable("username") String username,
-            @RequestBody String authority
+            @Valid
+            @RequestBody AuthorityInputDto authority,
+            BindingResult bindingResult
     ) {
-        try {
-            userService.addAuthority(username, authority);
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            try {
+                userService.addAuthority(username, authority.getAuthority().toUpperCase());
 
-            return ResponseEntity.noContent().build();
-        } catch (Exception exception) {
-            throw new BadRequestException();
+                return ResponseEntity.ok().body(userService.getUser(username));
+            } catch (Exception exception) {
+                throw new BadRequestException(exception.getMessage());
+            }
         }
     }
 
