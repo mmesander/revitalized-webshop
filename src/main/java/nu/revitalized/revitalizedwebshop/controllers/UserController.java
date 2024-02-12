@@ -136,7 +136,6 @@ public class UserController {
     ) {
         String confirmation = userService.removeAuthority(username, authority);
 
-
         return ResponseEntity.ok().body(confirmation);
     }
 }
