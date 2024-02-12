@@ -157,9 +157,13 @@ public class UserService {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
-            userRepository.deleteById(username);
+            if (user.get().getUsername().equalsIgnoreCase("mmesander")) {
+                throw new BadRequestException("Can't remove user: " + user.get().getUsername());
+            } else {
+                userRepository.deleteById(username);
 
-            return "User: " + username + " is deleted";
+                return "User: " + username + " is deleted";
+            }
         } else {
             throw new UsernameNotFoundException(username);
         }
@@ -177,8 +181,6 @@ public class UserService {
             throw new UsernameNotFoundException(username);
         }
     }
-
-
 
     public UserDto addAuthority(String username, String authority) {
         Optional<User> user = userRepository.findById(username);
@@ -203,21 +205,32 @@ public class UserService {
     }
 
     public String removeAuthority(String username, String authority) {
-        Optional<User> user = userRepository.findById(username);
+        Optional<User> optionalUser = userRepository.findById(username);
 
-        if (user.isPresent()) {
-            if (user.get().getUsername().equalsIgnoreCase("mmesander")
-                    && authority.equalsIgnoreCase("ROLE_ADMIN")
-            ) {
-                return "Forbidden to remove admin rights from user " + user.get().getUsername()
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            if (user.getUsername().equalsIgnoreCase("mmesander") &&
+                    authority.equalsIgnoreCase("ROLE_ADMIN")) {
+
+                return "Forbidden to remove admin rights from user: " + user.getUsername()
+                        + " " +
+                        ", to remove please contact developer";
+
+            } else if (user.getUsername().equalsIgnoreCase("mmesander") &&
+                    authority.equalsIgnoreCase("ROLE_USER")) {
+
+                return "Forbidden to remove user rights from user: " + user.getUsername()
                         + ", to remove please contact developer";
+
             } else {
-                Authority toRemove = user.get().getAuthorities().stream().filter((a) ->
-                        a.getAuthority().equalsIgnoreCase(authority)).findAny().get();
+                Authority toRemove = user.getAuthorities().stream()
+                        .filter(a -> a.getAuthority().equalsIgnoreCase(authority))
+                        .findFirst()
+                        .orElseThrow(() -> new InvalidInputException("User does not have authority: " + authority));
 
-                user.get().removeAuthority(toRemove);
-
-                userRepository.save(user.get());
+                user.removeAuthority(toRemove);
+                userRepository.save(user);
 
                 return "Authority: " + authority + " is removed from user: " + username;
             }
