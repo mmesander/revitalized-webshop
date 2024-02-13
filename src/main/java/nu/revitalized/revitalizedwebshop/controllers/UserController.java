@@ -3,10 +3,11 @@ package nu.revitalized.revitalizedwebshop.controllers;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+
+import jakarta.persistence.Id;
 import jakarta.validation.Valid;
-import nu.revitalized.revitalizedwebshop.dtos.input.AuthorityInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.*;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -129,6 +130,27 @@ public class UserController {
         }
     }
 
+    @PutMapping(value = "/{username}/shipping-details")
+    public ResponseEntity<Object> assignShippingDetailsToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto idInputDto,
+            BindingResult bindingResult
+            ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            try {
+                userService.assignShippingDetailsToUser(username, idInputDto.getId());
+
+                return ResponseEntity.ok().body(userService.getUser(username));
+            } catch (Exception exception) {
+                throw new BadRequestException(exception.getMessage());
+            }
+        }
+    }
+
+
     @DeleteMapping(value = "/{username}/authorities/{authority}")
     public ResponseEntity<Object> deleteUserAuthority(
             @PathVariable("username") String username,
@@ -138,6 +160,7 @@ public class UserController {
 
         return ResponseEntity.ok().body(confirmation);
     }
+
 
 
     // USER - CRUD Requests
