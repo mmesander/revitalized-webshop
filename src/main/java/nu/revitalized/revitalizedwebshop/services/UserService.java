@@ -19,6 +19,7 @@ import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.AuthorityRepository;
+import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import nu.revitalized.revitalizedwebshop.models.Authority;
 import org.apache.commons.lang3.StringUtils;
@@ -31,13 +32,19 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
+    private final ShippingDetailsRepository shippingDetailsRepository;
+    private final ShippingDetailsService shippingDetailsService;
 
     public UserService(
             UserRepository userRepository,
-            AuthorityRepository authorityRepository
+            AuthorityRepository authorityRepository,
+            ShippingDetailsRepository shippingDetailsRepository,
+            ShippingDetailsService shippingDetailsService
     ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
+        this.shippingDetailsRepository = shippingDetailsRepository;
+        this.shippingDetailsService = shippingDetailsService;
     }
 
 
@@ -251,4 +258,52 @@ public class UserService {
             throw new UsernameNotFoundException(username);
         }
     }
+
+    public UserDto assignShippingDetailsToUser(String username, Long id) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+        UserDto dto;
+
+        if (optionalUser.isPresent() && optionalShippingDetails.isPresent()) {
+            User user = optionalUser.get();
+            ShippingDetails shippingDetails = optionalShippingDetails.get();
+
+            Set<ShippingDetails> shippingDetailsSet = new HashSet<>();
+
+            if (user.getShippingDetails() != null) {
+                shippingDetailsSet.addAll(user.getShippingDetails());
+            }
+
+            shippingDetailsSet.add(shippingDetails);
+            user.setShippingDetails(shippingDetailsSet);
+            userRepository.save(user);
+
+            dto = userToDto(user);
+
+            return dto;
+        } else {
+            if (optionalUser.isEmpty() && optionalShippingDetails.isEmpty()) {
+                throw new RecordNotFoundException("User: " + username + " and shipping details with id: " + id
+                        + " are not found");
+            } else if (optionalUser.isEmpty()) {
+                throw new RecordNotFoundException("User with username: " + username + " not found");
+            } else {
+                throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
+            }
+        }
+    }
+
+//    public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
+//        Optional<User> user = userRepository.findById(username);
+//
+//        if (user.isPresent()) {
+//            shippingDetailsService.createShippingDetails(inputDto);
+//
+//            // Vervolgens moet hij opgehaald worden en moet de assign gebruikt worden
+//        } else {
+//            throw new UsernameNotFoundException(username);
+//        }
+//    }
+
+
 }

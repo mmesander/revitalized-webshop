@@ -175,8 +175,6 @@ public class UserController {
         }
     }
 
-
-
-
-
+//    @PostMapping("/user/{username}/shippingdetails")
+//    public ResponseEntity
 }
