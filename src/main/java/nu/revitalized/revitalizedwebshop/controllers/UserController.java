@@ -1,12 +1,11 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.AuthorityInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
@@ -33,7 +32,7 @@ public class UserController {
     }
 
 
-    // CRUD Requests -- GET Requests
+    // ADMIN -- CRUD Requests
     @GetMapping(value = "")
     public ResponseEntity<List<UserDto>> getUsers() {
         List<UserDto> dtos = userService.getUsers();
@@ -60,7 +59,6 @@ public class UserController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    // CRUD Requests -- POST Requests
     @PostMapping("")
     public ResponseEntity<UserDto> createUser(
             @Valid
@@ -78,23 +76,21 @@ public class UserController {
         }
     }
 
-    // CRUD Requests -- PUT/PATCH Requests
     @PutMapping("/{username}")
-    public ResponseEntity<UserDto> updateUser(
+    public ResponseEntity<UserDto> updateUserEmail(
             @PathVariable("username") String username,
-            @RequestBody UserInputDto inputDto,
+            @RequestBody UserEmailInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.updateUser(username, inputDto);
+            UserDto dto = userService.updateUserEmail(username, inputDto);
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
-    // CRUD Requests -- DELETE Requests
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteUser(
             @PathVariable("username") String username
@@ -105,7 +101,7 @@ public class UserController {
     }
 
 
-    // Relations Requests
+    // ADMIN - Relations Requests
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities(
             @PathVariable("username") String username
@@ -144,9 +140,9 @@ public class UserController {
     }
 
 
-    // User Requests
+    // USER - CRUD Requests
     @GetMapping(value = "/user/{username}")
-    public ResponseEntity<UserDto> getUser(
+    public ResponseEntity<UserDto> getSpecificUser(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String username
             ) {
@@ -155,7 +151,32 @@ public class UserController {
 
             return ResponseEntity.ok(userDto);
         } else {
-            throw new BadRequestException("Invalid token used");
+            throw new BadRequestException("Used token is not valid");
         }
     }
+
+    @PutMapping("/user/{username}/update-email")
+    public ResponseEntity<UserDto> updateSpecificUserEmail(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String username,
+            @RequestBody UserEmailInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.updateUserEmail(username, inputDto);
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+
+
+
+
 }

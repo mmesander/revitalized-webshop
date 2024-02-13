@@ -7,6 +7,8 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.dtoToShippingDetails;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.shippingDetailsToDto;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
+
+import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
@@ -147,11 +149,12 @@ public class UserService {
     }
 
     // CRUD Methods --> PUT/PATCH Methods
-    public UserDto updateUser(String username, UserInputDto inputDto) {
+    public UserDto updateUserEmail(String username, UserEmailInputDto inputDto) {
         Optional<User> optionalUser = userRepository.findById(username);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+
 
             user.setEmail(inputDto.getEmail());
 
