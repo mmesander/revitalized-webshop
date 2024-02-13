@@ -4,16 +4,24 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
 
+import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.UserShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
+import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.AuthorityRepository;
+import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import nu.revitalized.revitalizedwebshop.models.Authority;
 import org.apache.commons.lang3.StringUtils;
@@ -26,13 +34,19 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
+    private final ShippingDetailsRepository shippingDetailsRepository;
+    private final ShippingDetailsService shippingDetailsService;
 
     public UserService(
             UserRepository userRepository,
-            AuthorityRepository authorityRepository
+            AuthorityRepository authorityRepository,
+            ShippingDetailsRepository shippingDetailsRepository,
+            ShippingDetailsService shippingDetailsService
     ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
+        this.shippingDetailsRepository = shippingDetailsRepository;
+        this.shippingDetailsService = shippingDetailsService;
     }
 
 
@@ -52,7 +66,23 @@ public class UserService {
 
         copyProperties(user, userDto);
 
+        if (user.getShippingDetails() != null) {
+            Set<ShippingDetailsShortDto> dtos = new TreeSet<>(Comparator.comparingLong(ShippingDetailsShortDto::getId));
+            for (ShippingDetails shippingDetails : user.getShippingDetails()) {
+                dtos.add(shippingDetailsToShortDto(shippingDetails));
+            }
+            userDto.setShippingDetails(dtos);
+        }
+
         return userDto;
+    }
+
+    public static UserShortDto userToShortDto(User user) {
+        UserShortDto userShortDto = new UserShortDto();
+
+        copyProperties(user, userShortDto);
+
+        return userShortDto;
     }
 
 
@@ -136,11 +166,12 @@ public class UserService {
     }
 
     // CRUD Methods --> PUT/PATCH Methods
-    public UserDto updateUser(String username, UserInputDto inputDto) {
+    public UserDto updateUserEmail(String username, UserEmailInputDto inputDto) {
         Optional<User> optionalUser = userRepository.findById(username);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+
 
             user.setEmail(inputDto.getEmail());
 
@@ -214,8 +245,7 @@ public class UserService {
                     authority.equalsIgnoreCase("ROLE_ADMIN")) {
 
                 return "Forbidden to remove admin rights from user: " + user.getUsername()
-                        + " " +
-                        ", to remove please contact developer";
+                        + ", to remove please contact developer";
 
             } else if (user.getUsername().equalsIgnoreCase("mmesander") &&
                     authority.equalsIgnoreCase("ROLE_USER")) {
@@ -237,5 +267,67 @@ public class UserService {
         } else {
             throw new UsernameNotFoundException(username);
         }
+    }
+
+    public UserDto assignShippingDetailsToUser(String username, Long id) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+        UserDto dto;
+
+        if (optionalUser.isPresent() && optionalShippingDetails.isPresent()) {
+            User user = optionalUser.get();
+            ShippingDetails shippingDetails = optionalShippingDetails.get();
+
+            shippingDetails.setUser(user);
+            shippingDetailsRepository.save(shippingDetails);
+
+            Set<ShippingDetails> shippingDetailsSet = new TreeSet<>(Comparator.comparingLong(ShippingDetails::getId));
+
+            if (!user.getShippingDetails().isEmpty()) {
+                shippingDetailsSet.addAll(user.getShippingDetails());
+            }
+
+            shippingDetailsSet.add(shippingDetails);
+            user.setShippingDetails(shippingDetailsSet);
+
+            userRepository.save(user);
+
+            dto = userToDto(user);
+
+            return dto;
+        } else {
+            if (optionalUser.isEmpty() && optionalShippingDetails.isEmpty()) {
+                throw new RecordNotFoundException("User: " + username + " and shipping details with id: " + id
+                        + " are not found");
+            } else if (optionalUser.isEmpty()) {
+                throw new RecordNotFoundException("User with username: " + username + " not found");
+            } else {
+                throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
+            }
+        }
+    }
+
+    public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
+        Optional<User> user = userRepository.findById(username);
+        UserDto dto;
+
+        if (user.isPresent()) {
+            shippingDetailsService.createShippingDetails(inputDto);
+
+            String houseNumber = buildHouseNumber(inputDto);
+            Optional<ShippingDetails> optionalShippingDetails =
+                    shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(inputDto.getStreet(), houseNumber);
+
+            if (optionalShippingDetails.isPresent()) {
+                assignShippingDetailsToUser(username, optionalShippingDetails.get().getId());
+            }
+
+            dto = userToDto(user.get());
+
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        return dto;
     }
 }

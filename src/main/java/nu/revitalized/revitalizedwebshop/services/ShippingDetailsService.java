@@ -5,9 +5,11 @@ import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
@@ -15,16 +17,15 @@ import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ShippingDetailsService {
     private final ShippingDetailsRepository shippingDetailsRepository;
 
-    public ShippingDetailsService(ShippingDetailsRepository shippingDetailsRepository) {
+    public ShippingDetailsService(
+            ShippingDetailsRepository shippingDetailsRepository
+    ) {
         this.shippingDetailsRepository = shippingDetailsRepository;
     }
 
@@ -50,7 +51,19 @@ public class ShippingDetailsService {
 
         copyProperties(shippingDetails, shippingDetailsDto);
 
+        if (shippingDetails.getUser() != null) {
+            shippingDetailsDto.setUser(userToShortDto(shippingDetails.getUser()));
+        }
+
         return shippingDetailsDto;
+    }
+
+    public static ShippingDetailsShortDto shippingDetailsToShortDto(ShippingDetails shippingDetails) {
+        ShippingDetailsShortDto shortDto = new ShippingDetailsShortDto();
+
+        copyProperties(shippingDetails, shortDto);
+
+        return shortDto;
     }
 
     // CRUD Methods --> GET Methods

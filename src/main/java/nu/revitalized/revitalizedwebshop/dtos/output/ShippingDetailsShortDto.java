@@ -7,7 +7,7 @@ import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
 
 @Getter
 @Setter
-public class ShippingDetailsDto implements IdentifiableId {
+public class ShippingDetailsShortDto implements IdentifiableId {
     // Variables
     private Long id;
     private String detailsName;
@@ -18,8 +18,4 @@ public class ShippingDetailsDto implements IdentifiableId {
     private String street;
     private String houseNumber;
     private String email;
-
-
-    // Relations
-    private UserShortDto user;
 }
