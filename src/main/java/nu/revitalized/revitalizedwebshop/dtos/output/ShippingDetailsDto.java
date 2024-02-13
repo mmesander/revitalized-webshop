@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
-import nu.revitalized.revitalizedwebshop.models.User;
 
 @Getter
 @Setter
@@ -22,5 +21,5 @@ public class ShippingDetailsDto implements IdentifiableId {
 
 
     // Relations
-    private User user;
+    private UserDto user;
 }

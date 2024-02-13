@@ -30,10 +30,17 @@ public class User {
             mappedBy = "username",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.EAGER
+    )
     private Set<Authority> authorities = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(
+            targetEntity = ShippingDetails.class,
+            mappedBy = "user",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
     private Set<ShippingDetails> shippingDetails;
 
 
