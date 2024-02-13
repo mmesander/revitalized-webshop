@@ -23,4 +23,10 @@ public class ShippingDetails {
     private String street;
     private String houseNumber;
     private String email;
+
+
+    // Relations
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private User user;
 }

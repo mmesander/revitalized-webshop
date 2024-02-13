@@ -33,6 +33,9 @@ public class User {
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<ShippingDetails> shippingDetails;
+
 
     // Methods
     public void addAuthority(Authority authority) {
