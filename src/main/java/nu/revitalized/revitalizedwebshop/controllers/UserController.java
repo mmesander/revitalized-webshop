@@ -13,11 +13,14 @@ import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin
 @RestController
@@ -101,6 +104,7 @@ public class UserController {
         return ResponseEntity.ok().body(confirmation);
     }
 
+
     // Relations Requests
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities(
@@ -137,5 +141,21 @@ public class UserController {
         String confirmation = userService.removeAuthority(username, authority);
 
         return ResponseEntity.ok().body(confirmation);
+    }
+
+
+    // User Requests
+    @GetMapping(value = "/user/{username}")
+    public ResponseEntity<UserDto> getUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String username
+            ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            UserDto userDto = userService.getUser(username);
+
+            return ResponseEntity.ok(userDto);
+        } else {
+            throw new BadRequestException("Invalid token used");
+        }
     }
 }
