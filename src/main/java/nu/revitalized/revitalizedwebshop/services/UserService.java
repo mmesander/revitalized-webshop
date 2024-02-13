@@ -228,8 +228,7 @@ public class UserService {
                     authority.equalsIgnoreCase("ROLE_ADMIN")) {
 
                 return "Forbidden to remove admin rights from user: " + user.getUsername()
-                        + " " +
-                        ", to remove please contact developer";
+                        + ", to remove please contact developer";
 
             } else if (user.getUsername().equalsIgnoreCase("mmesander") &&
                     authority.equalsIgnoreCase("ROLE_USER")) {
