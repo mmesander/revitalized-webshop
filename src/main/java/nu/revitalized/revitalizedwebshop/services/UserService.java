@@ -4,14 +4,17 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.dtoToShippingDetails;
+import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.shippingDetailsToDto;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
+import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.AuthorityRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
@@ -51,6 +54,14 @@ public class UserService {
         UserDto userDto = new UserDto();
 
         copyProperties(user, userDto);
+
+        if (user.getShippingDetails() != null) {
+            Set<ShippingDetailsDto> dtos = new HashSet<>();
+            for (ShippingDetails shippingDetails : user.getShippingDetails()) {
+                dtos.add(shippingDetailsToDto(shippingDetails));
+            }
+            userDto.setShippingDetails(dtos);
+        }
 
         return userDto;
     }
