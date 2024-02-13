@@ -182,6 +182,7 @@ public class UserController {
     public ResponseEntity<UserDto> updateSpecificUserEmail(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String username,
+            @Valid
             @RequestBody UserEmailInputDto inputDto,
             BindingResult bindingResult
     ) {
@@ -198,6 +199,24 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/user/{username}/shippingdetails")
-//    public ResponseEntity
+    @PostMapping("/user/{username}/shipping-details")
+    public ResponseEntity<UserDto> createNewUserShippingDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String username,
+            @Valid
+            @RequestBody ShippingDetailsInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.addUserShippingDetails(username, inputDto);
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
 }

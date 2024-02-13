@@ -4,9 +4,11 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
 
+import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
@@ -305,17 +307,27 @@ public class UserService {
         }
     }
 
-//    public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
-//        Optional<User> user = userRepository.findById(username);
-//
-//        if (user.isPresent()) {
-//            shippingDetailsService.createShippingDetails(inputDto);
-//
-//            // Vervolgens moet hij opgehaald worden en moet de assign gebruikt worden
-//        } else {
-//            throw new UsernameNotFoundException(username);
-//        }
-//    }
+    public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
+        Optional<User> user = userRepository.findById(username);
+        UserDto dto;
 
+        if (user.isPresent()) {
+            shippingDetailsService.createShippingDetails(inputDto);
 
+            String houseNumber = buildHouseNumber(inputDto);
+            Optional<ShippingDetails> optionalShippingDetails =
+                    shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(inputDto.getStreet(), houseNumber);
+
+            if (optionalShippingDetails.isPresent()) {
+                assignShippingDetailsToUser(username, optionalShippingDetails.get().getId());
+            }
+
+            dto = userToDto(user.get());
+
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        return dto;
+    }
 }
