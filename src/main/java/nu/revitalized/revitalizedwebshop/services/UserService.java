@@ -4,14 +4,14 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.dtoToShippingDetails;
-import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.shippingDetailsToDto;
+import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.UserShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -65,14 +65,22 @@ public class UserService {
         copyProperties(user, userDto);
 
         if (user.getShippingDetails() != null) {
-            Set<ShippingDetailsDto> dtos = new HashSet<>();
+            Set<ShippingDetailsShortDto> dtos = new TreeSet<>(Comparator.comparingLong(ShippingDetailsShortDto::getId));
             for (ShippingDetails shippingDetails : user.getShippingDetails()) {
-                dtos.add(shippingDetailsToDto(shippingDetails));
+                dtos.add(shippingDetailsToShortDto(shippingDetails));
             }
             userDto.setShippingDetails(dtos);
         }
 
         return userDto;
+    }
+
+    public static UserShortDto userToShortDto(User user) {
+        UserShortDto userShortDto = new UserShortDto();
+
+        copyProperties(user, userShortDto);
+
+        return userShortDto;
     }
 
 
@@ -268,14 +276,18 @@ public class UserService {
             User user = optionalUser.get();
             ShippingDetails shippingDetails = optionalShippingDetails.get();
 
-            Set<ShippingDetails> shippingDetailsSet = new HashSet<>();
+            shippingDetails.setUser(user);
+            shippingDetailsRepository.save(shippingDetails);
 
-            if (user.getShippingDetails() != null) {
+            Set<ShippingDetails> shippingDetailsSet = new TreeSet<>(Comparator.comparingLong(ShippingDetails::getId));
+
+            if (!user.getShippingDetails().isEmpty()) {
                 shippingDetailsSet.addAll(user.getShippingDetails());
             }
 
             shippingDetailsSet.add(shippingDetails);
             user.setShippingDetails(shippingDetailsSet);
+
             userRepository.save(user);
 
             dto = userToDto(user);

@@ -27,6 +27,6 @@ public class ShippingDetails {
 
     // Relations
     @ManyToOne
-    @JoinColumn(name = "shipping_details")
+    @JoinColumn(name = "user_shipping_details")
     private User user;
 }

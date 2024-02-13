@@ -34,11 +34,12 @@ public class User {
     )
     private Set<Authority> authorities = new HashSet<>();
 
+
     @OneToMany(
-            targetEntity = ShippingDetails.class,
+//            targetEntity = ShippingDetails.class,
             mappedBy = "user",
-            orphanRemoval = true,
-            cascade = CascadeType.ALL,
+//            orphanRemoval = true,
+//            cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
     private Set<ShippingDetails> shippingDetails;
