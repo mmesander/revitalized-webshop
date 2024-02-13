@@ -33,7 +33,7 @@ public class User {
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
-    @OneToMany(mappedBy = "username")
+    @OneToMany(mappedBy = "user")
     private Set<ShippingDetails> shippingDetails;
 
 
