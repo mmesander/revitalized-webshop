@@ -4,6 +4,8 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Getter
 @Setter
 public class ReviewDto {
@@ -11,4 +13,5 @@ public class ReviewDto {
     private Long id;
     private String review;
     private Integer rating;
+    private Date date;
 }
