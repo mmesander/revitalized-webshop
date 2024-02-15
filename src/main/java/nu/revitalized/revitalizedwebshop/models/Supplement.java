@@ -4,7 +4,7 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -24,4 +24,10 @@ public class Supplement extends Product {
             inverseJoinColumns = @JoinColumn(name = "allergen_id")
     )
     private Set<Allergen> allergens;
+
+    @OneToMany(
+            mappedBy = "supplement",
+            fetch = FetchType.EAGER
+    )
+    private Set<Review> reviews;
 }

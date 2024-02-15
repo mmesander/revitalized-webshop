@@ -1,10 +1,9 @@
 package nu.revitalized.revitalizedwebshop.models;
 
 // Imports
+
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 //TODO in de variablen moet nog een lijst met reviews komen;
 //TODO in de variablen moet nog een foto komen;

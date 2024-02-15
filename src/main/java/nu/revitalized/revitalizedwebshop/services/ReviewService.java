@@ -1,28 +1,46 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildBadAssignRequest.buildBadAssignRequest;
+import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
+import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Review;
+import nu.revitalized.revitalizedwebshop.models.Supplement;
+import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.ReviewRepository;
+import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
+    private final SupplementRepository supplementRepository;
+    private final GarmentRepository garmentRepository;
 
-    public ReviewService(ReviewRepository reviewRepository) {
+    public ReviewService(
+            ReviewRepository reviewRepository,
+            SupplementRepository supplementRepository,
+            GarmentRepository garmentRepository
+    ) {
         this.reviewRepository = reviewRepository;
+        this.supplementRepository = supplementRepository;
+        this.garmentRepository = garmentRepository;
     }
 
 
@@ -39,6 +57,14 @@ public class ReviewService {
         ReviewDto reviewDto = new ReviewDto();
 
         copyProperties(review, reviewDto);
+
+        if (review.getGarment() != null) {
+            reviewDto.setProductId(review.getGarment().getId());
+        }
+
+        if (review.getSupplement() != null) {
+            reviewDto.setProductId(review.getSupplement().getId());
+        }
 
         return reviewDto;
     }
@@ -78,7 +104,7 @@ public class ReviewService {
             Integer maxRating
     ) {
         Specification<Review> params = Specification.where
-                (rating == null ? null : getReviewRatingLikeFilter(rating))
+                        (rating == null ? null : getReviewRatingLikeFilter(rating))
                 .and(minRating == null ? null : getReviewMoreThanFilter(minRating))
                 .and(maxRating == null ? null : getReviewLessThanFilter(maxRating));
 
@@ -158,9 +184,92 @@ public class ReviewService {
         if (optionalReview.isPresent()) {
             reviewRepository.deleteById(id);
 
-            return "Review with id: " + id + " from: "+ formatDate(optionalReview.get().getDate()) +" is removed";
+            return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate()) + " is removed";
         } else {
             throw new RecordNotFoundException("No review found with id: " + id);
+        }
+    }
+
+
+    // Product Requests
+    public Object assignReviewToProduct(Long productId, Long reviewId) {
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
+        GarmentDto garmentDto;
+        SupplementDto supplementDto;
+
+        if (optionalSupplement.isPresent() && optionalReview.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            Review review = optionalReview.get();
+
+            if (review.getSupplement() != null) {
+
+                throw new BadRequestException(buildBadAssignRequest(
+                        "supplement", review.getSupplement().getName(), review.getSupplement().getId(), reviewId));
+
+            } else if (review.getGarment() != null) {
+
+                throw new BadRequestException(buildBadAssignRequest(
+                        "garment", review.getGarment().getName(), review.getGarment().getId(), reviewId));
+
+            } else {
+                review.setSupplement(supplement);
+                reviewRepository.save(review);
+
+                Set<Review> reviewSet = new TreeSet<>(Comparator.comparing(Review::getDate).reversed());
+
+                if (!supplement.getReviews().isEmpty()) {
+                    reviewSet.addAll(supplement.getReviews());
+                }
+
+                reviewSet.add(review);
+                supplement.setReviews(reviewSet);
+
+                supplementRepository.save(supplement);
+
+                supplementDto = supplementToDto(supplement);
+
+                return supplementDto;
+            }
+        } else if (optionalGarment.isPresent() && optionalReview.isPresent()) {
+            Garment garment = optionalGarment.get();
+            Review review = optionalReview.get();
+
+            if (review.getSupplement() != null) {
+
+                throw new BadRequestException(buildBadAssignRequest(
+                        "supplement", review.getSupplement().getName(), review.getSupplement().getId(), reviewId));
+
+            } else if (review.getGarment() != null) {
+
+                throw new BadRequestException(buildBadAssignRequest(
+                        "garment", review.getGarment().getName(), review.getGarment().getId(), reviewId));
+
+            } else {
+                review.setGarment(garment);
+                reviewRepository.save(review);
+
+                Set<Review> reviewSet = new TreeSet<>(Comparator.comparing(Review::getDate).reversed());
+
+                if (!garment.getReviews().isEmpty()) {
+                    reviewSet.addAll(garment.getReviews());
+                }
+
+                reviewSet.add(review);
+                garment.setReviews(reviewSet);
+
+                garmentRepository.save(garment);
+
+                garmentDto = garmentToDto(garment);
+
+                return garmentDto;
+            }
+        } else if (optionalGarment.isEmpty() && optionalReview.isPresent() ||
+                optionalSupplement.isEmpty() && optionalReview.isPresent()) {
+            throw new BadRequestException("No product found with id: " + productId);
+        } else {
+            throw new BadRequestException("No review found with id:" + reviewId);
         }
     }
 }

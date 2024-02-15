@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,4 +14,12 @@ public class Garment extends Product {
     // Variables
     private String size;
     private String color;
+
+
+    // Relations
+    @OneToMany(
+            mappedBy = "garment",
+            fetch = FetchType.EAGER
+    )
+    private Set<Review> reviews;
 }
