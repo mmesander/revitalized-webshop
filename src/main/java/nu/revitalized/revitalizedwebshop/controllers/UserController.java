@@ -137,6 +137,16 @@ public class UserController {
         }
     }
 
+    @DeleteMapping(value = "/{username}/authorities/{authority}")
+    public ResponseEntity<Object> deleteUserAuthority(
+            @PathVariable("username") String username,
+            @PathVariable("authority") String authority
+    ) {
+        String confirmation = userService.removeAuthority(username, authority);
+
+        return ResponseEntity.ok().body(confirmation);
+    }
+
 
     // ADMIN - ShippingDetails Requests
     @PutMapping(value = "/{username}/shipping-details")
@@ -157,17 +167,6 @@ public class UserController {
                 throw new BadRequestException(exception.getMessage());
             }
         }
-    }
-
-
-    @DeleteMapping(value = "/{username}/authorities/{authority}")
-    public ResponseEntity<Object> deleteUserAuthority(
-            @PathVariable("username") String username,
-            @PathVariable("authority") String authority
-    ) {
-        String confirmation = userService.removeAuthority(username, authority);
-
-        return ResponseEntity.ok().body(confirmation);
     }
 
 
@@ -207,6 +206,8 @@ public class UserController {
         }
     }
 
+
+    // USER - ShippingDetails Requests
     @PostMapping("/auth/{username}/shipping-details")
     public ResponseEntity<UserDto> createNewUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
