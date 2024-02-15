@@ -272,7 +272,7 @@ public class UserController {
     }
 
     @DeleteMapping("/auth/{username}/shipping-details/{id}")
-    public ResponseEntity<String> deleteUserShippingDetails(
+    public ResponseEntity<Object> deleteUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id

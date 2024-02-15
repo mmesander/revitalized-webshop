@@ -84,7 +84,7 @@ public class AllergenController {
     }
 
     @DeleteMapping("/products/supplements/allergens/{id}")
-    public ResponseEntity<String> deleteAllergen(
+    public ResponseEntity<Object> deleteAllergen(
             @PathVariable("id") Long id
     ) {
         String confirmation = allergenService.deleteAllergen(id);
