@@ -153,5 +153,15 @@ public class ReviewService {
         }
     }
 
+    public String deleteReview(Long id) {
+        Optional<Review> optionalReview = reviewRepository.findById(id);
 
+        if (optionalReview.isPresent()) {
+            reviewRepository.deleteById(id);
+
+            return "Review with id: " + id + " is removed";
+        } else {
+            throw new RecordNotFoundException("No review found with id: " + id);
+        }
+    }
 }
