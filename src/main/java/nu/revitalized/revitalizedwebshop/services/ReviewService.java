@@ -131,15 +131,15 @@ public class ReviewService {
         if (optionalReview.isPresent()) {
             Review review = optionalReview.get();
 
-            if (review.getReview() != null) {
+            if (inputDto.getReview() != null) {
                 review.setReview(inputDto.getReview());
             }
 
-            if (review.getRating() != null) {
+            if (inputDto.getRating() != null) {
                 review.setRating(inputDto.getRating());
             }
 
-            if (review.getReview() != null || review.getRating() != null) {
+            if (inputDto.getReview() != null || inputDto.getRating() != null) {
                 review.setDate(createDate());
             }
 
