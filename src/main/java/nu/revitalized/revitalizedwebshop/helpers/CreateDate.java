@@ -1,6 +1,6 @@
 package nu.revitalized.revitalizedwebshop.helpers;
 
-import java.text.SimpleDateFormat;
+// Imports
 import java.util.Date;
 
 public class CreateDate {
