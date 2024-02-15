@@ -10,4 +10,5 @@ public class Checklist {
 
     // Overig
     // TODO: Alles nalopen op imports etc.
+    // TODO: De url van authenticate aanpassen op users/authenticate
 }
