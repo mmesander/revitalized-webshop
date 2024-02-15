@@ -120,4 +120,14 @@ public class ReviewController {
 
         return ResponseEntity.ok().body(dto);
     }
+
+    @DeleteMapping("/products/{productId}/reviews/{reviewId}")
+    public ResponseEntity<Object> removeReviewFromProduct(
+            @PathVariable("productId") Long productId,
+            @PathVariable("reviewId") Long reviewId
+    ) {
+        Object dto = reviewService.removeReviewFromProduct(productId, reviewId);
+
+        return ResponseEntity.ok().body(dto);
+    }
 }
