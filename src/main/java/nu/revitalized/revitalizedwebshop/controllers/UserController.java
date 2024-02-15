@@ -4,8 +4,8 @@ package nu.revitalized.revitalizedwebshop.controllers;
 
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildPersonalConfirmation.buildPersonalConfirmation;
 
-import jakarta.persistence.Id;
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
@@ -263,6 +263,26 @@ public class UserController {
                 ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
 
                 return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/shipping-details/{id}")
+    public ResponseEntity<String> deleteUserShippingDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("id") Long id,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                String confirmation = shippingDetailsService.deleteShippingDetailsById(id);
+
+                return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, username));
             }
         } else {
             throw new BadRequestException("Used token is not valid");

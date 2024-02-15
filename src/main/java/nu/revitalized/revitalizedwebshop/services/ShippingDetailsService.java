@@ -225,11 +225,14 @@ public class ShippingDetailsService {
     }
 
     // CRUD Methods --> DELETE Methods
-    public void deleteShippingDetailsById(Long id) {
+    public String deleteShippingDetailsById(Long id) {
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
 
         if (optionalShippingDetails.isPresent()) {
+
             shippingDetailsRepository.deleteById(id);
+
+            return "Shipping details with id: " + id + " is removed";
         } else {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
         }
