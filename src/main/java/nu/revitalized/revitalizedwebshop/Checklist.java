@@ -2,10 +2,10 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // TODO: REVIEW
-    // TODO: Controller
     // TODO: RELATIONS
-    // TODO: user
-    // TODO: product
+    // TODO: product - patch en put de averagerating meeberekenen indien het gekoppeld is aan een product
+    // TODO: user - alle persoonlijke mogelijkheden doen:
+    // TODO: Review GET POST PUT PATCH DELETE
 
 
     // Overig
