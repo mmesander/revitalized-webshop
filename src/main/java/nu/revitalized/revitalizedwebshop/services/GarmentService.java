@@ -2,6 +2,7 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildSpecificConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.specifications.GarmentSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
@@ -227,11 +228,13 @@ public class GarmentService {
     }
 
     // CRUD Methods --> DELETE Methods
-    public void deleteGarment(Long id) {
+    public String deleteGarment(Long id) {
         Optional<Garment> garment = garmentRepository.findById(id);
 
         if (garment.isPresent()) {
             garmentRepository.deleteById(id);
+
+            return buildSpecificConfirmation("Garment", garment.get().getName(), id);
         } else {
             throw new RecordNotFoundException("No garment found with id: " + id);
         }

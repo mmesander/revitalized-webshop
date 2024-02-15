@@ -3,6 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildSpecificConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
@@ -238,11 +239,13 @@ public class SupplementService {
     }
 
     // CRUD Methods --> DELETE Methods
-    public void deleteSupplement(Long id) {
+    public String deleteSupplement(Long id) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
 
         if (supplement.isPresent()) {
             supplementRepository.deleteById(id);
+
+            return buildSpecificConfirmation("Supplement", supplement.get().getName(), id);
         } else {
             throw new RecordNotFoundException("No supplement found with id: " + id);
         }

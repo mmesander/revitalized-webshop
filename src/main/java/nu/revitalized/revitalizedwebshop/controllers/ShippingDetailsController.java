@@ -110,8 +110,8 @@ public class ShippingDetailsController {
     public ResponseEntity<Object> deleteShippingDetails(
             @PathVariable("id") Long id
     ) {
-        shippingDetailsService.deleteShippingDetailsById(id);
+        String confirmation = shippingDetailsService.deleteShippingDetailsById(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(confirmation);
     }
 }

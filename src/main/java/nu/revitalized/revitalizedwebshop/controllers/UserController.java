@@ -4,7 +4,7 @@ package nu.revitalized.revitalizedwebshop.controllers;
 
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildPersonalConfirmation.buildPersonalConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildTargetConfirmation.buildPersonalConfirmation;
 
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
@@ -272,7 +272,7 @@ public class UserController {
     }
 
     @DeleteMapping("/auth/{username}/shipping-details/{id}")
-    public ResponseEntity<String> deleteUserShippingDetails(
+    public ResponseEntity<Object> deleteUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id
@@ -280,7 +280,7 @@ public class UserController {
         if (Objects.equals(userDetails.getUsername(), username)) {
             String confirmation = shippingDetailsService.deleteShippingDetailsById(id);
 
-            return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, username));
+            return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, "user", username));
         } else {
             throw new BadRequestException("Used token is not valid");
         }

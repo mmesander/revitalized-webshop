@@ -87,8 +87,8 @@ public class AllergenController {
     public ResponseEntity<Object> deleteAllergen(
             @PathVariable("id") Long id
     ) {
-        allergenService.deleteAllergen(id);
+        String confirmation = allergenService.deleteAllergen(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(confirmation);
     }
 }
