@@ -127,9 +127,9 @@ public class SupplementController {
     public ResponseEntity<Object> deleteSupplement(
             @PathVariable("id") Long id
     ) {
-        supplementService.deleteSupplement(id);
+        String confirmation = supplementService.deleteSupplement(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(confirmation);
     }
 
 
