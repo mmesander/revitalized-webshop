@@ -11,6 +11,7 @@ import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserShortDto;
@@ -347,7 +348,18 @@ public class UserService {
         return dto;
     }
 
-//    public UserDto updateUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
-//
-//    }
+    public ShippingDetailsDto updateUserShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+
+        if (optionalShippingDetails.isPresent()) {
+            ShippingDetails shippingDetails = optionalShippingDetails.get();
+
+            copyProperties(inputDto, shippingDetails);
+            shippingDetailsRepository.save(shippingDetails);
+
+            return shippingDetailsToDto(shippingDetails);
+        } else {
+            throw new BadRequestException("Shipping Details with id: " + id + " is not found");
+        }
+    }
 }

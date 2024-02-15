@@ -10,6 +10,5 @@ import java.util.Optional;
 
 public interface ShippingDetailsRepository extends JpaRepository<ShippingDetails, Long>, JpaSpecificationExecutor<ShippingDetails> {
     boolean existsByStreetIgnoreCaseAndHouseNumberAndUser_Username(String street, String houseNumber, String username);
-//    Optional<ShippingDetails> findByStreetIgnoreCaseAndHouseNumberAndUser_Username(String street, String houseNumber, String username);
     Optional<List<ShippingDetails>> findByStreetIgnoreCaseAndHouseNumber(String street, String houseNumber);
 }

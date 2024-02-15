@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 
@@ -136,7 +137,7 @@ public class UserController {
             @Valid
             @RequestBody IdInputDto idInputDto,
             BindingResult bindingResult
-            ) {
+    ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
@@ -162,13 +163,12 @@ public class UserController {
     }
 
 
-
     // USER - CRUD Requests
     @GetMapping(value = "/auth/{username}")
     public ResponseEntity<UserDto> getSpecificUser(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String username
-            ) {
+            @PathVariable("username") String username
+    ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
             UserDto userDto = userService.getUser(username);
 
@@ -181,7 +181,7 @@ public class UserController {
     @PutMapping("/auth/{username}/update-email")
     public ResponseEntity<UserDto> updateSpecificUserEmail(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String username,
+            @PathVariable("username") String username,
             @Valid
             @RequestBody UserEmailInputDto inputDto,
             BindingResult bindingResult
@@ -202,7 +202,7 @@ public class UserController {
     @PostMapping("/auth/{username}/shipping-details")
     public ResponseEntity<UserDto> createNewUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String username,
+            @PathVariable("username") String username,
             @Valid
             @RequestBody ShippingDetailsInputDto inputDto,
             BindingResult bindingResult
@@ -212,6 +212,28 @@ public class UserController {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
                 UserDto dto = userService.addUserShippingDetails(username, inputDto);
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PutMapping("/auth/{username}/shipping-details/{id}")
+    public ResponseEntity<ShippingDetailsDto> updateUserShippingDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("id") Long id,
+            @Valid
+            @RequestBody ShippingDetailsInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                ShippingDetailsDto dto = userService.updateUserShippingDetails(id, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
