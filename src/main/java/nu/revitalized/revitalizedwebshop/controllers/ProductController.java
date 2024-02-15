@@ -56,8 +56,8 @@ public class ProductController {
     public ResponseEntity<Object> deleteProduct(
             @PathVariable("id") Long id
     ) {
-        productService.deleteProduct(id);
+        String confirmation = productService.deleteProduct(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(confirmation);
     }
 }

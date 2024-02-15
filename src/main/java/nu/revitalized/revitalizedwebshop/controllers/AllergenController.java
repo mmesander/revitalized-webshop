@@ -89,8 +89,6 @@ public class AllergenController {
     ) {
         String confirmation = allergenService.deleteAllergen(id);
 
-
-
         return ResponseEntity.ok().body(confirmation);
     }
 }

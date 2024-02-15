@@ -5,7 +5,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
-
+import static nu.revitalized.revitalizedwebshop.helpers.BuildSpecificConfirmation.buildSpecificConfirmation;
 import nu.revitalized.revitalizedwebshop.dtos.output.ProductDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
@@ -141,14 +141,18 @@ public class ProductService {
     }
 
     // CRUD Methods --> DELETE Methods
-    public void deleteProduct(Long id) {
+    public String deleteProduct(Long id) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
         Optional<Garment> garment = garmentRepository.findById(id);
 
         if (supplement.isPresent()) {
             supplementRepository.deleteById(id);
+
+            return buildSpecificConfirmation("Supplement", supplement.get().getName(), id);
         } else if (garment.isPresent()) {
             garmentRepository.deleteById(id);
+
+            return buildSpecificConfirmation("Garment", garment.get().getName(), id);
         } else {
             throw new RecordNotFoundException("No products found with id: " + id);
         }
