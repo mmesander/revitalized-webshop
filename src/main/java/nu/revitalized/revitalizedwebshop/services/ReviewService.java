@@ -11,8 +11,6 @@ import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.repositories.ReviewRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

@@ -2,10 +2,12 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // TODO: REVIEW
-    // TODO: Service
     // TODO: Controller
-    // TODO: Relations
+    // TODO: RELATIONS
+    // TODO: user
+    // TODO: product
+
 
     // Overig
-    //
+    // TODO: Alles nalopen op imports etc.
 }
