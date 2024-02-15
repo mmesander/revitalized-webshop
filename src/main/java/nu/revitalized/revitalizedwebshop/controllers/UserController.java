@@ -12,6 +12,7 @@ import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
+import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
 import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,9 +29,14 @@ import java.util.Objects;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final ShippingDetailsService shippingDetailsService;
 
-    public UserController(UserService userService) {
+    public UserController(
+            UserService userService,
+            ShippingDetailsService shippingDetailsService
+    ) {
         this.userService = userService;
+        this.shippingDetailsService = shippingDetailsService;
     }
 
 
@@ -233,10 +239,27 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                ShippingDetailsDto dto = userService.updateUserShippingDetails(id, inputDto);
+                ShippingDetailsDto dto = shippingDetailsService.updateShippingDetails(id, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PatchMapping("/auth/{username}/shipping-details/{id}")
+    public ResponseEntity<ShippingDetailsDto> patchUserShippingDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("id") Long id,
+            @RequestBody ShippingDetailsInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
+
+            return ResponseEntity.ok().body(dto);
         } else {
             throw new BadRequestException("Used token is not valid");
         }
