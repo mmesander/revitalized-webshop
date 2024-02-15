@@ -109,7 +109,7 @@ public class UserController {
     }
 
 
-    // ADMIN - Relations Requests
+    // ADMIN - Authorities Requests
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities(
             @PathVariable("username") String username
@@ -137,6 +137,8 @@ public class UserController {
         }
     }
 
+
+    // ADMIN - ShippingDetails Requests
     @PutMapping(value = "/{username}/shipping-details")
     public ResponseEntity<Object> assignShippingDetailsToUser(
             @PathVariable("username") String username,
@@ -273,17 +275,12 @@ public class UserController {
     public ResponseEntity<String> deleteUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
-            @PathVariable("id") Long id,
-            BindingResult bindingResult
+            @PathVariable("id") Long id
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            if (bindingResult.hasFieldErrors()) {
-                throw new InvalidInputException(handleBindingResultError(bindingResult));
-            } else {
-                String confirmation = shippingDetailsService.deleteShippingDetailsById(id);
+            String confirmation = shippingDetailsService.deleteShippingDetailsById(id);
 
-                return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, username));
-            }
+            return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, username));
         } else {
             throw new BadRequestException("Used token is not valid");
         }

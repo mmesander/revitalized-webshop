@@ -5,7 +5,7 @@ public class BuildPersonalConfirmation {
 
         String personalConfirmation = confirmation +
                 " " +
-                "from user with username: " +
+                "from user: " +
                 username;
 
         return personalConfirmation;
