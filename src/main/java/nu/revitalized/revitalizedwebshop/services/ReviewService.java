@@ -217,6 +217,9 @@ public class ReviewService {
             Supplement supplement = optionalSupplement.get();
             review.setSupplement(supplement);
             supplement.getReviews().add(review);
+
+            supplement.setAverageRating();
+
             supplementRepository.save(supplement);
             objectDto = supplementToDto(supplement);
         } else if (optionalGarment.isPresent()) {

@@ -4,14 +4,15 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
+import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
+
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "supplements")
-public class Supplement extends Product {
+public class Supplement extends Product implements IdentifiableProduct {
     // Variables
     private String contains;
 
