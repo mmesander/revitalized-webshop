@@ -137,11 +137,13 @@ public class AllergenService {
     }
 
     // CRUD Methods --> DELETE Methods
-    public void deleteAllergen(Long id) {
+    public String deleteAllergen(Long id) {
         Optional<Allergen> allergen = allergenRepository.findById(id);
 
         if (allergen.isPresent()) {
             allergenRepository.deleteById(id);
+
+            return "Allergen: " + allergen.get().getName() + " with id: " + id + " is removed";
         } else {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }

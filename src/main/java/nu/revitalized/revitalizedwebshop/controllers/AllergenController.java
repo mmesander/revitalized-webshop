@@ -84,11 +84,13 @@ public class AllergenController {
     }
 
     @DeleteMapping("/products/supplements/allergens/{id}")
-    public ResponseEntity<Object> deleteAllergen(
+    public ResponseEntity<String> deleteAllergen(
             @PathVariable("id") Long id
     ) {
-        allergenService.deleteAllergen(id);
+        String confirmation = allergenService.deleteAllergen(id);
 
-        return ResponseEntity.noContent().build();
+
+
+        return ResponseEntity.ok().body(confirmation);
     }
 }
