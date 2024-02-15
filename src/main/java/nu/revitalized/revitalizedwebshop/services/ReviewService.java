@@ -127,7 +127,31 @@ public class ReviewService {
         }
     }
 
-    public ReviewDto patchReview(Long id) {}
+    public ReviewDto patchReview(Long id, ReviewInputDto inputDto) {
+        Optional<Review> optionalReview = reviewRepository.findById(id);
+
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+
+            if (review.getReview() != null) {
+                review.setReview(inputDto.getReview());
+            }
+
+            if (review.getRating() != null) {
+                review.setRating(inputDto.getRating());
+            }
+
+            if (review.getReview() != null || review.getRating() != null) {
+                review.setDate(createDate());
+            }
+
+            Review patchedReview = reviewRepository.save(review);
+
+            return reviewToDto(patchedReview);
+        } else {
+            throw new RecordNotFoundException("No review found with id: " + id);
+        }
+    }
 
 
 }
