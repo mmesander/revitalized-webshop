@@ -3,7 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildSpecificConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;

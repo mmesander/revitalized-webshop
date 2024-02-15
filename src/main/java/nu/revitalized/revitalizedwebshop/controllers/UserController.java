@@ -4,7 +4,7 @@ package nu.revitalized.revitalizedwebshop.controllers;
 
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildTargetConfirmation.buildPersonalConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildPersonalConfirmation;
 
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;

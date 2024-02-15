@@ -6,7 +6,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildSpecificConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
