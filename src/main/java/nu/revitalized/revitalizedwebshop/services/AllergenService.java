@@ -3,7 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToShortDto;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-
+import static nu.revitalized.revitalizedwebshop.helpers.BuildSpecificConfirmation.buildSpecificConfirmation;
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
@@ -143,7 +143,7 @@ public class AllergenService {
         if (allergen.isPresent()) {
             allergenRepository.deleteById(id);
 
-            return "Allergen: " + allergen.get().getName() + " with id: " + id + " is removed";
+            return buildSpecificConfirmation("Allergen", allergen.get().getName(), id);
         } else {
             throw new RecordNotFoundException("No allergen found with id: " + id);
         }

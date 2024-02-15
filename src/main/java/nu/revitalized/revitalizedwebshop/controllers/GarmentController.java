@@ -128,8 +128,8 @@ public class GarmentController {
     public ResponseEntity<Object> deleteGarment(
             @PathVariable("id") Long id
     ) {
-        garmentService.deleteGarment(id);
+        String confirmation = garmentService.deleteGarment(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(confirmation);
     }
 }
