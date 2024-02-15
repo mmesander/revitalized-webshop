@@ -55,7 +55,7 @@ public class ReviewService {
         if (reviewDtos.isEmpty()) {
             throw new RecordNotFoundException("No reviews found");
         } else {
-            reviewDtos.sort(Comparator.comparing(ReviewDto::getId).reversed());
+            reviewDtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
 
             return reviewDtos;
         }
@@ -92,7 +92,7 @@ public class ReviewService {
         if (reviewDtos.isEmpty()) {
             throw new RecordNotFoundException("No reviews found with the specified filters");
         } else {
-            reviewDtos.sort(Comparator.comparing(ReviewDto::getId).reversed());
+            reviewDtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
 
             return reviewDtos;
         }
