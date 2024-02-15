@@ -2,6 +2,7 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
@@ -102,10 +103,7 @@ public class ReviewService {
     public ReviewDto createReview(ReviewInputDto inputDto) {
         Review review = dtoToReview(inputDto);
 
-        long timeStamp = System.currentTimeMillis();
-        Date creationTime = new Date(timeStamp);
-
-        review.setDate(creationTime);
+        review.setDate(createDate());
 
         reviewRepository.save(review);
 
@@ -119,6 +117,7 @@ public class ReviewService {
             Review review = optionalReview.get();
 
             copyProperties(inputDto, review);
+            review.setDate(createDate());
 
             Review updatedReview = reviewRepository.save(review);
 
@@ -127,6 +126,8 @@ public class ReviewService {
             throw new RecordNotFoundException("No review found with id: " + id);
         }
     }
+
+    public ReviewDto patchReview(Long id) {}
 
 
 }
