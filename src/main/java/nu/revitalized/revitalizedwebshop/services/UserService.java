@@ -86,7 +86,7 @@ public class UserService {
     }
 
 
-    // CRUD Methods --> GET Methods
+    // CRUD Requests
     public List<UserDto> getUsers() {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
@@ -137,7 +137,6 @@ public class UserService {
         }
     }
 
-    // CRUD Methods --> POST Methods
     public UserDto createUser(UserInputDto inputDto) {
         User user = dtoToUser(inputDto);
 
@@ -165,7 +164,6 @@ public class UserService {
         }
     }
 
-    // CRUD Methods --> PUT/PATCH Methods
     public UserDto updateUserEmail(String username, UserEmailInputDto inputDto) {
         Optional<User> optionalUser = userRepository.findById(username);
 
@@ -183,7 +181,6 @@ public class UserService {
         }
     }
 
-    // CRUD Methods --> DELETE Methods
     public String deleteUser(String username) {
         Optional<User> user = userRepository.findById(username);
 
@@ -200,7 +197,8 @@ public class UserService {
         }
     }
 
-    // Relations Methods
+
+    // Relation - Authorities Requests
     public Set<Authority> getUserAuthorities(String username) {
         Optional<User> user = userRepository.findById(username);
 
@@ -269,6 +267,8 @@ public class UserService {
         }
     }
 
+
+    // Relation - Shipping Details Requests
     public UserDto assignShippingDetailsToUser(String username, Long id) {
         Optional<User> optionalUser = userRepository.findById(username);
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
@@ -307,6 +307,8 @@ public class UserService {
         }
     }
 
+
+    // Authenticated User Requests
     public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
         Optional<User> user = userRepository.findById(username);
         UserDto dto;
