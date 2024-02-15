@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 public interface ShippingDetailsRepository extends JpaRepository<ShippingDetails, Long>, JpaSpecificationExecutor<ShippingDetails> {
-    boolean existsByStreetIgnoreCaseAndHouseNumber(String street, String houseNumber);
+    boolean existsByStreetIgnoreCaseAndHouseNumberAndUser_Username(String street, String houseNumber, String username);
     Optional<ShippingDetails> findByStreetIgnoreCaseAndHouseNumber(String street, String houseNumber);
 }

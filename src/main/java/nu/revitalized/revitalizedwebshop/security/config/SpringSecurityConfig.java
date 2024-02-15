@@ -52,6 +52,7 @@ public class SpringSecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(HttpMethod.GET, "/users/{username}/shipping-details").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users/*/authorities").hasRole("ADMIN")

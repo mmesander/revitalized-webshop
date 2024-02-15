@@ -130,11 +130,11 @@ public class ShippingDetailsService {
     }
 
     // CRUD Methods --> POST Methods
-    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto) {
+    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto, String username) {
         ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
 
-        boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumber(
-                inputDto.getStreet(), buildHouseNumber(inputDto)
+        boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumberAndUser_Username(
+                inputDto.getStreet(), buildHouseNumber(inputDto), username
         );
 
         if (exists) {

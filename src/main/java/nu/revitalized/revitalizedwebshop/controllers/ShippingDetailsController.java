@@ -9,6 +9,8 @@ import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -61,13 +63,14 @@ public class ShippingDetailsController {
     @PostMapping("/shipping-details")
     public ResponseEntity<ShippingDetailsDto> createShippingDetails(
             @Valid
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ShippingDetailsInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            ShippingDetailsDto dto = shippingDetailsService.createShippingDetails(inputDto);
+            ShippingDetailsDto dto = shippingDetailsService.createShippingDetails(inputDto, userDetails.getUsername());
 
             URI uri = buildUriId(dto);
 

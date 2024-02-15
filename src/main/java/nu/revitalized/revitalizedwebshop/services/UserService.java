@@ -312,15 +312,14 @@ public class UserService {
         UserDto dto;
 
         if (user.isPresent()) {
-            shippingDetailsService.createShippingDetails(inputDto);
+            shippingDetailsService.createShippingDetails(inputDto, username);
 
             String houseNumber = buildHouseNumber(inputDto);
             Optional<ShippingDetails> optionalShippingDetails =
                     shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(inputDto.getStreet(), houseNumber);
 
-            if (optionalShippingDetails.isPresent()) {
-                assignShippingDetailsToUser(username, optionalShippingDetails.get().getId());
-            }
+            optionalShippingDetails.ifPresent(shippingDetails ->
+                    assignShippingDetailsToUser(username, shippingDetails.getId()));
 
             dto = userToDto(user.get());
 
