@@ -148,7 +148,7 @@ public class GarmentService {
         }
 
         if (garmentDtos.isEmpty()) {
-            throw new RecordNotFoundException("No garments out of stock found");
+            throw new RecordNotFoundException("No garments in stock found");
         } else {
             return garmentDtos;
         }

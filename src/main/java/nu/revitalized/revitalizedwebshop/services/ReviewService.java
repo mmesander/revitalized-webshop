@@ -11,6 +11,7 @@ import nu.revitalized.revitalizedwebshop.repositories.ReviewRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -98,5 +99,34 @@ public class ReviewService {
         }
     }
 
-    
+    public ReviewDto createReview(ReviewInputDto inputDto) {
+        Review review = dtoToReview(inputDto);
+
+        long timeStamp = System.currentTimeMillis();
+        Date creationTime = new Date(timeStamp);
+
+        review.setDate(creationTime);
+
+        reviewRepository.save(review);
+
+        return reviewToDto(review);
+    }
+
+    public ReviewDto updateReview(Long id, ReviewInputDto inputDto) {
+        Optional<Review> optionalReview = reviewRepository.findById(id);
+
+        if (optionalReview.isPresent()) {
+            Review review = optionalReview.get();
+
+            copyProperties(inputDto, review);
+
+            Review updatedReview = reviewRepository.save(review);
+
+            return reviewToDto(updatedReview);
+        } else {
+            throw new RecordNotFoundException("No review found with id: " + id);
+        }
+    }
+
+
 }
