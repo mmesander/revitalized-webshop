@@ -3,6 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
+import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
 import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
@@ -157,7 +158,7 @@ public class ReviewService {
         if (optionalReview.isPresent()) {
             reviewRepository.deleteById(id);
 
-            return "Review with id: " + id + " is removed";
+            return "Review with id: " + id + " from: "+ formatDate(optionalReview.get().getDate()) +" is removed";
         } else {
             throw new RecordNotFoundException("No review found with id: " + id);
         }
