@@ -1,7 +1,9 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
+
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
@@ -60,7 +62,7 @@ public class ReviewController {
             @Valid
             @RequestBody ReviewInputDto inputDto,
             BindingResult bindingResult
-            ) {
+    ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
@@ -70,5 +72,40 @@ public class ReviewController {
 
             return ResponseEntity.created(uri).body(dto);
         }
+    }
+
+    @PutMapping("/products/reviews/{id}")
+    public ResponseEntity<ReviewDto> updateReview(
+            @PathVariable("id") Long id,
+            @Valid
+            @RequestBody ReviewInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            ReviewDto dto = reviewService.updateReview(id, inputDto);
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PatchMapping("/products/reviews/{id}")
+    public ResponseEntity<ReviewDto> patchReview(
+            @PathVariable("id") Long id,
+            @RequestBody ReviewInputDto inputDto
+    ) {
+        ReviewDto dto = reviewService.patchReview(id, inputDto);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping("/products/reviews/{id}")
+    public ResponseEntity<Object> deleteReview(
+            @PathVariable("id") Long id
+    ) {
+        String confirmation = reviewService.deleteReview(id);
+
+        return ResponseEntity.ok().body(confirmation);
     }
 }
