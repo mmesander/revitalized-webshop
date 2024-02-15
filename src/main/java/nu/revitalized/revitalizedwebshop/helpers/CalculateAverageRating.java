@@ -3,8 +3,6 @@ package nu.revitalized.revitalizedwebshop.helpers;
 // Imports
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
 import nu.revitalized.revitalizedwebshop.models.Review;
-import java.text.DecimalFormat;
-
 
 public class CalculateAverageRating {
 
@@ -13,16 +11,16 @@ public class CalculateAverageRating {
             return null;
         } else {
             Integer length = product.getReviews().size();
-            Integer totalSum = 0;
+            Double totalSum = 0.0;
 
             for (Review review : product.getReviews()) {
                 totalSum = review.getRating() + totalSum;
             }
 
-            Double averageRating = (double) (totalSum / length);
+            Double averageRating = (totalSum / length);
 
-            DecimalFormat decimalFormat = new DecimalFormat("#.#");
-            averageRating = Double.parseDouble(decimalFormat.format(averageRating));
+
+            averageRating = Math.round(averageRating * 10.0) / 10.0;
 
             return averageRating;
         }

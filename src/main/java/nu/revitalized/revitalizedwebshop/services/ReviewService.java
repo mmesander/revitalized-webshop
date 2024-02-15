@@ -6,14 +6,13 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildBadAssignRequest.buildBadAssignRequest;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
@@ -217,15 +216,14 @@ public class ReviewService {
             Supplement supplement = optionalSupplement.get();
             review.setSupplement(supplement);
             supplement.getReviews().add(review);
-
-            supplement.setAverageRating();
-
+            supplement.setAverageRating(calculateAverageRating(supplement));
             supplementRepository.save(supplement);
             objectDto = supplementToDto(supplement);
         } else if (optionalGarment.isPresent()) {
             Garment garment = optionalGarment.get();
             review.setGarment(garment);
             garment.getReviews().add(review);
+            garment.setAverageRating(calculateAverageRating(garment));
             garmentRepository.save(garment);
             objectDto = garmentToDto(garment);
         } else {
