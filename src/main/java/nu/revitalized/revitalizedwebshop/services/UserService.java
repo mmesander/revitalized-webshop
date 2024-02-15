@@ -347,19 +347,4 @@ public class UserService {
 
         return dto;
     }
-
-    public ShippingDetailsDto updateUserShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
-
-        if (optionalShippingDetails.isPresent()) {
-            ShippingDetails shippingDetails = optionalShippingDetails.get();
-
-            copyProperties(inputDto, shippingDetails);
-            shippingDetailsRepository.save(shippingDetails);
-
-            return shippingDetailsToDto(shippingDetails);
-        } else {
-            throw new BadRequestException("Shipping Details with id: " + id + " is not found");
-        }
-    }
 }
