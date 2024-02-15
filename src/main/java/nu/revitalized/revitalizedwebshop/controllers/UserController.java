@@ -164,7 +164,7 @@ public class UserController {
 
 
     // USER - CRUD Requests
-    @GetMapping(value = "/user/{username}")
+    @GetMapping(value = "/auth/{username}")
     public ResponseEntity<UserDto> getSpecificUser(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String username
@@ -178,7 +178,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/{username}/update-email")
+    @PutMapping("/auth/{username}/update-email")
     public ResponseEntity<UserDto> updateSpecificUserEmail(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String username,
@@ -199,7 +199,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/{username}/shipping-details")
+    @PostMapping("/auth/{username}/shipping-details")
     public ResponseEntity<UserDto> createNewUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String username,
