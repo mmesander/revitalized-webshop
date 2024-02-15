@@ -317,11 +317,26 @@ public class UserService {
             shippingDetailsService.createShippingDetails(inputDto, username);
 
             String houseNumber = buildHouseNumber(inputDto);
-            Optional<ShippingDetails> optionalShippingDetails =
-                    shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(inputDto.getStreet(), houseNumber);
+            ShippingDetails presentShippingDetails = null;
 
-            optionalShippingDetails.ifPresent(shippingDetails ->
-                    assignShippingDetailsToUser(username, shippingDetails.getId()));
+            Optional<List<ShippingDetails>> optionalListOfShippingDetails =
+                    shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(
+                            inputDto.getStreet(), houseNumber);
+
+            if (optionalListOfShippingDetails.isPresent()) {
+                for (ShippingDetails shippingDetails : optionalListOfShippingDetails.get()) {
+                    if (shippingDetails.getUser() == null) {
+                        presentShippingDetails = shippingDetails;
+                    }
+                }
+            }
+
+            if (presentShippingDetails != null) {
+                assignShippingDetailsToUser(username, presentShippingDetails.getId());
+            } else {
+                throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
+                        + " is not found");
+            }
 
             dto = userToDto(user.get());
 
@@ -331,4 +346,8 @@ public class UserService {
 
         return dto;
     }
+
+//    public UserDto updateUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
+//
+//    }
 }

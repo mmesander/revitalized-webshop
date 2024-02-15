@@ -133,11 +133,11 @@ public class ShippingDetailsService {
     public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto, String username) {
         ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
 
-        boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumberAndUser_Username(
+        boolean streetExists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumberAndUser_Username(
                 inputDto.getStreet(), buildHouseNumber(inputDto), username
         );
 
-        if (exists) {
+        if (streetExists) {
             if (inputDto.getHouseNumberAddition() != null) {
                 throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
                         + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition().toUpperCase() + " already exists.");
