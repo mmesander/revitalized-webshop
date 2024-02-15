@@ -6,6 +6,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildSpecificConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
@@ -232,7 +233,7 @@ public class ShippingDetailsService {
 
             shippingDetailsRepository.deleteById(id);
 
-            return "Shipping details with id: " + id + " is removed";
+            return buildSpecificConfirmation("Shipping Details", optionalShippingDetails.get().getDetailsName(), id);
         } else {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
         }
