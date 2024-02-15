@@ -257,9 +257,13 @@ public class UserController {
             BindingResult bindingResult
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
 
-            return ResponseEntity.ok().body(dto);
+                return ResponseEntity.ok().body(dto);
+            }
         } else {
             throw new BadRequestException("Used token is not valid");
         }
