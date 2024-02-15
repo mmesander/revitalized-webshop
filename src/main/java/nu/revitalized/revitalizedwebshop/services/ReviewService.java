@@ -196,80 +196,40 @@ public class ReviewService {
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
-        GarmentDto garmentDto;
-        SupplementDto supplementDto;
 
-        if (optionalSupplement.isPresent() && optionalReview.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
-            Review review = optionalReview.get();
-
-            if (review.getSupplement() != null) {
-
-                throw new BadRequestException(buildBadAssignRequest(
-                        "supplement", review.getSupplement().getName(), review.getSupplement().getId(), reviewId));
-
-            } else if (review.getGarment() != null) {
-
-                throw new BadRequestException(buildBadAssignRequest(
-                        "garment", review.getGarment().getName(), review.getGarment().getId(), reviewId));
-
-            } else {
-                review.setSupplement(supplement);
-                reviewRepository.save(review);
-
-                Set<Review> reviewSet = new TreeSet<>(Comparator.comparing(Review::getDate).reversed());
-
-                if (!supplement.getReviews().isEmpty()) {
-                    reviewSet.addAll(supplement.getReviews());
-                }
-
-                reviewSet.add(review);
-                supplement.setReviews(reviewSet);
-
-                supplementRepository.save(supplement);
-
-                supplementDto = supplementToDto(supplement);
-
-                return supplementDto;
-            }
-        } else if (optionalGarment.isPresent() && optionalReview.isPresent()) {
-            Garment garment = optionalGarment.get();
-            Review review = optionalReview.get();
-
-            if (review.getSupplement() != null) {
-
-                throw new BadRequestException(buildBadAssignRequest(
-                        "supplement", review.getSupplement().getName(), review.getSupplement().getId(), reviewId));
-
-            } else if (review.getGarment() != null) {
-
-                throw new BadRequestException(buildBadAssignRequest(
-                        "garment", review.getGarment().getName(), review.getGarment().getId(), reviewId));
-
-            } else {
-                review.setGarment(garment);
-                reviewRepository.save(review);
-
-                Set<Review> reviewSet = new TreeSet<>(Comparator.comparing(Review::getDate).reversed());
-
-                if (!garment.getReviews().isEmpty()) {
-                    reviewSet.addAll(garment.getReviews());
-                }
-
-                reviewSet.add(review);
-                garment.setReviews(reviewSet);
-
-                garmentRepository.save(garment);
-
-                garmentDto = garmentToDto(garment);
-
-                return garmentDto;
-            }
-        } else if (optionalGarment.isEmpty() && optionalReview.isPresent() ||
-                optionalSupplement.isEmpty() && optionalReview.isPresent()) {
-            throw new BadRequestException("No product found with id: " + productId);
-        } else {
+        if (optionalReview.isEmpty()) {
             throw new BadRequestException("No review found with id:" + reviewId);
         }
+
+        Review review = optionalReview.get();
+
+        if (review.getSupplement() != null || review.getGarment() != null) {
+            String type = review.getSupplement() != null ? "supplement" : "garment";
+            String name = review.getSupplement() != null ? review.getSupplement().getName() : review.getGarment().getName();
+            Long id = review.getSupplement() != null ? review.getSupplement().getId() : review.getGarment().getId();
+
+            throw new BadRequestException(buildBadAssignRequest(type, name, id, reviewId));
+        }
+
+        Object objectDto;
+
+        if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            review.setSupplement(supplement);
+            supplement.getReviews().add(review);
+            supplementRepository.save(supplement);
+            objectDto = supplementToDto(supplement);
+        } else if (optionalGarment.isPresent()) {
+            Garment garment = optionalGarment.get();
+            review.setGarment(garment);
+            garment.getReviews().add(review);
+            garmentRepository.save(garment);
+            objectDto = garmentToDto(garment);
+        } else {
+            throw new BadRequestException("No product found with id: " + productId);
+        }
+
+        reviewRepository.save(review);
+        return objectDto;
     }
 }
