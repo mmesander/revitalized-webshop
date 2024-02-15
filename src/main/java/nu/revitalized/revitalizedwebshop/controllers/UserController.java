@@ -1,16 +1,18 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildPersonalConfirmation.buildPersonalConfirmation;
 
-import jakarta.persistence.Id;
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
+import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
 import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,9 +29,14 @@ import java.util.Objects;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final ShippingDetailsService shippingDetailsService;
 
-    public UserController(UserService userService) {
+    public UserController(
+            UserService userService,
+            ShippingDetailsService shippingDetailsService
+    ) {
         this.userService = userService;
+        this.shippingDetailsService = shippingDetailsService;
     }
 
 
@@ -102,7 +109,7 @@ public class UserController {
     }
 
 
-    // ADMIN - Relations Requests
+    // ADMIN - Authorities Requests
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities(
             @PathVariable("username") String username
@@ -130,13 +137,15 @@ public class UserController {
         }
     }
 
+
+    // ADMIN - ShippingDetails Requests
     @PutMapping(value = "/{username}/shipping-details")
     public ResponseEntity<Object> assignShippingDetailsToUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto idInputDto,
             BindingResult bindingResult
-            ) {
+    ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
@@ -162,13 +171,12 @@ public class UserController {
     }
 
 
-
     // USER - CRUD Requests
-    @GetMapping(value = "/user/{username}")
+    @GetMapping(value = "/auth/{username}")
     public ResponseEntity<UserDto> getSpecificUser(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String username
-            ) {
+            @PathVariable("username") String username
+    ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
             UserDto userDto = userService.getUser(username);
 
@@ -178,10 +186,10 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/{username}/update-email")
+    @PutMapping("/auth/{username}/update-email")
     public ResponseEntity<UserDto> updateSpecificUserEmail(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String username,
+            @PathVariable("username") String username,
             @Valid
             @RequestBody UserEmailInputDto inputDto,
             BindingResult bindingResult
@@ -199,10 +207,10 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/{username}/shipping-details")
+    @PostMapping("/auth/{username}/shipping-details")
     public ResponseEntity<UserDto> createNewUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String username,
+            @PathVariable("username") String username,
             @Valid
             @RequestBody ShippingDetailsInputDto inputDto,
             BindingResult bindingResult
@@ -215,6 +223,64 @@ public class UserController {
 
                 return ResponseEntity.ok().body(dto);
             }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PutMapping("/auth/{username}/shipping-details/{id}")
+    public ResponseEntity<ShippingDetailsDto> updateUserShippingDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("id") Long id,
+            @Valid
+            @RequestBody ShippingDetailsInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                ShippingDetailsDto dto = shippingDetailsService.updateShippingDetails(id, inputDto);
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PatchMapping("/auth/{username}/shipping-details/{id}")
+    public ResponseEntity<ShippingDetailsDto> patchUserShippingDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("id") Long id,
+            @RequestBody ShippingDetailsInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/shipping-details/{id}")
+    public ResponseEntity<String> deleteUserShippingDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("id") Long id
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            String confirmation = shippingDetailsService.deleteShippingDetailsById(id);
+
+            return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, username));
         } else {
             throw new BadRequestException("Used token is not valid");
         }

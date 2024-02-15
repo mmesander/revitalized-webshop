@@ -11,6 +11,7 @@ import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserShortDto;
@@ -86,7 +87,7 @@ public class UserService {
     }
 
 
-    // CRUD Methods --> GET Methods
+    // CRUD Requests
     public List<UserDto> getUsers() {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
@@ -137,7 +138,6 @@ public class UserService {
         }
     }
 
-    // CRUD Methods --> POST Methods
     public UserDto createUser(UserInputDto inputDto) {
         User user = dtoToUser(inputDto);
 
@@ -165,7 +165,6 @@ public class UserService {
         }
     }
 
-    // CRUD Methods --> PUT/PATCH Methods
     public UserDto updateUserEmail(String username, UserEmailInputDto inputDto) {
         Optional<User> optionalUser = userRepository.findById(username);
 
@@ -183,7 +182,6 @@ public class UserService {
         }
     }
 
-    // CRUD Methods --> DELETE Methods
     public String deleteUser(String username) {
         Optional<User> user = userRepository.findById(username);
 
@@ -200,7 +198,8 @@ public class UserService {
         }
     }
 
-    // Relations Methods
+
+    // Relation - Authorities Requests
     public Set<Authority> getUserAuthorities(String username) {
         Optional<User> user = userRepository.findById(username);
 
@@ -269,6 +268,8 @@ public class UserService {
         }
     }
 
+
+    // Relation - Shipping Details Requests
     public UserDto assignShippingDetailsToUser(String username, Long id) {
         Optional<User> optionalUser = userRepository.findById(username);
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
@@ -307,19 +308,35 @@ public class UserService {
         }
     }
 
+
+    // Authenticated User Requests
     public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
         Optional<User> user = userRepository.findById(username);
         UserDto dto;
 
         if (user.isPresent()) {
-            shippingDetailsService.createShippingDetails(inputDto);
+            shippingDetailsService.createShippingDetails(inputDto, username);
 
             String houseNumber = buildHouseNumber(inputDto);
-            Optional<ShippingDetails> optionalShippingDetails =
-                    shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(inputDto.getStreet(), houseNumber);
+            ShippingDetails presentShippingDetails = null;
 
-            if (optionalShippingDetails.isPresent()) {
-                assignShippingDetailsToUser(username, optionalShippingDetails.get().getId());
+            Optional<List<ShippingDetails>> optionalListOfShippingDetails =
+                    shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(
+                            inputDto.getStreet(), houseNumber);
+
+            if (optionalListOfShippingDetails.isPresent()) {
+                for (ShippingDetails shippingDetails : optionalListOfShippingDetails.get()) {
+                    if (shippingDetails.getUser() == null) {
+                        presentShippingDetails = shippingDetails;
+                    }
+                }
+            }
+
+            if (presentShippingDetails != null) {
+                assignShippingDetailsToUser(username, presentShippingDetails.getId());
+            } else {
+                throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
+                        + " is not found");
             }
 
             dto = userToDto(user.get());

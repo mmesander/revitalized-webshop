@@ -130,11 +130,11 @@ public class ShippingDetailsService {
     }
 
     // CRUD Methods --> POST Methods
-    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto) {
+    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto, String username) {
         ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
 
-        boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumber(
-                inputDto.getStreet(), buildHouseNumber(inputDto)
+        boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumberAndUser_Username(
+                inputDto.getStreet(), buildHouseNumber(inputDto), username
         );
 
         if (exists) {
@@ -225,11 +225,14 @@ public class ShippingDetailsService {
     }
 
     // CRUD Methods --> DELETE Methods
-    public void deleteShippingDetailsById(Long id) {
+    public String deleteShippingDetailsById(Long id) {
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
 
         if (optionalShippingDetails.isPresent()) {
+
             shippingDetailsRepository.deleteById(id);
+
+            return "Shipping details with id: " + id + " is removed";
         } else {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
         }
