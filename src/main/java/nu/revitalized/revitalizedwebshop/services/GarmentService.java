@@ -2,7 +2,7 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildSpecificConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.specifications.GarmentSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
@@ -148,7 +148,7 @@ public class GarmentService {
         }
 
         if (garmentDtos.isEmpty()) {
-            throw new RecordNotFoundException("No garments out of stock found");
+            throw new RecordNotFoundException("No garments in stock found");
         } else {
             return garmentDtos;
         }
