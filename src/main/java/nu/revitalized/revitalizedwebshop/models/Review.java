@@ -21,4 +21,14 @@ public class Review {
     private String review;
     private Integer rating;
     private Date date;
+
+
+    // Relations
+    @ManyToOne
+    @JoinColumn(name = "garment_id")
+    private Garment garment;
+
+    @ManyToOne
+    @JoinColumn(name = "supplement_id")
+    private Supplement supplement;
 }

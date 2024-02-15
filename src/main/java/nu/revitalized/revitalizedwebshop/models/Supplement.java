@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
 
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "supplements")
-public class Supplement extends Product {
+public class Supplement extends Product implements IdentifiableProduct {
     // Variables
     private String contains;
 
@@ -24,4 +25,10 @@ public class Supplement extends Product {
             inverseJoinColumns = @JoinColumn(name = "allergen_id")
     )
     private Set<Allergen> allergens;
+
+    @OneToMany(
+            mappedBy = "supplement",
+            fetch = FetchType.EAGER
+    )
+    private Set<Review> reviews;
 }

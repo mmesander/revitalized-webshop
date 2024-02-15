@@ -4,13 +4,24 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
+
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "garments")
-public class Garment extends Product {
+public class Garment extends Product implements IdentifiableProduct {
     // Variables
     private String size;
     private String color;
+
+
+    // Relations
+    @OneToMany(
+            mappedBy = "garment",
+            fetch = FetchType.EAGER
+    )
+    private Set<Review> reviews;
 }

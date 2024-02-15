@@ -4,14 +4,17 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
+import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
@@ -54,6 +57,14 @@ public class SupplementService {
                 allergenShortDtos.add(allergenToShortDto(allergen));
             }
             supplementDto.setAllergens(allergenShortDtos);
+        }
+
+        if (supplement.getReviews() != null) {
+            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            for (Review review : supplement.getReviews()) {
+                dtos.add(reviewToDto(review));
+            }
+            supplementDto.setReviews(dtos);
         }
 
         return supplementDto;
