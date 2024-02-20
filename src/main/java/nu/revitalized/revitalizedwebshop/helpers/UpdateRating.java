@@ -33,7 +33,7 @@ public class UpdateRating {
 //        return product;
 //    }
 
-    public static Supplement updateSupplementRating(Review review, Supplement supplement, boolean deleteRating) {
+    public static Supplement updateSupplementRating(Review review, Supplement supplement, boolean deleteRating, boolean update) {
         Set<Review> reviews = supplement.getReviews();
 
         if (deleteRating) {
@@ -41,15 +41,19 @@ public class UpdateRating {
             supplement.setReviews(reviews);
             supplement.setAverageRating(calculateAverageRating(supplement));
         } else {
-            review.setSupplement(supplement);
-            supplement.getReviews().add(review);
-            supplement.setAverageRating(calculateAverageRating(supplement));
+            if (update) {
+                supplement.setAverageRating(calculateAverageRating(supplement));
+            } else {
+                review.setSupplement(supplement);
+                supplement.getReviews().add(review);
+                supplement.setAverageRating(calculateAverageRating(supplement));
+            }
         }
 
         return supplement;
     }
 
-    public static Garment updateGarmentRating(Review review, Garment garment, boolean deleteRating) {
+    public static Garment updateGarmentRating(Review review, Garment garment, boolean deleteRating, boolean update) {
         Set<Review> reviews = garment.getReviews();
 
         if (deleteRating) {
@@ -57,9 +61,13 @@ public class UpdateRating {
             garment.setReviews(reviews);
             garment.setAverageRating(calculateAverageRating(garment));
         } else {
-            review.setGarment(garment);
-            garment.getReviews().add(review);
-            garment.setAverageRating(calculateAverageRating(garment));
+            if (update) {
+                garment.setAverageRating(calculateAverageRating(garment));
+            } else {
+                review.setGarment(garment);
+                garment.getReviews().add(review);
+                garment.setAverageRating(calculateAverageRating(garment));
+            }
         }
 
         return garment;

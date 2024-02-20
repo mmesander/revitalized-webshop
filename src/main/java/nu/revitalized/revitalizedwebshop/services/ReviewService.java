@@ -5,6 +5,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
@@ -140,8 +141,19 @@ public class ReviewService {
 
             copyProperties(inputDto, review);
             review.setDate(createDate());
-
             Review updatedReview = reviewRepository.save(review);
+
+            if (updatedReview.getSupplement() != null) {
+                supplementRepository.save(updateSupplementRating(
+                        updatedReview, updatedReview.getSupplement(), false, true
+                ));
+            }
+
+            if (updatedReview.getGarment() != null) {
+                garmentRepository.save(updateGarmentRating(
+                        updatedReview, updatedReview.getGarment(), false, true
+                ));
+            }
 
             return reviewToDto(updatedReview);
         } else {
@@ -182,14 +194,14 @@ public class ReviewService {
             Review review = optionalReview.get();
 
             if (review.getSupplement() != null) {
-                supplementRepository.save(updateSupplementRating(review, review.getSupplement(), true));
+                supplementRepository.save(updateSupplementRating(review, review.getSupplement(), true, false));
                 reviewRepository.deleteById(id);
 
                 return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate())
                         + " is removed from Supplement: " + review.getSupplement().getName() + " with id: "
                         + review.getSupplement().getId();
             } else if (review.getGarment() != null) {
-                garmentRepository.save(updateGarmentRating(review, review.getGarment(), true));
+                garmentRepository.save(updateGarmentRating(review, review.getGarment(), true, false));
                 reviewRepository.deleteById(id);
 
                 return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate())
@@ -231,12 +243,12 @@ public class ReviewService {
 
         if (optionalSupplement.isPresent()) {
             Supplement updatedSupplement = supplementRepository.save(
-                    updateSupplementRating(review, optionalSupplement.get(), false));
+                    updateSupplementRating(review, optionalSupplement.get(), false, false));
 
             objectDto = supplementToDto(updatedSupplement);
         } else if (optionalGarment.isPresent()) {
             Garment updatedGarment = garmentRepository.save(
-                    updateGarmentRating(review, optionalGarment.get(), false));
+                    updateGarmentRating(review, optionalGarment.get(), false, false));
 
             objectDto = garmentToDto(updatedGarment);
         } else {
@@ -261,14 +273,14 @@ public class ReviewService {
 
         if (optionalSupplement.isPresent()) {
             Supplement updatedSupplement = supplementRepository.save(
-                    updateSupplementRating(review, review.getSupplement(), true));
+                    updateSupplementRating(review, review.getSupplement(), true, false));
 
             reviewRepository.deleteById(reviewId);
 
             objectDto = supplementToDto(updatedSupplement);
         } else if (optionalGarment.isPresent()) {
             Garment updatedGarment = garmentRepository.save(
-                    updateGarmentRating(review, review.getGarment(), true));
+                    updateGarmentRating(review, review.getGarment(), true, false));
 
             reviewRepository.deleteById(reviewId);
 
