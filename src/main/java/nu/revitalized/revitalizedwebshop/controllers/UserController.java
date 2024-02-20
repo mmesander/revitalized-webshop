@@ -357,4 +357,19 @@ public class UserController {
             throw new BadRequestException("Used token is not valid");
         }
     }
+
+    @DeleteMapping("/auth/{username}/reviews/{reviewId}")
+    public ResponseEntity<Object> deleteUserProductReview(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("reviewId") Long reviewId
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            String confirmation = reviewService.deleteReview(reviewId);
+
+            return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, "user", username));
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
 }
