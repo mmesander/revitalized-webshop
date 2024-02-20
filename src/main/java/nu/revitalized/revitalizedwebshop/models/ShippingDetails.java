@@ -24,7 +24,6 @@ public class ShippingDetails {
     private String houseNumber;
     private String email;
 
-
     // Relations
     @ManyToOne
     @JoinColumn(name = "user_shipping_details")

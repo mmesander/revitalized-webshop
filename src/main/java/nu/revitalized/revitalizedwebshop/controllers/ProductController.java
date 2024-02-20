@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
@@ -19,8 +18,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-
-    // CRUD Requests -- GET Requests
+    // CRUD Requests
     @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<ProductDto> dtos = productService.getAllProducts();
@@ -51,7 +49,6 @@ public class ProductController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    // CRUD Requests -- DELETE Requests
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Object> deleteProduct(
             @PathVariable("id") Long id

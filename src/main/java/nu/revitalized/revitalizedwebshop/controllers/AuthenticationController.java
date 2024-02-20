@@ -1,5 +1,6 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
+// Imports
 import nu.revitalized.revitalizedwebshop.security.payload.AuthenticationRequest;
 import nu.revitalized.revitalizedwebshop.security.payload.AuthenticationResponse;
 import nu.revitalized.revitalizedwebshop.security.utils.JwtUtil;
@@ -11,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 
 @CrossOrigin

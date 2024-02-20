@@ -1,11 +1,9 @@
 package nu.revitalized.revitalizedwebshop.dtos.output;
 
+// Imports
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
-import nu.revitalized.revitalizedwebshop.models.Review;
-
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -21,7 +19,6 @@ public class GarmentDto implements IdentifiableId {
     private Double averageRating;
     private String size;
     private String color;
-
 
     // Relations
     private Set<ReviewDto> reviews;

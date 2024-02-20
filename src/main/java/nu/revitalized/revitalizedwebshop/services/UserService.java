@@ -51,7 +51,6 @@ public class UserService {
         this.reviewService = reviewService;
     }
 
-
     // Transfer Methods
     public static User dtoToUser(UserInputDto inputDto) {
         User user = new User();
@@ -95,8 +94,7 @@ public class UserService {
         return userShortDto;
     }
 
-
-    // CRUD Requests
+    // CRUD Methods
     public List<UserDto> getUsers() {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
@@ -207,8 +205,7 @@ public class UserService {
         }
     }
 
-
-    // Relation - Authorities Requests
+    // Relation - Authorities Methods
     public Set<Authority> getUserAuthorities(String username) {
         Optional<User> user = userRepository.findById(username);
 
@@ -277,8 +274,7 @@ public class UserService {
         }
     }
 
-
-    // Relation - Shipping Details Requests
+    // Relation - Shipping Details Methods
     public UserDto assignShippingDetailsToUser(String username, Long id) {
         Optional<User> optionalUser = userRepository.findById(username);
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
@@ -317,8 +313,7 @@ public class UserService {
         }
     }
 
-
-    // Authenticated User Requests
+    // Relation - Authenticated User Methods
     public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
         Optional<User> user = userRepository.findById(username);
         UserDto dto;
@@ -402,6 +397,4 @@ public class UserService {
             return dto;
         }
     }
-
-
 }

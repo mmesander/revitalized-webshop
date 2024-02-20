@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
-
 import java.util.Date;
 
 @Getter
@@ -15,7 +14,6 @@ public class ReviewDto implements IdentifiableId {
     private String review;
     private Integer rating;
     private Date date;
-
 
     // Relations
     private Long productId;

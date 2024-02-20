@@ -23,8 +23,7 @@ public class SupplementController {
         this.supplementService = supplementService;
     }
 
-
-    // CRUD Requests -- GET Requests
+    // CRUD Requests
     @GetMapping("/products/supplements")
     public ResponseEntity<List<SupplementDto>> getAllSupplements() {
         List<SupplementDto> dtos = supplementService.getAllSupplements();
@@ -77,7 +76,6 @@ public class SupplementController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    // CRUD Requests -- POST Requests
     @PostMapping("/products/supplements")
     public ResponseEntity<SupplementDto> createSupplement(
             @Valid
@@ -95,7 +93,6 @@ public class SupplementController {
         }
     }
 
-    // CRUD Requests -- PUT/PATCH Requests
     @PutMapping("/products/supplements/{id}")
     public ResponseEntity<SupplementDto> updateSupplement(
             @PathVariable("id") Long id,
@@ -122,7 +119,6 @@ public class SupplementController {
         return ResponseEntity.ok().body(dto);
     }
 
-    // CRUD Requests -- DELETE Requests
     @DeleteMapping("/products/supplements/{id}")
     public ResponseEntity<Object> deleteSupplement(
             @PathVariable("id") Long id
@@ -132,8 +128,7 @@ public class SupplementController {
         return ResponseEntity.ok().body(confirmation);
     }
 
-
-    // Relations Requests
+    // Allergen Requests
     @PostMapping(value = "/products/supplements/{id}/allergens")
     public ResponseEntity<Object> addAllergenToSupplement(
             @PathVariable("id") Long id,

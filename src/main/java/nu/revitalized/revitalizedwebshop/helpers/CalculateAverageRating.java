@@ -5,7 +5,6 @@ import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
 import nu.revitalized.revitalizedwebshop.models.Review;
 
 public class CalculateAverageRating {
-
     public static Double calculateAverageRating(IdentifiableProduct product) {
         if (product.getReviews() == null) {
             return null;

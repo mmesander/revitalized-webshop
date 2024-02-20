@@ -16,7 +16,6 @@ import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -26,7 +25,6 @@ public class GarmentService {
     public GarmentService(GarmentRepository garmentRepository) {
         this.garmentRepository = garmentRepository;
     }
-
 
     // Transfer Methods
     public static Garment dtoToGarment(GarmentInputDto inputDto) {
@@ -53,8 +51,7 @@ public class GarmentService {
         return garmentDto;
     }
 
-
-    // CRUD Methods --> GET Methods
+    // CRUD Methods
     public List<GarmentDto> getAllGarments() {
         List<Garment> garments = garmentRepository.findAll();
         List<GarmentDto> garmentDtos = new ArrayList<>();
@@ -163,7 +160,6 @@ public class GarmentService {
         }
     }
 
-    // CRUD Methods --> POST Methods
     public GarmentDto createGarment(GarmentInputDto inputDto) {
         Garment garment = dtoToGarment(inputDto);
         boolean exists = garmentRepository.existsByNameIgnoreCase(inputDto.getName());
@@ -177,7 +173,6 @@ public class GarmentService {
         }
     }
 
-    // CRUD Methods --> PUT/PATCH Methods
     public GarmentDto updateGarment(Long id, GarmentInputDto inputDto) {
         Optional<Garment> optionalGarment = garmentRepository.findById(id);
 
@@ -236,7 +231,6 @@ public class GarmentService {
         }
     }
 
-    // CRUD Methods --> DELETE Methods
     public String deleteGarment(Long id) {
         Optional<Garment> garment = garmentRepository.findById(id);
 

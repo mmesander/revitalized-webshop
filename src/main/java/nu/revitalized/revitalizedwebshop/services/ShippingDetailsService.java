@@ -36,7 +36,6 @@ public class ShippingDetailsService {
         this.userRepository = userRepository;
     }
 
-
     // Transfer Methods
     public static ShippingDetails dtoToShippingDetails(ShippingDetailsInputDto inputDto) {
         ShippingDetails shippingDetails = new ShippingDetails();
@@ -73,7 +72,7 @@ public class ShippingDetailsService {
         return shortDto;
     }
 
-    // CRUD Requests
+    // CRUD Methods
     public List<ShippingDetailsDto> getAllShippingDetails() {
         List<ShippingDetails> shippingDetailsList = shippingDetailsRepository.findAll();
         List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
@@ -242,7 +241,7 @@ public class ShippingDetailsService {
         }
     }
 
-    // User Methods
+    // Relation - Authenticated User Methods
     public List<ShippingDetailsDto> getAllPersonalShippingDetails(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Set<ShippingDetails> shippingDetailsSet;
@@ -265,6 +264,5 @@ public class ShippingDetailsService {
             shippingDetailsDtos.sort(Comparator.comparing(ShippingDetailsDto::getId));
             return shippingDetailsDtos;
         }
-
     }
 }

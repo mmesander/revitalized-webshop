@@ -13,9 +13,7 @@ import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -25,7 +23,6 @@ public class AllergenService {
     public AllergenService(AllergenRepository allergenRepository) {
         this.allergenRepository = allergenRepository;
     }
-
 
     // Transfer Methods
     public static Allergen dtoToAllergen(AllergenInputDto inputDto) {
@@ -60,8 +57,7 @@ public class AllergenService {
         return allergenShortDto;
     }
 
-
-    // CRUD Methods --> GET Methods
+    // CRUD Methods
     public List<AllergenDto> getAllAllergens() {
         List<Allergen> allergens = allergenRepository.findAll();
         List<AllergenDto> allergenDtos = new ArrayList<>();
@@ -105,7 +101,6 @@ public class AllergenService {
         }
     }
 
-    // CRUD Methods --> POST Methods
     public AllergenDto createAllergen(AllergenInputDto inputDto) {
         Allergen allergen = dtoToAllergen(inputDto);
         boolean exists = allergenRepository.existsByNameIgnoreCase(inputDto.getName());
@@ -119,7 +114,6 @@ public class AllergenService {
         }
     }
 
-    // CRUD Methods --> PUT/PATCH Methods
     public AllergenDto updateAllergen(Long id, AllergenInputDto inputDto) {
         Optional<Allergen> allergen = allergenRepository.findById(id);
 
@@ -136,7 +130,6 @@ public class AllergenService {
         }
     }
 
-    // CRUD Methods --> DELETE Methods
     public String deleteAllergen(Long id) {
         Optional<Allergen> allergen = allergenRepository.findById(id);
 

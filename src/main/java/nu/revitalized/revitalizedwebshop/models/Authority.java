@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.io.Serializable;
 
 @Getter
@@ -13,6 +12,7 @@ import java.io.Serializable;
 @IdClass(AuthorityKey.class)
 @Table(name = "authorities")
 public class Authority implements Serializable {
+    // Variables
     @Id
     @Column(nullable = false)
     private String username;
@@ -21,6 +21,7 @@ public class Authority implements Serializable {
     @Column
     private String authority;
 
+    // Methods
     public Authority() {}
 
     public Authority(String username, String authority) {

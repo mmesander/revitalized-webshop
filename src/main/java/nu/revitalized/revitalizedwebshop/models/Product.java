@@ -1,13 +1,8 @@
 package nu.revitalized.revitalizedwebshop.models;
 
 // Imports
-
 import jakarta.persistence.*;
 import lombok.Data;
-
-//TODO in de variablen moet nog een lijst met reviews komen;
-//TODO in de variablen moet nog een foto komen;
-//TODO de class moet een abstracte super class worden
 
 @Data
 @Entity
@@ -26,6 +21,7 @@ public abstract class Product {
     private String description;
     private Double price;
     private Integer stock;
+
     @Column(name = "average_rating")
     private Double averageRating;
 }

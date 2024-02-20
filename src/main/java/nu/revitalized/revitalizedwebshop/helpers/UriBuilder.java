@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.helpers;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableUsername;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 
 public class UriBuilder {

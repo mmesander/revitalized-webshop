@@ -1,5 +1,6 @@
 package nu.revitalized.revitalizedwebshop.security.payload;
 
+// Imports
 import lombok.Getter;
 import lombok.Setter;
 

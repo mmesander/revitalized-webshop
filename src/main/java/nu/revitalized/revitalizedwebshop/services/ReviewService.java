@@ -1,11 +1,9 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
-import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
@@ -25,7 +23,6 @@ import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -46,7 +43,6 @@ public class ReviewService {
         this.garmentRepository = garmentRepository;
         this.userRepository = userRepository;
     }
-
 
     // Transfer Methods
     public static Review dtoToReview(ReviewInputDto inputDto) {
@@ -77,7 +73,7 @@ public class ReviewService {
         return reviewDto;
     }
 
-    // CRUD Requests
+    // CRUD Methods
     public List<ReviewDto> getAllReviews() {
         List<Review> reviews = reviewRepository.findAll();
         List<ReviewDto> reviewDtos = new ArrayList<>();
@@ -238,8 +234,7 @@ public class ReviewService {
         }
     }
 
-
-    // Product Requests
+    // Relation - Product Methods
     public Object assignReviewToProduct(Long productId, Long reviewId) {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
@@ -313,8 +308,7 @@ public class ReviewService {
         return objectDto;
     }
 
-
-    // User Requests
+    // Relation - Authenticated User Methods
     public List<ReviewDto> getAllPersonalReviews(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Set<Review> reviews;
