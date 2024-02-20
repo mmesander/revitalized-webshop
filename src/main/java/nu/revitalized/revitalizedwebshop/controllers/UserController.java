@@ -41,6 +41,7 @@ public class UserController {
         this.reviewService = reviewService;
     }
 
+
     // ADMIN -- CRUD Requests
     @GetMapping(value = "")
     public ResponseEntity<List<UserDto>> getUsers() {
@@ -171,7 +172,7 @@ public class UserController {
     }
 
 
-    // USER - CRUD Requests
+    // USER (Authenticated) - CRUD Requests
     @GetMapping(value = "/auth/{username}")
     public ResponseEntity<UserDto> getSpecificUser(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -208,7 +209,7 @@ public class UserController {
     }
 
 
-    // USER - ShippingDetails Requests
+    // USER (Authenticated) - ShippingDetails Requests
     @GetMapping("/auth/{username}/shipping-details")
     public ResponseEntity<List<ShippingDetailsDto>> getAllUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -318,7 +319,7 @@ public class UserController {
     }
 
 
-    // USER - Review Requests
+    // USER (Authenticated) - Review Requests
     @GetMapping("/auth/{username}/reviews")
     public ResponseEntity<Object> getAllPersonalUserReviews(
             @AuthenticationPrincipal UserDetails userDetails,
