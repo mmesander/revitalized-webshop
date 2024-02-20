@@ -357,30 +357,24 @@ public class UserService {
 
     public Object addUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
         Optional<User> optionalUser = userRepository.findById(username);
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
-        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
-
+        Object dto;
 
         if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
 
-        Date currentTime = new Date();
-
-        if (optionalSupplement.isPresent() || optionalGarment.isPresent()) {
-            reviewService.createReview(inputDto);
-            currentTime = createDate();
-        }
-
-        Optional<Review> createdReview = reviewRepository.findReviewByDateAndUser_Username(currentTime, username);
-        Object objectDto;
-
-        if (createdReview.isPresent()) {
-            objectDto = reviewService.assignReviewToProduct(productId, createdReview.get().getId());
+        ReviewDto createdReview = null;
+        if (supplementRepository.existsById(productId) || garmentRepository.existsById(productId)) {
+            createdReview = reviewService.createReview(inputDto);
         } else {
-            throw new BadRequestException("Er is iets mis met de timestamp");
+            throw new BadRequestException("Er gaat iets mis met de create method");
         }
 
-        return objectDto;
+        if (createdReview != null) {
+            dto = reviewService.assignReviewToProduct(productId, createdReview.getId());
+            return dto;
+        } else {
+            throw new BadRequestException("Er gaat iets mis met de assign method");
+        }
     }
 }

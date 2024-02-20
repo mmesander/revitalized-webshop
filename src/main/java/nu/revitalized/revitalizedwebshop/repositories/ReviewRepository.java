@@ -9,5 +9,4 @@ import java.util.Date;
 import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review> {
-    Optional<Review> findReviewByDateAndUser_Username(Date date, String username);
 }
