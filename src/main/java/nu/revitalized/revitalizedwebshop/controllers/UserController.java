@@ -1,11 +1,9 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildPersonalConfirmation;
-
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
@@ -18,11 +16,9 @@ import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
 import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +40,6 @@ public class UserController {
         this.shippingDetailsService = shippingDetailsService;
         this.reviewService = reviewService;
     }
-
 
     // ADMIN -- CRUD Requests
     @GetMapping(value = "")
