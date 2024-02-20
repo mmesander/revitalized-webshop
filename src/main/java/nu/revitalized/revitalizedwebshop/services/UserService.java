@@ -5,6 +5,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
 
@@ -33,6 +34,7 @@ public class UserService {
     private final ShippingDetailsService shippingDetailsService;
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
+    private final ReviewRepository reviewRepository;
     private final ReviewService reviewService;
 
     public UserService(
@@ -42,6 +44,7 @@ public class UserService {
             ShippingDetailsService shippingDetailsService,
             SupplementRepository supplementRepository,
             GarmentRepository garmentRepository,
+            ReviewRepository reviewRepository,
             ReviewService reviewService
     ) {
         this.userRepository = userRepository;
@@ -50,6 +53,7 @@ public class UserService {
         this.shippingDetailsService = shippingDetailsService;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
+        this.reviewRepository = reviewRepository;
         this.reviewService = reviewService;
     }
 
@@ -351,20 +355,32 @@ public class UserService {
         return dto;
     }
 
-    public ReviewDto addUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
+    public Object addUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
         Optional<User> optionalUser = userRepository.findById(username);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+
 
         if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
 
+        Date currentTime = new Date();
+
         if (optionalSupplement.isPresent() || optionalGarment.isPresent()) {
             reviewService.createReview(inputDto);
+            currentTime = createDate();
         }
 
-//        Review createdReview =
+        Optional<Review> createdReview = reviewRepository.findReviewByDateAndUser_Username(currentTime, username);
+        Object objectDto;
 
+        if (createdReview.isPresent()) {
+            objectDto = reviewService.assignReviewToProduct(productId, createdReview.get().getId());
+        } else {
+            throw new BadRequestException("Er is iets mis met de timestamp");
+        }
+
+        return objectDto;
     }
 }
