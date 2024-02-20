@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
@@ -73,6 +74,14 @@ public class UserService {
                 dtos.add(shippingDetailsToShortDto(shippingDetails));
             }
             userDto.setShippingDetails(dtos);
+        }
+
+        if (user.getReviews() != null) {
+            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            for (Review review : user.getReviews()) {
+                dtos.add(reviewToDto(review));
+            }
+            userDto.setReviews(dtos);
         }
 
         return userDto;

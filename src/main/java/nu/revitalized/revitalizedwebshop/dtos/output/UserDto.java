@@ -24,5 +24,5 @@ public class UserDto implements IdentifiableUsername {
     @JsonSerialize
     private Set<Authority> authorities;
     private Set<ShippingDetailsShortDto> shippingDetails;
-    private Set<Review> reviews;
+    private Set<ReviewDto> reviews;
 }
