@@ -183,9 +183,38 @@ public class ReviewService {
         Optional<Review> optionalReview = reviewRepository.findById(id);
 
         if (optionalReview.isPresent()) {
-            reviewRepository.deleteById(id);
+            Review review = optionalReview.get();
+            Set<Review> reviews;
 
-            return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate()) + " is removed";
+            if (review.getSupplement() != null) {
+                Supplement supplement = review.getSupplement();
+
+                reviews = supplement.getReviews();
+                reviews.remove(review);
+                supplement.setReviews(reviews);
+                supplement.setAverageRating(calculateAverageRating(supplement));
+                supplementRepository.save(supplement);
+                reviewRepository.deleteById(id);
+
+                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate())
+                        + " is removed from Supplement: " + supplement.getName() + " with id: " + supplement.getId();
+            } else if (review.getGarment() != null) {
+                Garment garment = review.getGarment();
+
+                reviews = garment.getReviews();
+                reviews.remove(review);
+                garment.setReviews(reviews);
+                garment.setAverageRating(calculateAverageRating(garment));
+                garmentRepository.save(garment);
+                reviewRepository.deleteById(id);
+
+                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate())
+                        + " is removed from Garment: " + garment.getName() + " with id: " + garment.getId();
+            } else {
+                reviewRepository.deleteById(id);
+
+                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate()) + " is removed";
+            }
         } else {
             throw new RecordNotFoundException("No review found with id: " + id);
         }
