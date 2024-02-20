@@ -19,4 +19,5 @@ public class ReviewDto implements IdentifiableId {
 
     // Relations
     private Long productId;
+    private String username;
 }
