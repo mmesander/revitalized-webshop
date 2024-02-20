@@ -17,12 +17,8 @@ import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
-import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
-import nu.revitalized.revitalizedwebshop.models.User;
-import nu.revitalized.revitalizedwebshop.repositories.AuthorityRepository;
-import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
-import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
-import nu.revitalized.revitalizedwebshop.models.Authority;
+import nu.revitalized.revitalizedwebshop.models.*;
+import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -35,17 +31,26 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
     private final ShippingDetailsRepository shippingDetailsRepository;
     private final ShippingDetailsService shippingDetailsService;
+    private final SupplementRepository supplementRepository;
+    private final GarmentRepository garmentRepository;
+    private final ReviewService reviewService;
 
     public UserService(
             UserRepository userRepository,
             AuthorityRepository authorityRepository,
             ShippingDetailsRepository shippingDetailsRepository,
-            ShippingDetailsService shippingDetailsService
+            ShippingDetailsService shippingDetailsService,
+            SupplementRepository supplementRepository,
+            GarmentRepository garmentRepository,
+            ReviewService reviewService
     ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.shippingDetailsRepository = shippingDetailsRepository;
         this.shippingDetailsService = shippingDetailsService;
+        this.supplementRepository = supplementRepository;
+        this.garmentRepository = garmentRepository;
+        this.reviewService = reviewService;
     }
 
 
@@ -346,7 +351,20 @@ public class UserService {
         return dto;
     }
 
-//    public ReviewDto addUserProductReview(String username, ReviewInputDto inputDto) {
-//
-//    }
+    public ReviewDto addUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        if (optionalSupplement.isPresent() || optionalGarment.isPresent()) {
+            reviewService.createReview(inputDto);
+        }
+
+//        Review createdReview =
+
+    }
 }
