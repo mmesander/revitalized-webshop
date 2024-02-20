@@ -315,6 +315,29 @@ public class ReviewService {
 
 
     // User Requests
+    public List<ReviewDto> getAllPersonalReviews(String username) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Set<Review> reviews = new HashSet<>();
+        List<ReviewDto> reviewDtos = new ArrayList<>();
+
+        if (optionalUser.isPresent()) {
+            reviews = optionalUser.get().getReviews();
+        }
+
+        for (Review review : reviews) {
+            ReviewDto reviewDto = reviewToDto(review);
+            reviewDtos.add(reviewDto);
+        }
+
+        if (reviewDtos.isEmpty()) {
+            throw new RecordNotFoundException("No reviews found from user: " + username);
+        } else {
+            reviewDtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
+
+            return reviewDtos;
+        }
+    }
+
     public ReviewDto createPersonalReview(ReviewInputDto inputDto, String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Review review = dtoToReview(inputDto);

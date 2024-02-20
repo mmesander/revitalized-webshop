@@ -8,6 +8,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildP
 
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
+import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
@@ -17,6 +18,7 @@ import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
 import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -293,6 +295,20 @@ public class UserController {
 
 
     // USER - Review Requests
+    @GetMapping("/auth/{username}/reviews")
+    public ResponseEntity<Object> getAllPersonalUserReviews(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            List<ReviewDto> dtos = reviewService.getAllPersonalReviews(username);
+
+            return ResponseEntity.ok().body(dtos);
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
     @PostMapping("/auth/{username}/products/{productId}/reviews")
     public ResponseEntity<Object> createNewUserProductReview(
             @AuthenticationPrincipal UserDetails userDetails,
