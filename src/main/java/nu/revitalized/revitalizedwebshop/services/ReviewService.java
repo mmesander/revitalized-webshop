@@ -5,16 +5,13 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildBadAssignRequest.buildBadAssignRequest;
 import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
+import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
@@ -144,8 +141,19 @@ public class ReviewService {
 
             copyProperties(inputDto, review);
             review.setDate(createDate());
-
             Review updatedReview = reviewRepository.save(review);
+
+            if (updatedReview.getSupplement() != null) {
+                supplementRepository.save(updateSupplementRating(
+                        updatedReview, updatedReview.getSupplement(), false, true
+                ));
+            }
+
+            if (updatedReview.getGarment() != null) {
+                garmentRepository.save(updateGarmentRating(
+                        updatedReview, updatedReview.getGarment(), false, true
+                ));
+            }
 
             return reviewToDto(updatedReview);
         } else {
@@ -165,6 +173,18 @@ public class ReviewService {
 
             if (inputDto.getRating() != null) {
                 review.setRating(inputDto.getRating());
+
+                if (review.getSupplement() != null) {
+                    supplementRepository.save(updateSupplementRating(
+                            review, review.getSupplement(), false, true
+                    ));
+                }
+
+                if (review.getGarment() != null) {
+                    garmentRepository.save(updateGarmentRating(
+                            review, review.getGarment(), false, true
+                    ));
+                }
             }
 
             if (inputDto.getReview() != null || inputDto.getRating() != null) {
@@ -183,9 +203,27 @@ public class ReviewService {
         Optional<Review> optionalReview = reviewRepository.findById(id);
 
         if (optionalReview.isPresent()) {
-            reviewRepository.deleteById(id);
+            Review review = optionalReview.get();
 
-            return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate()) + " is removed";
+            if (review.getSupplement() != null) {
+                supplementRepository.save(updateSupplementRating(review, review.getSupplement(), true, false));
+                reviewRepository.deleteById(id);
+
+                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate())
+                        + " is removed from Supplement: " + review.getSupplement().getName() + " with id: "
+                        + review.getSupplement().getId();
+            } else if (review.getGarment() != null) {
+                garmentRepository.save(updateGarmentRating(review, review.getGarment(), true, false));
+                reviewRepository.deleteById(id);
+
+                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate())
+                        + " is removed from Garment: " + review.getGarment().getName() + " with id: "
+                        + review.getGarment().getId();
+            } else {
+                reviewRepository.deleteById(id);
+
+                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate()) + " is removed";
+            }
         } else {
             throw new RecordNotFoundException("No review found with id: " + id);
         }
@@ -194,9 +232,9 @@ public class ReviewService {
 
     // Product Requests
     public Object assignReviewToProduct(Long productId, Long reviewId) {
+        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
-        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
 
         if (optionalReview.isEmpty()) {
             throw new BadRequestException("No review found with id:" + reviewId);
@@ -209,25 +247,22 @@ public class ReviewService {
             String name = review.getSupplement() != null ? review.getSupplement().getName() : review.getGarment().getName();
             Long id = review.getSupplement() != null ? review.getSupplement().getId() : review.getGarment().getId();
 
-            throw new BadRequestException(buildBadAssignRequest(type, name, id, reviewId));
+            throw new BadRequestException("Review with id: " + reviewId + " is already assigned to " + type
+                    + ": " + name + " with id: " + id);
         }
 
         Object objectDto;
 
         if (optionalSupplement.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
-            review.setSupplement(supplement);
-            supplement.getReviews().add(review);
-            supplement.setAverageRating(calculateAverageRating(supplement));
-            supplementRepository.save(supplement);
-            objectDto = supplementToDto(supplement);
+            Supplement updatedSupplement = supplementRepository.save(
+                    updateSupplementRating(review, optionalSupplement.get(), false, false));
+
+            objectDto = supplementToDto(updatedSupplement);
         } else if (optionalGarment.isPresent()) {
-            Garment garment = optionalGarment.get();
-            review.setGarment(garment);
-            garment.getReviews().add(review);
-            garment.setAverageRating(calculateAverageRating(garment));
-            garmentRepository.save(garment);
-            objectDto = garmentToDto(garment);
+            Garment updatedGarment = garmentRepository.save(
+                    updateGarmentRating(review, optionalGarment.get(), false, false));
+
+            objectDto = garmentToDto(updatedGarment);
         } else {
             throw new BadRequestException("No product found with id: " + productId);
         }
@@ -237,10 +272,9 @@ public class ReviewService {
     }
 
     public Object removeReviewFromProduct(Long productId, Long reviewId) {
+        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
-        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
-        Set<Review> reviews;
 
         if (optionalReview.isEmpty()) {
             throw new BadRequestException("No review found with id: " + reviewId);
@@ -250,23 +284,19 @@ public class ReviewService {
         Object objectDto;
 
         if (optionalSupplement.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
-            reviews = supplement.getReviews();
-            reviews.remove(review);
+            Supplement updatedSupplement = supplementRepository.save(
+                    updateSupplementRating(review, review.getSupplement(), true, false));
+
             reviewRepository.deleteById(reviewId);
-            supplement.setReviews(reviews);
-            supplement.setAverageRating(calculateAverageRating(supplement));
-            supplementRepository.save(supplement);
-            objectDto = supplementToDto(supplement);
+
+            objectDto = supplementToDto(updatedSupplement);
         } else if (optionalGarment.isPresent()) {
-            Garment garment = optionalGarment.get();
-            reviews = garment.getReviews();
-            reviews.remove(review);
+            Garment updatedGarment = garmentRepository.save(
+                    updateGarmentRating(review, review.getGarment(), true, false));
+
             reviewRepository.deleteById(reviewId);
-            garment.setReviews(reviews);
-            garment.setAverageRating(calculateAverageRating(garment));
-            garmentRepository.save(garment);
-            objectDto = garmentToDto(garment);
+
+            objectDto = garmentToDto(updatedGarment);
         } else {
             throw new BadRequestException("No product found with id: " + productId);
         }
