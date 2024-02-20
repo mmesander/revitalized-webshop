@@ -357,24 +357,47 @@ public class UserService {
 
     public Object addUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
         Optional<User> optionalUser = userRepository.findById(username);
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+        ReviewDto createdReview = null;
         Object dto;
 
         if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
 
-        ReviewDto createdReview = null;
-        if (supplementRepository.existsById(productId) || garmentRepository.existsById(productId)) {
-            createdReview = reviewService.createPersonalReview(inputDto, username);
+        boolean exists = false;
+        Long existingId = null;
+
+        if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            for (Review review : supplement.getReviews()) {
+                if (review.getUser().getUsername().equalsIgnoreCase(username)) {
+                    exists = true;
+                    existingId = review.getId();
+                    break;
+                }
+            }
+        } else if (optionalGarment.isPresent()) {
+            Garment garment = optionalGarment.get();
+            for (Review review : garment.getReviews()) {
+                if (review.getUser().getUsername().equalsIgnoreCase(username)) {
+                    exists = true;
+                    existingId = review.getId();
+                    break;
+                }
+            }
         } else {
-            throw new BadRequestException("Er gaat iets mis met de create method");
+            throw new RecordNotFoundException("No product found with id: " + productId);
         }
 
-        if (createdReview != null) {
+        if (exists) {
+            throw new BadRequestException("Product: " + productId + " already has a review with id: " + existingId
+                    + " written by user: " + username);
+        } else {
+            createdReview = reviewService.createPersonalReview(inputDto, username);
             dto = reviewService.assignReviewToProduct(productId, createdReview.getId());
             return dto;
-        } else {
-            throw new BadRequestException("Er gaat iets mis met de assign method");
         }
     }
 }
