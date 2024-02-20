@@ -309,6 +309,21 @@ public class UserController {
         }
     }
 
+    @GetMapping("/auth/{username}/reviews/{reviewId}")
+    public ResponseEntity<Object> getPersonalUserReview(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("reviewId") Long reviewId
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            ReviewDto dto = reviewService.getReview(reviewId);
+
+            return ResponseEntity.ok().body(dto);
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
     @PostMapping("/auth/{username}/products/{productId}/reviews")
     public ResponseEntity<Object> createNewUserProductReview(
             @AuthenticationPrincipal UserDetails userDetails,
