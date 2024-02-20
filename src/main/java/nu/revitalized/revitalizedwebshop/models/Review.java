@@ -31,4 +31,8 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "supplement_id")
     private Supplement supplement;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

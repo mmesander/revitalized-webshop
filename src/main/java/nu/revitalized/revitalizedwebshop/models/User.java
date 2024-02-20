@@ -44,6 +44,12 @@ public class User {
     )
     private Set<ShippingDetails> shippingDetails;
 
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.EAGER
+    )
+    private Set<Review> reviews;
+
 
     // Methods
     public void addAuthority(Authority authority) {
