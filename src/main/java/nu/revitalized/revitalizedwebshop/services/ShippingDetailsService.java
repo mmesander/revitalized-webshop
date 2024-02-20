@@ -73,6 +73,7 @@ public class ShippingDetailsService {
         return shortDto;
     }
 
+
     // CRUD Requests
     public List<ShippingDetailsDto> getAllShippingDetails() {
         List<ShippingDetails> shippingDetailsList = shippingDetailsRepository.findAll();
@@ -242,7 +243,7 @@ public class ShippingDetailsService {
         }
     }
 
-    // User Methods
+    // Relation - User Requests
     public List<ShippingDetailsDto> getAllPersonalShippingDetails(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Set<ShippingDetails> shippingDetailsSet;
@@ -265,6 +266,5 @@ public class ShippingDetailsService {
             shippingDetailsDtos.sort(Comparator.comparing(ShippingDetailsDto::getId));
             return shippingDetailsDtos;
         }
-
     }
 }

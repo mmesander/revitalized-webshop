@@ -79,7 +79,7 @@ public class SupplementService {
     }
 
 
-    // CRUD Methods --> GET Methods
+    // CRUD Methods
     public List<SupplementDto> getAllSupplements() {
         List<Supplement> supplements = supplementRepository.findAll();
         List<SupplementDto> supplementDtos = new ArrayList<>();
@@ -185,7 +185,6 @@ public class SupplementService {
         }
     }
 
-    // CRUD Methods --> POST Methods
     public SupplementDto createSupplement(SupplementInputDto inputDto) {
         Supplement supplement = dtoToSupplement(inputDto);
         boolean exists = supplementRepository.existsByNameIgnoreCase(inputDto.getName());
@@ -199,7 +198,6 @@ public class SupplementService {
         }
     }
 
-    // CRUD Methods --> PUT/PATCH Methods
     public SupplementDto updateSupplement(Long id, SupplementInputDto inputDto) {
         Optional<Supplement> optionalSupplement = supplementRepository.findById(id);
 
@@ -249,7 +247,6 @@ public class SupplementService {
         }
     }
 
-    // CRUD Methods --> DELETE Methods
     public String deleteSupplement(Long id) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
 
@@ -263,7 +260,7 @@ public class SupplementService {
     }
 
 
-    // Relations Methods
+    // Relation - Allergen Requests
     public SupplementDto assignAllergenToSupplement(Long supplementId, Long allergenId) {
         Optional<Supplement> optionalSupplement = supplementRepository.findById(supplementId);
         Optional<Allergen> optionalAllergen = allergenRepository.findById(allergenId);

@@ -1,5 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
+// Imports
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.models.Authority;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

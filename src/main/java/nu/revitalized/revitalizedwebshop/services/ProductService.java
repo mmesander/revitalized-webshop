@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
@@ -13,7 +12,6 @@ import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -51,7 +49,7 @@ public class ProductService {
     }
 
 
-    // CRUD Methods --> GET Methods
+    // CRUD Requests
     public List<ProductDto> getAllProducts() {
         List<Supplement> supplements = supplementRepository.findAll();
         List<Garment> garments = garmentRepository.findAll();
@@ -140,7 +138,6 @@ public class ProductService {
         }
     }
 
-    // CRUD Methods --> DELETE Methods
     public String deleteProduct(Long id) {
         Optional<Supplement> supplement = supplementRepository.findById(id);
         Optional<Garment> garment = garmentRepository.findById(id);
