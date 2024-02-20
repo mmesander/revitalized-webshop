@@ -173,6 +173,18 @@ public class ReviewService {
 
             if (inputDto.getRating() != null) {
                 review.setRating(inputDto.getRating());
+
+                if (review.getSupplement() != null) {
+                    supplementRepository.save(updateSupplementRating(
+                            review, review.getSupplement(), false, true
+                    ));
+                }
+
+                if (review.getGarment() != null) {
+                    garmentRepository.save(updateGarmentRating(
+                            review, review.getGarment(), false, true
+                    ));
+                }
             }
 
             if (inputDto.getReview() != null || inputDto.getRating() != null) {
