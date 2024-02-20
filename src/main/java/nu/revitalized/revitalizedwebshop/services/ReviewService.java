@@ -317,11 +317,13 @@ public class ReviewService {
     // User Requests
     public List<ReviewDto> getAllPersonalReviews(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
-        Set<Review> reviews = new HashSet<>();
+        Set<Review> reviews;
         List<ReviewDto> reviewDtos = new ArrayList<>();
 
         if (optionalUser.isPresent()) {
             reviews = optionalUser.get().getReviews();
+        } else {
+            throw new UsernameNotFoundException(username);
         }
 
         for (Review review : reviews) {
