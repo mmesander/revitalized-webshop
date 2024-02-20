@@ -12,6 +12,7 @@ import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
+import nu.revitalized.revitalizedwebshop.services.ReviewService;
 import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
 import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +31,16 @@ import java.util.Objects;
 public class UserController {
     private final UserService userService;
     private final ShippingDetailsService shippingDetailsService;
+    private final ReviewService reviewService;
 
     public UserController(
             UserService userService,
-            ShippingDetailsService shippingDetailsService
+            ShippingDetailsService shippingDetailsService,
+            ReviewService reviewService
     ) {
         this.userService = userService;
         this.shippingDetailsService = shippingDetailsService;
+        this.reviewService = reviewService;
     }
 
 
@@ -289,7 +293,7 @@ public class UserController {
 
 
     // USER - Review Requests
-    @PostMapping("/auth/{username}/reviews/products/{productId}")
+    @PostMapping("/auth/{username}/products/{productId}/reviews")
     public ResponseEntity<Object> createNewUserProductReview(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
@@ -311,5 +315,46 @@ public class UserController {
         }
     }
 
+    @PutMapping("/auth/{username}/reviews/{reviewId}")
+    public ResponseEntity<Object> updateUserProductReview(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("reviewId") Long reviewId,
+            @Valid
+            @RequestBody ReviewInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                Object dto = reviewService.updateReview(reviewId, inputDto);
 
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PatchMapping("/auth/{username}/reviews/{reviewId}")
+    public ResponseEntity<Object> patchUserProductReview(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("reviewId") Long reviewId,
+            @RequestBody ReviewInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                Object dto = reviewService.patchReview(reviewId, inputDto);
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
 }
