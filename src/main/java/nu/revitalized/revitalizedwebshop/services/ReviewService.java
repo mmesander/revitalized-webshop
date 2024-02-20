@@ -44,7 +44,6 @@ public class ReviewService {
         this.userRepository = userRepository;
     }
 
-
     // Transfer Methods
     public static Review dtoToReview(ReviewInputDto inputDto) {
         Review review = new Review();
@@ -74,7 +73,7 @@ public class ReviewService {
         return reviewDto;
     }
 
-    // CRUD Requests
+    // CRUD Methods
     public List<ReviewDto> getAllReviews() {
         List<Review> reviews = reviewRepository.findAll();
         List<ReviewDto> reviewDtos = new ArrayList<>();
@@ -235,8 +234,7 @@ public class ReviewService {
         }
     }
 
-
-    // Relation - Product Requests
+    // Relation - Product Methods
     public Object assignReviewToProduct(Long productId, Long reviewId) {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
@@ -310,8 +308,7 @@ public class ReviewService {
         return objectDto;
     }
 
-
-    // Relation - User Requests
+    // Relation - Authenticated User Methods
     public List<ReviewDto> getAllPersonalReviews(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Set<Review> reviews;

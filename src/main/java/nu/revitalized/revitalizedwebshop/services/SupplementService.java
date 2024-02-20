@@ -36,7 +36,6 @@ public class SupplementService {
         this.allergenRepository = allergenRepository;
     }
 
-
     // Transfer Methods
     public static Supplement dtoToSupplement(SupplementInputDto inputDto) {
         Supplement supplement = new Supplement();
@@ -77,7 +76,6 @@ public class SupplementService {
 
         return supplementShortDto;
     }
-
 
     // CRUD Methods
     public List<SupplementDto> getAllSupplements() {
@@ -259,8 +257,7 @@ public class SupplementService {
         }
     }
 
-
-    // Relation - Allergen Requests
+    // Relation - Allergen Methods
     public SupplementDto assignAllergenToSupplement(Long supplementId, Long allergenId) {
         Optional<Supplement> optionalSupplement = supplementRepository.findById(supplementId);
         Optional<Allergen> optionalAllergen = allergenRepository.findById(allergenId);

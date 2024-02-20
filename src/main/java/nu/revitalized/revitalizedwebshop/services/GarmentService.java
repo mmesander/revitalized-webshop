@@ -26,7 +26,6 @@ public class GarmentService {
         this.garmentRepository = garmentRepository;
     }
 
-
     // Transfer Methods
     public static Garment dtoToGarment(GarmentInputDto inputDto) {
         Garment garment = new Garment();
@@ -52,8 +51,7 @@ public class GarmentService {
         return garmentDto;
     }
 
-
-    // CRUD Requests
+    // CRUD Methods
     public List<GarmentDto> getAllGarments() {
         List<Garment> garments = garmentRepository.findAll();
         List<GarmentDto> garmentDtos = new ArrayList<>();

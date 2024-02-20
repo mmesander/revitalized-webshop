@@ -30,7 +30,6 @@ public class ProductService {
         this.garmentRepository = garmentRepository;
     }
 
-
     // Transfer Methods
     public static ProductDto supplementToProductDto(Supplement supplement) {
         ProductDto productDto = new ProductDto();
@@ -48,8 +47,7 @@ public class ProductService {
         return productDto;
     }
 
-
-    // CRUD Requests
+    // CRUD Methods
     public List<ProductDto> getAllProducts() {
         List<Supplement> supplements = supplementRepository.findAll();
         List<Garment> garments = garmentRepository.findAll();

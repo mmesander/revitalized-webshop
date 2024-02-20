@@ -24,7 +24,6 @@ public class AllergenService {
         this.allergenRepository = allergenRepository;
     }
 
-
     // Transfer Methods
     public static Allergen dtoToAllergen(AllergenInputDto inputDto) {
         Allergen allergen = new Allergen();
@@ -58,8 +57,7 @@ public class AllergenService {
         return allergenShortDto;
     }
 
-
-    // CRUD Requests
+    // CRUD Methods
     public List<AllergenDto> getAllAllergens() {
         List<Allergen> allergens = allergenRepository.findAll();
         List<AllergenDto> allergenDtos = new ArrayList<>();
