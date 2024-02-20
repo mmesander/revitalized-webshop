@@ -1,5 +1,6 @@
 package nu.revitalized.revitalizedwebshop.specifications;
 
+// Imports
 import nu.revitalized.revitalizedwebshop.models.User;
 import org.springframework.data.jpa.domain.Specification;
 
