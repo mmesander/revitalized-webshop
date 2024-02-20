@@ -1,9 +1,8 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-
+import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
-
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
@@ -12,11 +11,8 @@ import nu.revitalized.revitalizedwebshop.services.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
-
-import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 
 @RestController
 public class ReviewController {

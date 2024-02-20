@@ -23,7 +23,7 @@ public class GarmentController {
     }
 
 
-    // CRUD Requests -- GET Requests
+    // CRUD Requests
     @GetMapping("/products/garments")
     public ResponseEntity<List<GarmentDto>> getAllGarments() {
         List<GarmentDto> dtos = garmentService.getAllGarments();
@@ -78,7 +78,6 @@ public class GarmentController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    // CRUD Requests -- POST Requests
     @PostMapping("/products/garments")
     public ResponseEntity<GarmentDto> createGarment(
             @Valid
@@ -96,7 +95,6 @@ public class GarmentController {
         }
     }
 
-    // CRUD Requests -- PUT/PATCH Requests
     @PutMapping("/products/garments/{id}")
     public ResponseEntity<GarmentDto> updateGarment(
             @PathVariable("id") Long id,
@@ -123,7 +121,6 @@ public class GarmentController {
         return ResponseEntity.ok().body(dto);
     }
 
-    // CRUD Requests -- DELETE Requests
     @DeleteMapping("/products/garments/{id}")
     public ResponseEntity<Object> deleteGarment(
             @PathVariable("id") Long id

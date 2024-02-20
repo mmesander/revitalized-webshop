@@ -3,7 +3,6 @@ package nu.revitalized.revitalizedwebshop.controllers;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -13,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ShippingDetailsController {
     }
 
 
-    // CRUD Requests -- GET Requests
+    // CRUD Requests
     @GetMapping("/shipping-details")
     public ResponseEntity<List<ShippingDetailsDto>> getAllShippingDetails() {
         List<ShippingDetailsDto> dtos = shippingDetailsService.getAllShippingDetails();
@@ -59,7 +59,6 @@ public class ShippingDetailsController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    // CRUD Requests -- POST Requests
     @PostMapping("/shipping-details")
     public ResponseEntity<ShippingDetailsDto> createShippingDetails(
             @Valid
@@ -78,7 +77,6 @@ public class ShippingDetailsController {
         }
     }
 
-    // CRUD Requests -- PUT/PATCH Requests
     @PutMapping("/shipping-details/{id}")
     public ResponseEntity<ShippingDetailsDto> updateShippingDetails(
             @PathVariable("id") Long id,
@@ -105,7 +103,6 @@ public class ShippingDetailsController {
         return ResponseEntity.ok().body(dto);
     }
 
-    // CRUD Requests -- DELETE Requests
     @DeleteMapping("/shipping-details/{id}")
     public ResponseEntity<Object> deleteShippingDetails(
             @PathVariable("id") Long id
