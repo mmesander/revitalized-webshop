@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,9 +19,9 @@ public class User {
 
     @Column(nullable = false, length = 255)
     private String password;
+
     @Column(nullable = false, unique = true)
     private String email;
-
 
     // Relations
     @OneToMany(
@@ -34,12 +33,8 @@ public class User {
     )
     private Set<Authority> authorities = new HashSet<>();
 
-
     @OneToMany(
-//            targetEntity = ShippingDetails.class,
             mappedBy = "user",
-//            orphanRemoval = true,
-//            cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
     private Set<ShippingDetails> shippingDetails;
@@ -49,7 +44,6 @@ public class User {
             fetch = FetchType.EAGER
     )
     private Set<Review> reviews;
-
 
     // Methods
     public void addAuthority(Authority authority) {

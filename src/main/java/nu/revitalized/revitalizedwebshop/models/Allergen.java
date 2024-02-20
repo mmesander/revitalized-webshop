@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Set;
 
 @Getter
@@ -17,9 +16,9 @@ public class Allergen {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "allergens_seq")
     private Long id;
+
     @Column(unique = true)
     private String name;
-
 
     // Relations
     @ManyToMany(mappedBy = "allergens")

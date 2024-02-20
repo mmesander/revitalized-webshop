@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
-
 import java.util.Set;
 
 @Getter
@@ -15,7 +14,6 @@ import java.util.Set;
 public class Supplement extends Product implements IdentifiableProduct {
     // Variables
     private String contains;
-
 
     // Relations
     @ManyToMany

@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Date;
 
 @Getter
@@ -17,11 +16,9 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reviews_seq")
     private Long id;
-
     private String review;
     private Integer rating;
     private Date date;
-
 
     // Relations
     @ManyToOne

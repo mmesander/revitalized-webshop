@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
-
 import java.util.Set;
 
 @Getter
@@ -16,7 +15,6 @@ public class Garment extends Product implements IdentifiableProduct {
     // Variables
     private String size;
     private String color;
-
 
     // Relations
     @OneToMany(
