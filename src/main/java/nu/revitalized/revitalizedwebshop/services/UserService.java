@@ -365,7 +365,7 @@ public class UserService {
 
         ReviewDto createdReview = null;
         if (supplementRepository.existsById(productId) || garmentRepository.existsById(productId)) {
-            createdReview = reviewService.createReview(inputDto);
+            createdReview = reviewService.createPersonalReview(inputDto, username);
         } else {
             throw new BadRequestException("Er gaat iets mis met de create method");
         }
