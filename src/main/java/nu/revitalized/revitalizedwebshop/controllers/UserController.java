@@ -286,4 +286,30 @@ public class UserController {
             throw new BadRequestException("Used token is not valid");
         }
     }
+
+
+    // USER - Review Requests
+    @PostMapping("/auth/{username}/reviews/products/{productId}")
+    public ResponseEntity<Object> createNewUserProductReview(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("productId") Long productId,
+            @Valid
+            @RequestBody ReviewInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                Object dto = userService.addUserProductReview(username, inputDto, productId);
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+
 }
