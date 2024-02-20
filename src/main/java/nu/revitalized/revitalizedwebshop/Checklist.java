@@ -8,6 +8,7 @@ public class Checklist {
 
 
     // Overig
+    // TODO: User Specific : get all user shippingaddres en de specifieke toeveogen
     // TODO: Alles nalopen op imports etc.
     // TODO: De url van authenticate aanpassen op users/authenticate
 

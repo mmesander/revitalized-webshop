@@ -14,12 +14,15 @@ import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
+import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.ReviewRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +33,18 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
+    private final UserRepository userRepository;
 
     public ReviewService(
             ReviewRepository reviewRepository,
             SupplementRepository supplementRepository,
-            GarmentRepository garmentRepository
+            GarmentRepository garmentRepository,
+            UserRepository userRepository
     ) {
         this.reviewRepository = reviewRepository;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -62,6 +68,10 @@ public class ReviewService {
 
         if (review.getSupplement() != null) {
             reviewDto.setProductId(review.getSupplement().getId());
+        }
+
+        if (review.getUser() != null) {
+            reviewDto.setUsername(review.getUser().getUsername());
         }
 
         return reviewDto;
@@ -127,7 +137,6 @@ public class ReviewService {
         Review review = dtoToReview(inputDto);
 
         review.setDate(createDate());
-
         reviewRepository.save(review);
 
         return reviewToDto(review);
@@ -302,5 +311,46 @@ public class ReviewService {
         }
 
         return objectDto;
+    }
+
+
+    // User Requests
+    public List<ReviewDto> getAllPersonalReviews(String username) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Set<Review> reviews;
+        List<ReviewDto> reviewDtos = new ArrayList<>();
+
+        if (optionalUser.isPresent()) {
+            reviews = optionalUser.get().getReviews();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        for (Review review : reviews) {
+            ReviewDto reviewDto = reviewToDto(review);
+            reviewDtos.add(reviewDto);
+        }
+
+        if (reviewDtos.isEmpty()) {
+            throw new RecordNotFoundException("No reviews found from user: " + username);
+        } else {
+            reviewDtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
+
+            return reviewDtos;
+        }
+    }
+
+    public ReviewDto createPersonalReview(ReviewInputDto inputDto, String username) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Review review = dtoToReview(inputDto);
+
+        if (optionalUser.isPresent()) {
+            review.setDate(createDate());
+            review.setUser(optionalUser.get());
+            reviewRepository.save(review);
+            return reviewToDto(review);
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
     }
 }

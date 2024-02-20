@@ -1,34 +1,26 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
-
+import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.UserShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
-import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
-import nu.revitalized.revitalizedwebshop.models.User;
-import nu.revitalized.revitalizedwebshop.repositories.AuthorityRepository;
-import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
-import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
-import nu.revitalized.revitalizedwebshop.models.Authority;
+import nu.revitalized.revitalizedwebshop.models.*;
+import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -37,17 +29,26 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
     private final ShippingDetailsRepository shippingDetailsRepository;
     private final ShippingDetailsService shippingDetailsService;
+    private final SupplementRepository supplementRepository;
+    private final GarmentRepository garmentRepository;
+    private final ReviewService reviewService;
 
     public UserService(
             UserRepository userRepository,
             AuthorityRepository authorityRepository,
             ShippingDetailsRepository shippingDetailsRepository,
-            ShippingDetailsService shippingDetailsService
+            ShippingDetailsService shippingDetailsService,
+            SupplementRepository supplementRepository,
+            GarmentRepository garmentRepository,
+            ReviewService reviewService
     ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.shippingDetailsRepository = shippingDetailsRepository;
         this.shippingDetailsService = shippingDetailsService;
+        this.supplementRepository = supplementRepository;
+        this.garmentRepository = garmentRepository;
+        this.reviewService = reviewService;
     }
 
 
@@ -73,6 +74,14 @@ public class UserService {
                 dtos.add(shippingDetailsToShortDto(shippingDetails));
             }
             userDto.setShippingDetails(dtos);
+        }
+
+        if (user.getReviews() != null) {
+            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            for (Review review : user.getReviews()) {
+                dtos.add(reviewToDto(review));
+            }
+            userDto.setReviews(dtos);
         }
 
         return userDto;
@@ -347,4 +356,52 @@ public class UserService {
 
         return dto;
     }
+
+    public Object addUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+        ReviewDto createdReview;
+        Object dto;
+
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        boolean exists = false;
+        Long existingId = null;
+
+        if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            for (Review review : supplement.getReviews()) {
+                if (review.getUser().getUsername().equalsIgnoreCase(username)) {
+                    exists = true;
+                    existingId = review.getId();
+                    break;
+                }
+            }
+        } else if (optionalGarment.isPresent()) {
+            Garment garment = optionalGarment.get();
+            for (Review review : garment.getReviews()) {
+                if (review.getUser().getUsername().equalsIgnoreCase(username)) {
+                    exists = true;
+                    existingId = review.getId();
+                    break;
+                }
+            }
+        } else {
+            throw new RecordNotFoundException("No product found with id: " + productId);
+        }
+
+        if (exists) {
+            throw new BadRequestException("Product: " + productId + " already has a review with id: " + existingId
+                    + " written by user: " + username);
+        } else {
+            createdReview = reviewService.createPersonalReview(inputDto, username);
+            dto = reviewService.assignReviewToProduct(productId, createdReview.getId());
+            return dto;
+        }
+    }
+
+
 }

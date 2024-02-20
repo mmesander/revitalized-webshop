@@ -13,8 +13,11 @@ import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
+import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
+import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -23,11 +26,14 @@ import java.util.*;
 @Service
 public class ShippingDetailsService {
     private final ShippingDetailsRepository shippingDetailsRepository;
+    private final UserRepository userRepository;
 
     public ShippingDetailsService(
-            ShippingDetailsRepository shippingDetailsRepository
+            ShippingDetailsRepository shippingDetailsRepository,
+            UserRepository userRepository
     ) {
         this.shippingDetailsRepository = shippingDetailsRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -67,7 +73,7 @@ public class ShippingDetailsService {
         return shortDto;
     }
 
-    // CRUD Methods --> GET Methods
+    // CRUD Requests
     public List<ShippingDetailsDto> getAllShippingDetails() {
         List<ShippingDetails> shippingDetailsList = shippingDetailsRepository.findAll();
         List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
@@ -130,7 +136,6 @@ public class ShippingDetailsService {
         }
     }
 
-    // CRUD Methods --> POST Methods
     public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto, String username) {
         ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
 
@@ -153,7 +158,6 @@ public class ShippingDetailsService {
         }
     }
 
-    // CRUD Methods --> PUT/PATCH Methods
     public ShippingDetailsDto updateShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
 
@@ -225,7 +229,6 @@ public class ShippingDetailsService {
         }
     }
 
-    // CRUD Methods --> DELETE Methods
     public String deleteShippingDetailsById(Long id) {
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
 
@@ -237,5 +240,31 @@ public class ShippingDetailsService {
         } else {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
         }
+    }
+
+    // User Methods
+    public List<ShippingDetailsDto> getAllPersonalShippingDetails(String username) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Set<ShippingDetails> shippingDetailsSet;
+        List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
+
+        if (optionalUser.isPresent()) {
+            shippingDetailsSet = optionalUser.get().getShippingDetails();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        for (ShippingDetails shippingDetails : shippingDetailsSet) {
+            ShippingDetailsDto shippingDetailsDto = shippingDetailsToDto(shippingDetails);
+            shippingDetailsDtos.add(shippingDetailsDto);
+        }
+
+        if (shippingDetailsDtos.isEmpty()) {
+            throw new RecordNotFoundException("No shipping details found from user: " + username);
+        } else {
+            shippingDetailsDtos.sort(Comparator.comparing(ShippingDetailsDto::getId));
+            return shippingDetailsDtos;
+        }
+
     }
 }
