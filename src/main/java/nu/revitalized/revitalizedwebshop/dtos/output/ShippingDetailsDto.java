@@ -19,7 +19,6 @@ public class ShippingDetailsDto implements IdentifiableId {
     private String houseNumber;
     private String email;
 
-
     // Relations
     private UserShortDto user;
 }
