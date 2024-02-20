@@ -214,6 +214,20 @@ public class UserController {
 
 
     // USER - ShippingDetails Requests
+    @GetMapping("/auth/{username}/shipping-details")
+    public ResponseEntity<List<ShippingDetailsDto>> getAllUserShippingDetails(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            List<ShippingDetailsDto> dtos = shippingDetailsService.getAllPersonalShippingDetails(username);
+
+            return ResponseEntity.ok().body(dtos);
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
     @PostMapping("/auth/{username}/shipping-details")
     public ResponseEntity<UserDto> createNewUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
