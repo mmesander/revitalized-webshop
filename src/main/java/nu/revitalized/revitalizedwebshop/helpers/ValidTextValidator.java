@@ -26,7 +26,6 @@ public class ValidTextValidator implements ConstraintValidator<ValidText, String
             return false;
         }
 
-
         return true;
     }
 }
