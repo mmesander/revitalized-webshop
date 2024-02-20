@@ -8,13 +8,11 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHo
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
 
+import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.UserShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -346,5 +344,9 @@ public class UserService {
         }
 
         return dto;
+    }
+
+    public ReviewDto addUserProductReview(String username, ReviewInputDto inputDto) {
+
     }
 }
