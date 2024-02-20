@@ -18,7 +18,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-
     // CRUD Requests
     @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getAllProducts() {

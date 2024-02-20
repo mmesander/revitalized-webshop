@@ -14,7 +14,6 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-
 @RestController
 public class AllergenController {
     private final AllergenService allergenService;
@@ -22,7 +21,6 @@ public class AllergenController {
     public AllergenController(AllergenService allergenService) {
         this.allergenService = allergenService;
     }
-
 
     // CRUD Requests
     @GetMapping("/products/supplements/allergens")

@@ -41,7 +41,6 @@ public class UserController {
         this.reviewService = reviewService;
     }
 
-
     // ADMIN -- CRUD Requests
     @GetMapping(value = "")
     public ResponseEntity<List<UserDto>> getUsers() {
@@ -149,7 +148,6 @@ public class UserController {
         return ResponseEntity.ok().body(confirmation);
     }
 
-
     // ADMIN - ShippingDetails Requests
     @PutMapping(value = "/{username}/shipping-details")
     public ResponseEntity<Object> assignShippingDetailsToUser(
@@ -170,7 +168,6 @@ public class UserController {
             }
         }
     }
-
 
     // USER (Authenticated) - CRUD Requests
     @GetMapping(value = "/auth/{username}")
@@ -207,7 +204,6 @@ public class UserController {
             throw new BadRequestException("Used token is not valid");
         }
     }
-
 
     // USER (Authenticated) - ShippingDetails Requests
     @GetMapping("/auth/{username}/shipping-details")
@@ -317,7 +313,6 @@ public class UserController {
             throw new BadRequestException("Used token is not valid");
         }
     }
-
 
     // USER (Authenticated) - Review Requests
     @GetMapping("/auth/{username}/reviews")

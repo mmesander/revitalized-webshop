@@ -24,7 +24,6 @@ public class ShippingDetailsController {
         this.shippingDetailsService = shippingDetailsService;
     }
 
-
     // CRUD Requests
     @GetMapping("/shipping-details")
     public ResponseEntity<List<ShippingDetailsDto>> getAllShippingDetails() {

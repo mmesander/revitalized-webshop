@@ -22,7 +22,6 @@ public class GarmentController {
         this.garmentService = garmentService;
     }
 
-
     // CRUD Requests
     @GetMapping("/products/garments")
     public ResponseEntity<List<GarmentDto>> getAllGarments() {

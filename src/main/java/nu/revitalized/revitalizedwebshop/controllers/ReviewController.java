@@ -22,7 +22,6 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-
     // CRUD Requests
     @GetMapping("/products/reviews")
     public ResponseEntity<List<ReviewDto>> getAllProductReviews() {
@@ -104,7 +103,6 @@ public class ReviewController {
 
         return ResponseEntity.ok().body(confirmation);
     }
-
 
     // Review Requests
     @PutMapping("/products/{productId}/reviews/{reviewId}")

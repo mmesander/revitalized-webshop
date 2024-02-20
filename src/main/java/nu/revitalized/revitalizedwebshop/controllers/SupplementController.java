@@ -23,7 +23,6 @@ public class SupplementController {
         this.supplementService = supplementService;
     }
 
-
     // CRUD Requests
     @GetMapping("/products/supplements")
     public ResponseEntity<List<SupplementDto>> getAllSupplements() {
@@ -128,7 +127,6 @@ public class SupplementController {
 
         return ResponseEntity.ok().body(confirmation);
     }
-
 
     // Allergen Requests
     @PostMapping(value = "/products/supplements/{id}/allergens")
