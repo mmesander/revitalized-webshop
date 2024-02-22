@@ -221,8 +221,8 @@ public class DiscountService {
 
     // Relation - User Methods
     public DiscountDto assignDiscountToUser(String username, Long id) {
-        Optional<User> optionalUser = userRepository.findById(username);
         Optional<Discount> optionalDiscount = discountRepository.findById(id);
+        Optional<User> optionalUser = userRepository.findById(username);
 
         if (optionalDiscount.isEmpty()) {
             throw new RecordNotFoundException("No discount found with id: " + id);

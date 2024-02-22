@@ -121,7 +121,7 @@ public class ShippingDetailsController {
     }
 
     // Relation - User Requests
-    @PutMapping(value = "/{username}/shipping-details")
+    @PutMapping(value = "users/{username}/shipping-details")
     public ResponseEntity<Object> assignShippingDetailsToUser(
             @PathVariable("username") String username,
             @Valid

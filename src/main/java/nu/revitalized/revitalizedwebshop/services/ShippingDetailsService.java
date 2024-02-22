@@ -245,40 +245,34 @@ public class ShippingDetailsService {
 
     // Relation - User Methods
     public UserDto assignShippingDetailsToUser(String username, Long id) {
-        Optional<User> optionalUser = userRepository.findById(username);
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
-        UserDto dto;
+        Optional<User> optionalUser = userRepository.findById(username);
 
-        if (optionalUser.isPresent() && optionalShippingDetails.isPresent()) {
-            User user = optionalUser.get();
+        if (optionalShippingDetails.isEmpty()) {
+            throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
+        }
+
+        Set<ShippingDetails> shippingDetailsSet;
+
+        if (optionalUser.isPresent()) {
             ShippingDetails shippingDetails = optionalShippingDetails.get();
+            User user = optionalUser.get();
 
-            shippingDetails.setUser(user);
-            shippingDetailsRepository.save(shippingDetails);
+            shippingDetailsSet = user.getShippingDetails();
 
-            Set<ShippingDetails> shippingDetailsSet = new TreeSet<>(Comparator.comparingLong(ShippingDetails::getId));
 
-            if (!user.getShippingDetails().isEmpty()) {
+            if (!shippingDetailsSet.isEmpty()) {
                 shippingDetailsSet.addAll(user.getShippingDetails());
             }
 
             shippingDetailsSet.add(shippingDetails);
             user.setShippingDetails(shippingDetailsSet);
+            shippingDetails.setUser(user);
+            shippingDetailsRepository.save(shippingDetails);
 
-            userRepository.save(user);
-
-            dto = userToDto(user);
-
-            return dto;
+            return userToDto(user);
         } else {
-            if (optionalUser.isEmpty() && optionalShippingDetails.isEmpty()) {
-                throw new RecordNotFoundException("User: " + username + " and shipping details with id: " + id
-                        + " are not found");
-            } else if (optionalUser.isEmpty()) {
-                throw new RecordNotFoundException("User with username: " + username + " not found");
-            } else {
-                throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
-            }
+            throw new UsernameNotFoundException(username);
         }
     }
 
