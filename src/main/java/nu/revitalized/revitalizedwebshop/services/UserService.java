@@ -308,6 +308,7 @@ public class UserService {
             for (Discount discount : discounts) {
                 discountService.removeDiscountFromUser(username, discount.getId());
             }
+            return "All discounts from user: " + username + " are removed";
         } else {
             throw new UsernameNotFoundException(username);
         }
