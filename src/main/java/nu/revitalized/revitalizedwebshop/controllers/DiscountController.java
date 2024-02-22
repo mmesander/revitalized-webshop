@@ -53,17 +53,17 @@ public class DiscountController {
                 name, value, minValue, maxValue
         );
 
-        return ResponseEntity.ok().body(dtos);
+        return ResponseEntity.ok().body(dtos);ita
     }
 
-    @GetMapping("/users/discounts")
+    @GetMapping("/users/discounts-active")
     public ResponseEntity<List<DiscountDto>> getAllActiveDiscounts() {
         List<DiscountDto> dtos = discountService.getAllActiveDiscounts();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/users/discounts")
+    @GetMapping("/users/discounts-inactive")
     public ResponseEntity<List<DiscountDto>> getAllInactiveDiscounts() {
         List<DiscountDto> dtos = discountService.getAllInactiveDiscounts();
 
