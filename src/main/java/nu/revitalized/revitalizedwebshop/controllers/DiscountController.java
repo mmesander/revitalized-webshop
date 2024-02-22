@@ -115,7 +115,7 @@ public class DiscountController {
             @Valid
             @RequestBody IdInputDto inputDto
             ) {
-        DiscountDto dto = discountService.assignDiscountToUser(username, inputDto);
+        DiscountDto dto = discountService.assignDiscountToUser(username, inputDto.getId());
 
         return ResponseEntity.ok().body(dto);
     }

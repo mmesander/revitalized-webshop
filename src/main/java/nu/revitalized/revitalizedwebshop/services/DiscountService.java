@@ -178,12 +178,12 @@ public class DiscountService {
     }
 
     // Relation - User Methods
-    public DiscountDto assignDiscountToUser(String username, IdInputDto inputDto) {
+    public DiscountDto assignDiscountToUser(String username, Long id) {
         Optional<User> optionalUser = userRepository.findById(username);
-        Optional<Discount> optionalDiscount = discountRepository.findById(inputDto.getId());
+        Optional<Discount> optionalDiscount = discountRepository.findById(id);
 
         if (optionalDiscount.isEmpty()) {
-            throw new RecordNotFoundException("No discount found with id: " + inputDto.getId());
+            throw new RecordNotFoundException("No discount found with id: " + id);
         }
 
         Set<User> users;
@@ -214,6 +214,6 @@ public class DiscountService {
         }
     }
 
-//    public String removeDiscountFromUser() {
+//    public String removeDiscountFromUser(String username, ) {
 //    }
 }

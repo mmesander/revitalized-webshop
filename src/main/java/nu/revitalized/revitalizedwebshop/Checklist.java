@@ -2,9 +2,6 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // DISCOUNT
-    // TODO: Controller
-    // TODO: Relation: User
-
 
     // ASSIGN DISCOUNT TO USER
     // REMOVE DISCOUNT FROM USER
