@@ -8,35 +8,35 @@ public class ShippingDetailsSpecification {
     private ShippingDetailsSpecification() {
     }
 
-    // Request Filter: Shipping Details detailsName
+    // Request Filter: ShippingDetails detailsName
     public static Specification<ShippingDetails> getShippingDetailsDetailsNameLikeFilter(String detailsNameLike) {
         String formattedDetailsNameLike = "%" + detailsNameLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
                 .like(criteriaBuilder.lower(root.get("detailsName")), formattedDetailsNameLike));
     }
 
-    // Request Filter: Shipping Details name
+    // Request Filter: ShippingDetails name
     public static Specification<ShippingDetails> getShippingDetailsNameLikeFilter(String nameLike) {
         String formattedNameLike = "%" + nameLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
                 .like(criteriaBuilder.lower(root.get("name")), formattedNameLike));
     }
 
-    // Request Filter: Shipping Details country
+    // Request Filter: ShippingDetails country
     public static Specification<ShippingDetails> getShippingDetailsCountryLikeFilter(String countryLike) {
         String formattedCountryLike = "%" + countryLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
                 .like(criteriaBuilder.lower(root.get("country")), formattedCountryLike));
     }
 
-    // Request Filter: Shipping Details city
+    // Request Filter: ShippingDetails city
     public static Specification<ShippingDetails> getShippingDetailsCityLikeFilter(String cityLike) {
         String formattedCityLike = "%" + cityLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
                 .like(criteriaBuilder.lower(root.get("city")), formattedCityLike));
     }
 
-    // Request Filter: Shipping Details zipCode
+    // Request Filter: ShippingDetails zipCode
     public static Specification<ShippingDetails> getShippingDetailsZipCodeLikeFilter(String zipCodeLike) {
         String formattedZipCodeLike = "%" + zipCodeLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder

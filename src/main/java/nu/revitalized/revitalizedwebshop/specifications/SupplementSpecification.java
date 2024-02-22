@@ -7,14 +7,14 @@ import org.springframework.data.jpa.domain.Specification;
 public class SupplementSpecification {
     private SupplementSpecification() {}
 
-    // Request filter: Supplement name
+    // Request Filter: Supplement name
     public static Specification<Supplement> getSupplementNameLikeFilter(String nameLike) {
         String formattedNameLike = "%" + nameLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
                 .like(criteriaBuilder.lower(root.get("name")), formattedNameLike));
     }
 
-    // Request filter: Supplement brand
+    // Request Filter: Supplement brand
     public static Specification<Supplement> getSupplementBrandLikeFilter(String brandLike) {
         String formattedBrandLike = "%" + brandLike.toLowerCase() + "%";
         return ((root, query, criteriaBuilder) -> criteriaBuilder
