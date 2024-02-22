@@ -24,5 +24,5 @@ public class Order {
     private boolean isPayed;
 
     // Relations
-
+    //
 }
