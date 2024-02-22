@@ -5,10 +5,7 @@ public class Checklist {
     // TODO: Controller
     // TODO: Relation: User
 
-    // ADMIN
-    // GET ALL, GET SPECIFIC, GET BY PARAM
-    // POST, PUT, PATCH
-    // DELETE
+
     // ASSIGN DISCOUNT TO USER
     // REMOVE DISCOUNT FROM USER
     // in de user class: Get All UserDiscounts
