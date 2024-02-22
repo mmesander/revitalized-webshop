@@ -53,7 +53,7 @@ public class DiscountController {
                 name, value, minValue, maxValue
         );
 
-        return ResponseEntity.ok().body(dtos);ita
+        return ResponseEntity.ok().body(dtos);
     }
 
     @GetMapping("/users/discounts-active")
