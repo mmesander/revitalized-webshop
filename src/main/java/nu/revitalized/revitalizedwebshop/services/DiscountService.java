@@ -186,28 +186,29 @@ public class DiscountService {
             throw new RecordNotFoundException("No discount found with id: " + inputDto.getId());
         }
 
-        Set<Discount> discounts;
+        Set<User> users;
 
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
             Discount discount = optionalDiscount.get();
+            User user = optionalUser.get();
 
-            discounts = user.getDiscounts();
+            users = discount.getUsers();
 
-            if (discounts.contains(discount)) {
-                throw new InvalidInputException("User: " + username + " already has discount: " + discount.getName());
+            for (Discount presentDiscount : user.getDiscounts()) {
+                if (presentDiscount.getName().equalsIgnoreCase(discount.getName())) {
+                    throw new InvalidInputException("User: " + username + " already has discount: " + discount.getName());
+                }
             }
-            if (!discounts.isEmpty()) {
-                discounts.addAll(user.getDiscounts());
+
+            if (!users.isEmpty()) {
+                users.addAll(discount.getUsers());
             }
 
-            discounts.add(discount);
-            user.setDiscounts(discounts);
-            userRepository.save(user);
-            discount.setUsers(); // DIt is de oplossing denk ik
-            discountRepository.save(discount);
+            users.add(user);
+            discount.setUsers(users);
+            Discount savedDiscount = discountRepository.save(discount);
 
-            return discountToDto(discount);
+            return discountToDto(savedDiscount);
         } else {
             throw new UsernameNotFoundException(username);
         }
