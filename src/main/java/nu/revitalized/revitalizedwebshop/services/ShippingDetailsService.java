@@ -5,12 +5,14 @@ import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
@@ -238,6 +240,45 @@ public class ShippingDetailsService {
             return buildSpecificConfirmation("Shipping Details", optionalShippingDetails.get().getDetailsName(), id);
         } else {
             throw new RecordNotFoundException("No shipping details found with id: " + id);
+        }
+    }
+
+    // Relation - User Methods
+    public UserDto assignShippingDetailsToUser(String username, Long id) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+        UserDto dto;
+
+        if (optionalUser.isPresent() && optionalShippingDetails.isPresent()) {
+            User user = optionalUser.get();
+            ShippingDetails shippingDetails = optionalShippingDetails.get();
+
+            shippingDetails.setUser(user);
+            shippingDetailsRepository.save(shippingDetails);
+
+            Set<ShippingDetails> shippingDetailsSet = new TreeSet<>(Comparator.comparingLong(ShippingDetails::getId));
+
+            if (!user.getShippingDetails().isEmpty()) {
+                shippingDetailsSet.addAll(user.getShippingDetails());
+            }
+
+            shippingDetailsSet.add(shippingDetails);
+            user.setShippingDetails(shippingDetailsSet);
+
+            userRepository.save(user);
+
+            dto = userToDto(user);
+
+            return dto;
+        } else {
+            if (optionalUser.isEmpty() && optionalShippingDetails.isEmpty()) {
+                throw new RecordNotFoundException("User: " + username + " and shipping details with id: " + id
+                        + " are not found");
+            } else if (optionalUser.isEmpty()) {
+                throw new RecordNotFoundException("User with username: " + username + " not found");
+            } else {
+                throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
+            }
         }
     }
 

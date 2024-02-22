@@ -109,7 +109,6 @@ public class UserController {
         return ResponseEntity.ok().body(confirmation);
     }
 
-
     // ADMIN - Authorities Requests
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities(
@@ -146,27 +145,6 @@ public class UserController {
         String confirmation = userService.removeAuthority(username, authority);
 
         return ResponseEntity.ok().body(confirmation);
-    }
-
-    // ADMIN - ShippingDetails Requests
-    @PutMapping(value = "/{username}/shipping-details")
-    public ResponseEntity<Object> assignShippingDetailsToUser(
-            @PathVariable("username") String username,
-            @Valid
-            @RequestBody IdInputDto idInputDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasFieldErrors()) {
-            throw new InvalidInputException(handleBindingResultError(bindingResult));
-        } else {
-            try {
-                userService.assignShippingDetailsToUser(username, idInputDto.getId());
-
-                return ResponseEntity.ok().body(userService.getUser(username));
-            } catch (Exception exception) {
-                throw new BadRequestException(exception.getMessage());
-            }
-        }
     }
 
     // USER (Authenticated) - CRUD Requests

@@ -284,45 +284,6 @@ public class UserService {
         }
     }
 
-    // Relation - Shipping Details Methods
-    public UserDto assignShippingDetailsToUser(String username, Long id) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
-        UserDto dto;
-
-        if (optionalUser.isPresent() && optionalShippingDetails.isPresent()) {
-            User user = optionalUser.get();
-            ShippingDetails shippingDetails = optionalShippingDetails.get();
-
-            shippingDetails.setUser(user);
-            shippingDetailsRepository.save(shippingDetails);
-
-            Set<ShippingDetails> shippingDetailsSet = new TreeSet<>(Comparator.comparingLong(ShippingDetails::getId));
-
-            if (!user.getShippingDetails().isEmpty()) {
-                shippingDetailsSet.addAll(user.getShippingDetails());
-            }
-
-            shippingDetailsSet.add(shippingDetails);
-            user.setShippingDetails(shippingDetailsSet);
-
-            userRepository.save(user);
-
-            dto = userToDto(user);
-
-            return dto;
-        } else {
-            if (optionalUser.isEmpty() && optionalShippingDetails.isEmpty()) {
-                throw new RecordNotFoundException("User: " + username + " and shipping details with id: " + id
-                        + " are not found");
-            } else if (optionalUser.isEmpty()) {
-                throw new RecordNotFoundException("User with username: " + username + " not found");
-            } else {
-                throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
-            }
-        }
-    }
-
     // Relation - Authenticated User Methods
     public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
         Optional<User> user = userRepository.findById(username);
@@ -347,7 +308,7 @@ public class UserService {
             }
 
             if (presentShippingDetails != null) {
-                assignShippingDetailsToUser(username, presentShippingDetails.getId());
+                shippingDetailsService.assignShippingDetailsToUser(username, presentShippingDetails.getId());
             } else {
                 throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
                         + " is not found");
