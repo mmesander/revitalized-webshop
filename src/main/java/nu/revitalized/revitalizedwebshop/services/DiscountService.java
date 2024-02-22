@@ -2,6 +2,7 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.*;
 import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
@@ -67,7 +68,7 @@ public class DiscountService {
         if (discount.isPresent()) {
             return discountToDto(discount.get());
         } else {
-            throw new RecordNotFoundException("Discount with id: " + id + " not found");
+            throw new RecordNotFoundException("No discount found with id: " + id);
         }
     }
 
@@ -100,13 +101,62 @@ public class DiscountService {
         }
     }
 
-    public DiscountDto createDiscount() {}
+    public DiscountDto createDiscount(DiscountInputDto inputDto) {
+        Discount discount = dtoToDiscount(inputDto);
 
-    public DiscountDto updateDiscount() {}
+        discountRepository.save(discount);
 
-    public DiscountDto patchDiscount() {}
+        return discountToDto(discount);
+    }
 
-    public String deleteDiscount() {}
+    public DiscountDto updateDiscount(Long id, DiscountInputDto inputDto) {
+        Optional<Discount> optionalDiscount = discountRepository.findById(id);
+
+        if (optionalDiscount.isPresent()) {
+            Discount discount = optionalDiscount.get();
+
+            copyProperties(inputDto, discount);
+
+            Discount updatedDiscount = discountRepository.save(discount);
+
+            return discountToDto(updatedDiscount);
+        } else {
+            throw new RecordNotFoundException("No discount found with id: " + id);
+        }
+    }
+
+    public DiscountDto patchDiscount(Long id, DiscountInputDto inputDto) {
+        Optional<Discount> optionalDiscount = discountRepository.findById(id);
+
+        if (optionalDiscount.isPresent()) {
+            Discount discount = optionalDiscount.get();
+
+            if (inputDto.getName() != null) {
+                discount.setName(inputDto.getName());
+            }
+            if (inputDto.getValue() != null) {
+                discount.setValue(inputDto.getValue());
+            }
+            Discount patchedDiscount = discountRepository.save(discount);
+
+            return discountToDto(patchedDiscount);
+        } else {
+            throw new RecordNotFoundException("No discount found with id: " + id);
+        }
+    }
+
+    public String deleteDiscount(Long id) {
+        Optional<Discount> discount = discountRepository.findById(id);
+
+        if (discount.isPresent()) {
+            discountRepository.deleteById(id);
+
+            return buildSpecificConfirmation("Discount", discount.get().getName(), id);
+        } else {
+            throw new RecordNotFoundException("No discount found with id: " + id);
+        }
+
+    }
 
     // Relation - User Methods
 }
