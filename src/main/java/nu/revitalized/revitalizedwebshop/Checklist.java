@@ -2,10 +2,6 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // DISCOUNT
-    // TODO: Model
-    // TODO: Repo
-    // TODO: Input & Output
-    // TODO: Specifications
     // TODO: Service
     // TODO: Controller
     // TODO: Relation: User
