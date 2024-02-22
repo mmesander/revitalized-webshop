@@ -225,7 +225,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.addUserShippingDetails(username, inputDto);
+                UserDto dto = userService.addAuthUserShippingDetails(username, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -335,7 +335,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                Object dto = userService.addUserProductReview(username, inputDto, productId);
+                Object dto = userService.addAuthUserProductReview(username, inputDto, productId);
 
                 return ResponseEntity.ok().body(dto);
             }

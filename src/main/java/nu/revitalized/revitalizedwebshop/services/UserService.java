@@ -32,6 +32,7 @@ public class UserService {
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
     private final ReviewService reviewService;
+    private final DiscountService discountService;
 
     public UserService(
             UserRepository userRepository,
@@ -40,7 +41,8 @@ public class UserService {
             ShippingDetailsService shippingDetailsService,
             SupplementRepository supplementRepository,
             GarmentRepository garmentRepository,
-            ReviewService reviewService
+            ReviewService reviewService,
+            DiscountService discountService
     ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
@@ -49,6 +51,7 @@ public class UserService {
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
         this.reviewService = reviewService;
+        this.discountService = discountService;
     }
 
     // Transfer Methods
@@ -284,8 +287,34 @@ public class UserService {
         }
     }
 
+    // Relation - Discount Methods
+    public Set<String> getAllUserDiscounts(String username) {
+        Optional<User> user = userRepository.findById(username);
+
+        if (user.isPresent()) {
+            UserDto userDto = userToDto(user.get());
+
+            return userDto.getDiscounts();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
+    public String removeAllUserDiscounts(String username) {
+        Optional<User> user = userRepository.findById(username);
+
+        if (user.isPresent()) {
+            Set<Discount> discounts = user.get().getDiscounts();
+            for (Discount discount : discounts) {
+                discountService.removeDiscountFromUser(username, discount.getId());
+            }
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
     // Relation - Authenticated User Methods
-    public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
+    public UserDto addAuthUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
         Optional<User> user = userRepository.findById(username);
         UserDto dto;
 
@@ -323,7 +352,7 @@ public class UserService {
         return dto;
     }
 
-    public Object addUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
+    public Object addAuthUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
         Optional<User> optionalUser = userRepository.findById(username);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
