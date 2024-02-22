@@ -12,7 +12,6 @@ import nu.revitalized.revitalizedwebshop.repositories.DiscountRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
