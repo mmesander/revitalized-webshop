@@ -11,7 +11,6 @@ public class OrderDto {
     // Variables
     private Long orderNumber;
     private Date orderDate;
-    private String discountCode;
     private Double totalAmount;
     private String status;
     private boolean isPayed;

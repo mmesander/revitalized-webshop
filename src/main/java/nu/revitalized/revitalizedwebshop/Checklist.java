@@ -24,6 +24,49 @@ public class Checklist {
 
 
     // Rowan
-    // TODO: Vragen hoe het zit met dat UML Diagram en authorityKey en of de attributes in Authority kloppen
     // TODO: Vragen hoe de foto's geimporteerd worden
+
+
+
+    // ADMIN
+    // get all orders
+    // get specific order
+    // get order by param
+    // create order
+    // update order
+    // patch order
+    // remove order
+
+    // change order status/payment
+
+    // assign products to order
+    // remove products from order
+
+
+    // assign order to user
+    // remove order from user
+
+    // assign shipping details to order
+    // update shipping details from order
+    // patch shipping details from order
+    // remove shipping details from order
+
+
+
+    // USER (auth)
+    // Get all personal orders
+    // get user specific order
+    // get user order by param
+
+    // Create Order
+    // Add products to order
+    // Remove products from order
+    // Send/Pay order (hier de discount bij)
+
+    // assign shippingDetails to order
+    // post new shipping details for order
+    // update shipping details for order?
+
+
+
 }
