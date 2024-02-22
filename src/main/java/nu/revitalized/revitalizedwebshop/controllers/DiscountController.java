@@ -56,6 +56,20 @@ public class DiscountController {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @GetMapping("/users/discounts")
+    public ResponseEntity<List<DiscountDto>> getAllActiveDiscounts() {
+        List<DiscountDto> dtos = discountService.getAllActiveDiscounts();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping("/users/discounts")
+    public ResponseEntity<List<DiscountDto>> getAllInactiveDiscounts() {
+        List<DiscountDto> dtos = discountService.getAllInactiveDiscounts();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
     @PostMapping("/users/discounts")
     public ResponseEntity<DiscountDto> createDiscount(
             @Valid

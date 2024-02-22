@@ -121,6 +121,46 @@ public class DiscountService {
         }
     }
 
+    public List<DiscountDto> getAllActiveDiscounts() {
+        List<Discount> discounts = discountRepository.findAll();
+        List<DiscountDto> discountDtos = new ArrayList<>();
+
+        for (Discount discount : discounts) {
+            if (!discount.getUsers().isEmpty()) {
+                DiscountDto discountDto = discountToDto(discount);
+                discountDtos.add(discountDto);
+            }
+        }
+
+        if (discountDtos.isEmpty()) {
+            throw new RecordNotFoundException("No discounts found");
+        } else {
+            discountDtos.sort(Comparator.comparing(DiscountDto::getId));
+
+            return discountDtos;
+        }
+    }
+
+    public List<DiscountDto> getAllInactiveDiscounts() {
+        List<Discount> discounts = discountRepository.findAll();
+        List<DiscountDto> discountDtos = new ArrayList<>();
+
+        for (Discount discount : discounts) {
+            if (discount.getUsers().isEmpty()) {
+                DiscountDto discountDto = discountToDto(discount);
+                discountDtos.add(discountDto);
+            }
+        }
+
+        if (discountDtos.isEmpty()) {
+            throw new RecordNotFoundException("No discounts found");
+        } else {
+            discountDtos.sort(Comparator.comparing(DiscountDto::getId));
+
+            return discountDtos;
+        }
+    }
+
     public DiscountDto createDiscount(DiscountInputDto inputDto) {
         Discount discount = dtoToDiscount(inputDto);
 
