@@ -34,6 +34,7 @@ public class Checklist {
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op imports etc.
     // TODO: een BuildIdNotFound helper maken die een string geeft
+    // TODO: checken in de services of de methods bij de owner of target kant staan (discount voorbeeld)
 
 
     // Rowan
