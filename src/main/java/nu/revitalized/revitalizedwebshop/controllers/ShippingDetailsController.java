@@ -7,6 +7,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
@@ -132,9 +133,9 @@ public class ShippingDetailsController {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
             try {
-                shippingDetailsService.assignShippingDetailsToUser(username, idInputDto.getId());
+                UserDto dto = shippingDetailsService.assignShippingDetailsToUser(username, idInputDto.getId());
 
-                return ResponseEntity.ok().body(userService.getUser(username));
+                return ResponseEntity.ok().body(dto);
             } catch (Exception exception) {
                 throw new BadRequestException(exception.getMessage());
             }
