@@ -22,13 +22,13 @@ public class DiscountSpecification {
     }
 
     // Request Filter: Discount minValue
-    public static Specification<Discount> getDiscountValueMoreThanFilter(String minValueLike) {
+    public static Specification<Discount> getDiscountValueMoreThanFilter(Double minValueLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
                 .greaterThanOrEqualTo(root.get("price"), minValueLike)));
     }
 
     // Request Filter: Discount maxValue
-    public static Specification<Discount> getDiscountValueLessThanFilter(String maxValueLike) {
+    public static Specification<Discount> getDiscountValueLessThanFilter(Double maxValueLike) {
         return (((root, query, criteriaBuilder) -> criteriaBuilder
                 .lessThanOrEqualTo(root.get("price"), maxValueLike)));
     }
