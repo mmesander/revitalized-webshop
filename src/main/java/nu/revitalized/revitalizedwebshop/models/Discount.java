@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -19,5 +21,11 @@ public class Discount {
     private Double value;
 
     // Relations
-    // User
+    @ManyToMany
+    @JoinTable(
+            name = "discounts_users",
+            joinColumns = @JoinColumn(name = "discount_id"),
+            inverseJoinColumns = @JoinColumn(name = "username")
+    )
+    private Set<User> users;
 }

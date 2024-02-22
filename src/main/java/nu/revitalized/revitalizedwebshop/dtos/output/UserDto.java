@@ -21,4 +21,5 @@ public class UserDto implements IdentifiableUsername {
     private Set<Authority> authorities;
     private Set<ShippingDetailsShortDto> shippingDetails;
     private Set<ReviewDto> reviews;
+    private Set<String> discounts;
 }

@@ -45,6 +45,9 @@ public class User {
     )
     private Set<Review> reviews;
 
+    @ManyToMany(mappedBy = "users")
+    private Set<Discount> discounts;
+
     // Methods
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
