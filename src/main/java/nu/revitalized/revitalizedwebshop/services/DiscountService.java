@@ -78,7 +78,7 @@ public class DiscountService {
             Double maxValue
     ) {
         Specification<Discount> params = Specification.where
-                (StringUtils.isBlank(name) ? null : getDiscountNameLikeFilter(name))
+                        (StringUtils.isBlank(name) ? null : getDiscountNameLikeFilter(name))
                 .and(value == null ? null : getDiscountValueLikeFilter(value))
                 .and(minValue == null ? null : getDiscountValueMoreThanFilter(minValue))
                 .and(maxValue == null ? null : getDiscountValueLessThanFilter(maxValue));
