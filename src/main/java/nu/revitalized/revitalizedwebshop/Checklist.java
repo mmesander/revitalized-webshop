@@ -16,10 +16,12 @@ public class Checklist {
     // DELETE
     // ASSIGN DISCOUNT TO USER
     // REMOVE DISCOUNT FROM USER
+    // in de user class: Get All UserDiscounts
 
     // USER
     // GET ALL DISCOUNTS
     // GET SPECIFIC DISCOUNT
+
 
 
     // ORDER
