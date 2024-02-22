@@ -83,6 +83,16 @@ public class UserService {
             userDto.setReviews(dtos);
         }
 
+        if (user.getDiscounts() != null) {
+            Set<String> discounts = new HashSet<>();
+
+            for (Discount discount : user.getDiscounts()) {
+                String discountName = discount.getName();
+                discounts.add(discountName);
+            }
+            userDto.setDiscounts(discounts);
+        }
+
         return userDto;
     }
 

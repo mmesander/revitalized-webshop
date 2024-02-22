@@ -8,14 +8,13 @@ import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Discount;
+import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.DiscountRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class DiscountService {
@@ -38,6 +37,16 @@ public class DiscountService {
         DiscountDto discountDto = new DiscountDto();
 
         copyProperties(discount, discountDto);
+
+        if (discount.getUsers() != null) {
+            Set<String> users = new HashSet<>();
+
+            for (User user : discount.getUsers()) {
+                String username = user.getUsername();
+                users.add(username);
+            }
+            discountDto.setUsers(users);
+        }
 
         return discountDto;
     }
