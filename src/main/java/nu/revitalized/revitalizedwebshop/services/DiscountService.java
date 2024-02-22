@@ -28,7 +28,9 @@ public class DiscountService {
     public static DiscountDto discountToDto(Discount discount) {
         DiscountDto discountDto = new DiscountDto();
 
-        copyProperties();
+        copyProperties(discount, discountDto);
+
+        return discountDto;
     }
 
     // CRUD Methods
