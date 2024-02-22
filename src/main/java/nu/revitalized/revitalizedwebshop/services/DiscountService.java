@@ -214,6 +214,34 @@ public class DiscountService {
         }
     }
 
-//    public String removeDiscountFromUser(String username, ) {
-//    }
+    public String removeDiscountFromUser(String username, Long id) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<Discount> optionalDiscount = discountRepository.findById(id);
+
+        if (optionalDiscount.isEmpty()) {
+            throw new RecordNotFoundException("No discount found with id: " + id);
+        }
+
+        Set<User> users;
+        DiscountDto dto;
+
+        if (optionalUser.isPresent()) {
+            Discount discount = optionalDiscount.get();
+            User user = optionalUser.get();
+
+            users = discount.getUsers();
+
+            if (!users.contains(user)) {
+                throw new InvalidInputException("User: " + username + " does not have discount: " + discount.getName());
+            } else {
+                users.remove(user);
+                discount.setUsers(users);
+                discountRepository.save(discount);
+                return "Discount: " + discount.getName() + " with id: " + discount.getId() + " is removed from user: "
+                        + username;
+            }
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
 }

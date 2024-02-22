@@ -119,4 +119,15 @@ public class DiscountController {
 
         return ResponseEntity.ok().body(dto);
     }
+
+    @DeleteMapping(value = "/users/{username}/discounts")
+    public ResponseEntity<Object> removeDiscountFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto
+    ) {
+        String confirmation = discountService.removeDiscountFromUser(username, inputDto.getId());
+
+        return ResponseEntity.ok().body(confirmation);
+    }
 }
