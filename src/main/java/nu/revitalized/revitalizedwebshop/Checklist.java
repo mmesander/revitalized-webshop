@@ -1,20 +1,22 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    // TODO: REVIEW
-    // TODO: RELATIONS
-    // TODO: user - alle persoonlijke mogelijkheden doen:
-    // TODO: Review GET POST PUT PATCH DELETE
+    // ORDER
+    // TODO: Model
+    // TODO: Repository
+    // TODO: Input & Output Dto's
+    // TODO: Specifications
+    // TODO: Service
+    // TODO: Controller
+    // TODO: Relations:
+    // TODO: Relation - Products
+    // TODO: Relation - ShippingDetails
+    // TODO: Relation - User
 
 
     // Overig
-    // TODO: User Specific : get all user shippingaddres en de specifieke toeveogen
-    // TODO: Alles nalopen op imports etc.
+    // TODO: User (Athenticated) Get ShippingDetails BY ID
     // TODO: De url van authenticate aanpassen op users/authenticate
-
-
-
-    // Gebruiker vult een rating in
-    // Het systeem slaat een rating op in een lijst
-    // Deze lijst wordt
+    // TODO: Foto's toevoegen
+    // TODO: Alles nalopen op imports etc.
 }
