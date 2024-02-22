@@ -133,7 +133,7 @@ public class DiscountService {
         }
 
         if (discountDtos.isEmpty()) {
-            throw new RecordNotFoundException("No discounts found");
+            throw new RecordNotFoundException("No active discounts found");
         } else {
             discountDtos.sort(Comparator.comparing(DiscountDto::getId));
 
@@ -153,7 +153,7 @@ public class DiscountService {
         }
 
         if (discountDtos.isEmpty()) {
-            throw new RecordNotFoundException("No discounts found");
+            throw new RecordNotFoundException("No inactive discounts found");
         } else {
             discountDtos.sort(Comparator.comparing(DiscountDto::getId));
 
