@@ -9,6 +9,7 @@ import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecifica
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
@@ -165,12 +166,17 @@ public class DiscountService {
     }
 
     public String deleteDiscount(Long id) {
-        Optional<Discount> discount = discountRepository.findById(id);
+        Optional<Discount> optionalDiscount = discountRepository.findById(id);
 
-        if (discount.isPresent()) {
-            discountRepository.deleteById(id);
+        if (optionalDiscount.isPresent()) {
+            Discount discount = optionalDiscount.get();
 
-            return buildSpecificConfirmation("Discount", discount.get().getName(), id);
+            if (!discount.getUsers().isEmpty()) {
+                throw new BadRequestException("Can't remove an active discount, remove all users from discount first");
+            } else {
+                discountRepository.deleteById(id);
+                return buildSpecificConfirmation("Discount", discount.getName(), id);
+            }
         } else {
             throw new RecordNotFoundException("No discount found with id: " + id);
         }
@@ -223,7 +229,6 @@ public class DiscountService {
         }
 
         Set<User> users;
-        DiscountDto dto;
 
         if (optionalUser.isPresent()) {
             Discount discount = optionalDiscount.get();

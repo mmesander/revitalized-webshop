@@ -3,8 +3,6 @@ package nu.revitalized.revitalizedwebshop;
 public class Checklist {
     // DISCOUNT
 
-    // ASSIGN DISCOUNT TO USER
-    // REMOVE DISCOUNT FROM USER
     // in de user class: Get All UserDiscounts
 
     // USER
