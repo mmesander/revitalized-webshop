@@ -1,9 +1,11 @@
 package nu.revitalized.revitalizedwebshop.models;
 
 // Imports
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,7 +47,10 @@ public class User {
     )
     private Set<Review> reviews;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(
+            mappedBy = "users",
+            fetch = FetchType.EAGER
+    )
     private Set<Discount> discounts;
 
     // Methods

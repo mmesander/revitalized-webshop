@@ -1,15 +1,21 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.*;
 import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Discount;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.DiscountRepository;
+import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -19,9 +25,14 @@ import java.util.*;
 @Service
 public class DiscountService {
     private final DiscountRepository discountRepository;
+    private final UserRepository userRepository;
 
-    public DiscountService(DiscountRepository discountRepository) {
+    public DiscountService(
+            DiscountRepository discountRepository,
+            UserRepository userRepository
+    ) {
         this.discountRepository = discountRepository;
+        this.userRepository = userRepository;
     }
 
     // Transfer Methods
@@ -167,4 +178,41 @@ public class DiscountService {
     }
 
     // Relation - User Methods
+    public DiscountDto assignDiscountToUser(String username, IdInputDto inputDto) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<Discount> optionalDiscount = discountRepository.findById(inputDto.getId());
+
+        if (optionalDiscount.isEmpty()) {
+            throw new RecordNotFoundException("No discount found with id: " + inputDto.getId());
+        }
+
+        Set<Discount> discounts;
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Discount discount = optionalDiscount.get();
+
+            discounts = user.getDiscounts();
+
+            if (discounts.contains(discount)) {
+                throw new InvalidInputException("User: " + username + " already has discount: " + discount.getName());
+            }
+            if (!discounts.isEmpty()) {
+                discounts.addAll(user.getDiscounts());
+            }
+
+            discounts.add(discount);
+            user.setDiscounts(discounts);
+            userRepository.save(user);
+            discount.setUsers(); // DIt is de oplossing denk ik
+            discountRepository.save(discount);
+
+            return discountToDto(discount);
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
+//    public String removeDiscountFromUser() {
+//    }
 }

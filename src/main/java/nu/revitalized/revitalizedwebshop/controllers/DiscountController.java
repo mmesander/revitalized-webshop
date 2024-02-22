@@ -5,6 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.DiscountService;
@@ -25,14 +26,14 @@ public class DiscountController {
     }
 
     // CRUD Requests
-    @GetMapping("/discounts")
+    @GetMapping("/users/discounts")
     public ResponseEntity<List<DiscountDto>> getAllDiscounts() {
         List<DiscountDto> dtos = discountService.getAllDiscounts();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/discounts/{id}")
+    @GetMapping("/users/discounts/{id}")
     public ResponseEntity<DiscountDto> getSpecificDiscount(
             @PathVariable("id") Long id
     ) {
@@ -41,7 +42,7 @@ public class DiscountController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/discounts/search")
+    @GetMapping("/users/discounts/search")
     public ResponseEntity<List<DiscountDto>> getDiscountsByParam(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Double value,
@@ -55,7 +56,7 @@ public class DiscountController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @PostMapping("/discounts")
+    @PostMapping("/users/discounts")
     public ResponseEntity<DiscountDto> createDiscount(
             @Valid
             @RequestBody DiscountInputDto inputDto,
@@ -72,7 +73,7 @@ public class DiscountController {
         }
     }
 
-    @PutMapping("/discounts/{id}")
+    @PutMapping("/users/discounts/{id}")
     public ResponseEntity<DiscountDto> updateDiscount(
             @PathVariable("id") Long id,
             @Valid
@@ -88,7 +89,7 @@ public class DiscountController {
         }
     }
 
-    @PatchMapping("/discounts/{id}")
+    @PatchMapping("/users/discounts/{id}")
     public ResponseEntity<DiscountDto> patchDiscount(
             @PathVariable("id") Long id,
             @RequestBody DiscountInputDto inputDto
@@ -98,7 +99,7 @@ public class DiscountController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @DeleteMapping("/discounts/{id}")
+    @DeleteMapping("/users/discounts/{id}")
     public ResponseEntity<Object> deleteDiscount(
             @PathVariable("id") Long id
     ) {
@@ -108,4 +109,14 @@ public class DiscountController {
     }
 
     // Relation - User Requests
+    @PostMapping(value = "/users/{username}/discounts")
+    public ResponseEntity<Object> assignDiscountToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto
+            ) {
+        DiscountDto dto = discountService.assignDiscountToUser(username, inputDto);
+
+        return ResponseEntity.ok().body(dto);
+    }
 }
