@@ -109,8 +109,8 @@ public class ReviewService {
     ) {
         Specification<Review> params = Specification.where
                         (rating == null ? null : getReviewRatingLikeFilter(rating))
-                .and(minRating == null ? null : getReviewMoreThanFilter(minRating))
-                .and(maxRating == null ? null : getReviewLessThanFilter(maxRating));
+                .and(minRating == null ? null : getReviewRatingMoreThanFilter(minRating))
+                .and(maxRating == null ? null : getReviewRatingLessThanFilter(maxRating));
 
         List<Review> filteredReviews = reviewRepository.findAll(params);
         List<ReviewDto> reviewDtos = new ArrayList<>();

@@ -14,13 +14,13 @@ public class ReviewSpecification {
     }
 
     // Request Filter: Review minRating
-    public static Specification<Review> getReviewMoreThanFilter(Integer minRatingLike) {
+    public static Specification<Review> getReviewRatingMoreThanFilter(Integer minRatingLike) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder
                 .greaterThanOrEqualTo(root.get("rating"), minRatingLike));
     }
 
     // Request Filter: Review maxRating
-    public static Specification<Review> getReviewLessThanFilter(Integer maxRatingLike) {
+    public static Specification<Review> getReviewRatingLessThanFilter(Integer maxRatingLike) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder
                 .lessThanOrEqualTo(root.get("rating"), maxRatingLike));
     }
