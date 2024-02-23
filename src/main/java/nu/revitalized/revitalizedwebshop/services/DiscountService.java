@@ -6,6 +6,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.*;
 import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.DiscountShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -57,6 +58,14 @@ public class DiscountService {
         }
 
         return discountDto;
+    }
+
+    public static DiscountShortDto discountToShortDto(Discount discount) {
+        DiscountShortDto shortDto = new DiscountShortDto();
+
+        copyProperties(discount, shortDto);
+
+        return shortDto;
     }
 
     // CRUD Methods
