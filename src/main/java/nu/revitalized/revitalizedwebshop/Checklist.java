@@ -44,7 +44,6 @@ public class Checklist {
     // assign products to order
     // remove products from order
 
-
     // assign order to user
     // remove order from user
 
@@ -56,18 +55,19 @@ public class Checklist {
 
 
     // USER (auth)
-    // Get all personal orders
-    // get user specific order
-    // get user order by param
+    // Get all personal orders (wellicht met een shortdto -> id, datum, prijs)
+    // get user specific order (met alle data)
 
     // Create Order
     // Add products to order
     // Remove products from order
-    // Send/Pay order (hier de discount bij)
 
     // assign shippingDetails to order
     // post new shipping details for order
     // update shipping details for order?
+
+    // Finish order Send/Pay order (hier de discount bij)
+
 
 
 
