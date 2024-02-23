@@ -5,12 +5,14 @@ import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
@@ -241,8 +243,41 @@ public class ShippingDetailsService {
         }
     }
 
+    // Relation - User Methods
+    public UserDto assignShippingDetailsToUser(String username, Long id) {
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+        Optional<User> optionalUser = userRepository.findById(username);
+
+        if (optionalShippingDetails.isEmpty()) {
+            throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
+        }
+
+        Set<ShippingDetails> shippingDetailsSet;
+
+        if (optionalUser.isPresent()) {
+            ShippingDetails shippingDetails = optionalShippingDetails.get();
+            User user = optionalUser.get();
+
+            shippingDetailsSet = user.getShippingDetails();
+
+
+            if (!shippingDetailsSet.isEmpty()) {
+                shippingDetailsSet.addAll(user.getShippingDetails());
+            }
+
+            shippingDetailsSet.add(shippingDetails);
+            user.setShippingDetails(shippingDetailsSet);
+            shippingDetails.setUser(user);
+            shippingDetailsRepository.save(shippingDetails);
+
+            return userToDto(user);
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
     // Relation - Authenticated User Methods
-    public List<ShippingDetailsDto> getAllPersonalShippingDetails(String username) {
+    public List<ShippingDetailsDto> getAllAuthUserShippingDetails(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Set<ShippingDetails> shippingDetailsSet;
         List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();

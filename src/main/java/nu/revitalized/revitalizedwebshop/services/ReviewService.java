@@ -309,7 +309,7 @@ public class ReviewService {
     }
 
     // Relation - Authenticated User Methods
-    public List<ReviewDto> getAllPersonalReviews(String username) {
+    public List<ReviewDto> getAllAuthUserReviews(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Set<Review> reviews;
         List<ReviewDto> reviewDtos = new ArrayList<>();

@@ -2,8 +2,6 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // DISCOUNT
-    // in de user class: Get All UserDiscounts (Admin)
-
     // USER (auth)
     // GET ALL DISCOUNTS
     // GET SPECIFIC DISCOUNT

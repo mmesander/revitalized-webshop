@@ -3,10 +3,15 @@ package nu.revitalized.revitalizedwebshop.controllers;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+
+import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
+import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +24,14 @@ import java.util.List;
 @RestController
 public class ShippingDetailsController {
     private final ShippingDetailsService shippingDetailsService;
+    private final UserService userService;
 
-    public ShippingDetailsController(ShippingDetailsService shippingDetailsService) {
+    public ShippingDetailsController(
+            ShippingDetailsService shippingDetailsService,
+            UserService userService
+    ) {
         this.shippingDetailsService = shippingDetailsService;
+        this.userService = userService;
     }
 
     // CRUD Requests
@@ -109,5 +119,26 @@ public class ShippingDetailsController {
         String confirmation = shippingDetailsService.deleteShippingDetailsById(id);
 
         return ResponseEntity.ok().body(confirmation);
+    }
+
+    // Relation - User Requests
+    @PutMapping(value = "users/{username}/shipping-details")
+    public ResponseEntity<Object> assignShippingDetailsToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto idInputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            try {
+                UserDto dto = shippingDetailsService.assignShippingDetailsToUser(username, idInputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            } catch (Exception exception) {
+                throw new BadRequestException(exception.getMessage());
+            }
+        }
     }
 }

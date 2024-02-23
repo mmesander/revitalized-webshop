@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.services.DiscountService.*;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
@@ -32,6 +33,7 @@ public class UserService {
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
     private final ReviewService reviewService;
+    private final DiscountService discountService;
 
     public UserService(
             UserRepository userRepository,
@@ -40,7 +42,8 @@ public class UserService {
             ShippingDetailsService shippingDetailsService,
             SupplementRepository supplementRepository,
             GarmentRepository garmentRepository,
-            ReviewService reviewService
+            ReviewService reviewService,
+            DiscountService discountService
     ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
@@ -49,6 +52,7 @@ public class UserService {
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
         this.reviewService = reviewService;
+        this.discountService = discountService;
     }
 
     // Transfer Methods
@@ -84,11 +88,11 @@ public class UserService {
         }
 
         if (user.getDiscounts() != null) {
-            Set<String> discounts = new HashSet<>();
+            Set<DiscountShortDto> discounts = new HashSet<>();
 
             for (Discount discount : user.getDiscounts()) {
-                String discountName = discount.getName();
-                discounts.add(discountName);
+                DiscountShortDto shortDto = discountToShortDto(discount);
+                discounts.add(shortDto);
             }
             userDto.setDiscounts(discounts);
         }
@@ -284,47 +288,44 @@ public class UserService {
         }
     }
 
-    // Relation - Shipping Details Methods
-    public UserDto assignShippingDetailsToUser(String username, Long id) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
-        UserDto dto;
+    // Relation - Discount Methods
+    public Set<DiscountShortDto> getAllUserDiscounts(String username) {
+        Optional<User> user = userRepository.findById(username);
 
-        if (optionalUser.isPresent() && optionalShippingDetails.isPresent()) {
-            User user = optionalUser.get();
-            ShippingDetails shippingDetails = optionalShippingDetails.get();
+        if (user.isPresent()) {
+            UserDto userDto = userToDto(user.get());
 
-            shippingDetails.setUser(user);
-            shippingDetailsRepository.save(shippingDetails);
-
-            Set<ShippingDetails> shippingDetailsSet = new TreeSet<>(Comparator.comparingLong(ShippingDetails::getId));
-
-            if (!user.getShippingDetails().isEmpty()) {
-                shippingDetailsSet.addAll(user.getShippingDetails());
+            if (userDto.getDiscounts().isEmpty()) {
+                throw new RecordNotFoundException("No discounts found for user: " + username);
             }
 
-            shippingDetailsSet.add(shippingDetails);
-            user.setShippingDetails(shippingDetailsSet);
-
-            userRepository.save(user);
-
-            dto = userToDto(user);
-
-            return dto;
+            return userDto.getDiscounts();
         } else {
-            if (optionalUser.isEmpty() && optionalShippingDetails.isEmpty()) {
-                throw new RecordNotFoundException("User: " + username + " and shipping details with id: " + id
-                        + " are not found");
-            } else if (optionalUser.isEmpty()) {
-                throw new RecordNotFoundException("User with username: " + username + " not found");
-            } else {
-                throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
+    public String removeAllUserDiscounts(String username) {
+        Optional<User> user = userRepository.findById(username);
+
+        if (user.isPresent()) {
+            Set<Discount> discounts = user.get().getDiscounts();
+
+            if (discounts.isEmpty()) {
+                throw new RecordNotFoundException("No discounts found for user: " + username);
             }
+
+            for (Discount discount : discounts) {
+                discountService.removeDiscountFromUser(username, discount.getId());
+            }
+            return "All discounts from user: " + username + " are removed";
+        } else {
+            throw new UsernameNotFoundException(username);
         }
     }
 
     // Relation - Authenticated User Methods
-    public UserDto addUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
+    public UserDto addAuthUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
         Optional<User> user = userRepository.findById(username);
         UserDto dto;
 
@@ -347,7 +348,7 @@ public class UserService {
             }
 
             if (presentShippingDetails != null) {
-                assignShippingDetailsToUser(username, presentShippingDetails.getId());
+                shippingDetailsService.assignShippingDetailsToUser(username, presentShippingDetails.getId());
             } else {
                 throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
                         + " is not found");
@@ -362,7 +363,7 @@ public class UserService {
         return dto;
     }
 
-    public Object addUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
+    public Object addAuthUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
         Optional<User> optionalUser = userRepository.findById(username);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);

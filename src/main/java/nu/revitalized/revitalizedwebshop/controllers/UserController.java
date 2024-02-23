@@ -5,6 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsern
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildPersonalConfirmation;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
+import nu.revitalized.revitalizedwebshop.dtos.output.DiscountShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -109,8 +111,7 @@ public class UserController {
         return ResponseEntity.ok().body(confirmation);
     }
 
-
-    // ADMIN - Authorities Requests
+    // ADMIN - Authority Requests
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities(
             @PathVariable("username") String username
@@ -148,30 +149,28 @@ public class UserController {
         return ResponseEntity.ok().body(confirmation);
     }
 
-    // ADMIN - ShippingDetails Requests
-    @PutMapping(value = "/{username}/shipping-details")
-    public ResponseEntity<Object> assignShippingDetailsToUser(
-            @PathVariable("username") String username,
-            @Valid
-            @RequestBody IdInputDto idInputDto,
-            BindingResult bindingResult
+    // ADMIN - Discount Requests
+    @GetMapping(value = "/{username}/discounts-all")
+    public ResponseEntity<Object> getAllUserDiscounts(
+            @PathVariable("username") String username
     ) {
-        if (bindingResult.hasFieldErrors()) {
-            throw new InvalidInputException(handleBindingResultError(bindingResult));
-        } else {
-            try {
-                userService.assignShippingDetailsToUser(username, idInputDto.getId());
+        Set<DiscountShortDto> discounts = userService.getAllUserDiscounts(username);
 
-                return ResponseEntity.ok().body(userService.getUser(username));
-            } catch (Exception exception) {
-                throw new BadRequestException(exception.getMessage());
-            }
-        }
+        return ResponseEntity.ok().body(discounts);
+    }
+
+    @DeleteMapping(value = "/{username}/discounts-all")
+    public ResponseEntity<Object> removeAllUserDiscounts(
+            @PathVariable("username") String username
+    ) {
+        String confirmation = userService.removeAllUserDiscounts(username);
+
+        return ResponseEntity.ok().body(confirmation);
     }
 
     // USER (Authenticated) - CRUD Requests
     @GetMapping(value = "/auth/{username}")
-    public ResponseEntity<UserDto> getSpecificUser(
+    public ResponseEntity<UserDto> getAuthUser(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username
     ) {
@@ -185,7 +184,7 @@ public class UserController {
     }
 
     @PutMapping("/auth/{username}/update-email")
-    public ResponseEntity<UserDto> updateSpecificUserEmail(
+    public ResponseEntity<UserDto> updateAuthUserEmail(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @Valid
@@ -207,12 +206,12 @@ public class UserController {
 
     // USER (Authenticated) - ShippingDetails Requests
     @GetMapping("/auth/{username}/shipping-details")
-    public ResponseEntity<List<ShippingDetailsDto>> getAllUserShippingDetails(
+    public ResponseEntity<List<ShippingDetailsDto>> getAllAuthUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            List<ShippingDetailsDto> dtos = shippingDetailsService.getAllPersonalShippingDetails(username);
+            List<ShippingDetailsDto> dtos = shippingDetailsService.getAllAuthUserShippingDetails(username);
 
             return ResponseEntity.ok().body(dtos);
         } else {
@@ -221,7 +220,7 @@ public class UserController {
     }
 
     @GetMapping("/auth/{username}/shipping-details/{id}")
-    public ResponseEntity<ShippingDetailsDto> getUserShippingDetails(
+    public ResponseEntity<ShippingDetailsDto> getAuthUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id
@@ -236,7 +235,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/{username}/shipping-details")
-    public ResponseEntity<UserDto> createNewUserShippingDetails(
+    public ResponseEntity<UserDto> createNewAuthUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @Valid
@@ -247,7 +246,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.addUserShippingDetails(username, inputDto);
+                UserDto dto = userService.addAuthUserShippingDetails(username, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -257,7 +256,7 @@ public class UserController {
     }
 
     @PutMapping("/auth/{username}/shipping-details/{id}")
-    public ResponseEntity<ShippingDetailsDto> updateUserShippingDetails(
+    public ResponseEntity<ShippingDetailsDto> updateAuthUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id,
@@ -279,7 +278,7 @@ public class UserController {
     }
 
     @PatchMapping("/auth/{username}/shipping-details/{id}")
-    public ResponseEntity<ShippingDetailsDto> patchUserShippingDetails(
+    public ResponseEntity<ShippingDetailsDto> patchAuthUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id,
@@ -300,7 +299,7 @@ public class UserController {
     }
 
     @DeleteMapping("/auth/{username}/shipping-details/{id}")
-    public ResponseEntity<Object> deleteUserShippingDetails(
+    public ResponseEntity<Object> deleteAuthUserShippingDetails(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id
@@ -316,12 +315,12 @@ public class UserController {
 
     // USER (Authenticated) - Review Requests
     @GetMapping("/auth/{username}/reviews")
-    public ResponseEntity<Object> getAllPersonalUserReviews(
+    public ResponseEntity<Object> getAllAuthUserReviews(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            List<ReviewDto> dtos = reviewService.getAllPersonalReviews(username);
+            List<ReviewDto> dtos = reviewService.getAllAuthUserReviews(username);
 
             return ResponseEntity.ok().body(dtos);
         } else {
@@ -330,7 +329,7 @@ public class UserController {
     }
 
     @GetMapping("/auth/{username}/reviews/{reviewId}")
-    public ResponseEntity<Object> getPersonalUserReview(
+    public ResponseEntity<Object> getAuthUserReview(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("reviewId") Long reviewId
@@ -345,7 +344,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/{username}/products/{productId}/reviews")
-    public ResponseEntity<Object> createNewUserProductReview(
+    public ResponseEntity<Object> createNewAuthUserProductReview(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("productId") Long productId,
@@ -357,7 +356,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                Object dto = userService.addUserProductReview(username, inputDto, productId);
+                Object dto = userService.addAuthUserProductReview(username, inputDto, productId);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -367,7 +366,7 @@ public class UserController {
     }
 
     @PutMapping("/auth/{username}/reviews/{reviewId}")
-    public ResponseEntity<Object> updateUserProductReview(
+    public ResponseEntity<Object> updateAuthUserProductReview(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("reviewId") Long reviewId,
@@ -389,7 +388,7 @@ public class UserController {
     }
 
     @PatchMapping("/auth/{username}/reviews/{reviewId}")
-    public ResponseEntity<Object> patchUserProductReview(
+    public ResponseEntity<Object> patchAuthUserProductReview(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("reviewId") Long reviewId,
@@ -410,7 +409,7 @@ public class UserController {
     }
 
     @DeleteMapping("/auth/{username}/reviews/{reviewId}")
-    public ResponseEntity<Object> deleteUserProductReview(
+    public ResponseEntity<Object> deleteAuthUserProductReview(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("reviewId") Long reviewId
