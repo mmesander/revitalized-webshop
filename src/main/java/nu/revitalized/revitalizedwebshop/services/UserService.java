@@ -294,6 +294,10 @@ public class UserService {
         if (user.isPresent()) {
             UserDto userDto = userToDto(user.get());
 
+            if (userDto.getDiscounts().isEmpty()) {
+                throw new RecordNotFoundException("No discounts found for user: " + username);
+            }
+
             return userDto.getDiscounts();
         } else {
             throw new UsernameNotFoundException(username);
@@ -305,6 +309,11 @@ public class UserService {
 
         if (user.isPresent()) {
             Set<Discount> discounts = user.get().getDiscounts();
+
+            if (discounts.isEmpty()) {
+                throw new RecordNotFoundException("No discounts found for user: " + username);
+            }
+
             for (Discount discount : discounts) {
                 discountService.removeDiscountFromUser(username, discount.getId());
             }
