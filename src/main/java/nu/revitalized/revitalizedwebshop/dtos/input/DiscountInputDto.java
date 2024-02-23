@@ -18,8 +18,8 @@ public class DiscountInputDto {
     private String name;
 
     @NotNull(message = "Value is required")
-    @DecimalMin(value = "0.000", message = "Value must be greater than or equal to 0")
-    @DecimalMax(value = "2.000", message = "Value must be less than or equal to 2")
-    @Digits(integer = 1, fraction = 3, message = "Value must have at most 3 digits after the decimal point")
+    @DecimalMin(value = "0.01", message = "Value must be greater than 0")
+    @DecimalMax(value = "100.00", message = "Value must be less than or equal to 100")
+    @Digits(integer = 3, fraction = 2, message = "Value must have at most 2 digits after the decimal point")
     private Double value;
 }

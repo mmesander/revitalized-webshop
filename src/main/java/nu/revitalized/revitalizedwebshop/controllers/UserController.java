@@ -11,6 +11,7 @@ import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
+import nu.revitalized.revitalizedwebshop.services.DiscountService;
 import nu.revitalized.revitalizedwebshop.services.ReviewService;
 import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
 import nu.revitalized.revitalizedwebshop.services.UserService;
@@ -32,15 +33,18 @@ public class UserController {
     private final UserService userService;
     private final ShippingDetailsService shippingDetailsService;
     private final ReviewService reviewService;
+    private final DiscountService discountService;
 
     public UserController(
             UserService userService,
             ShippingDetailsService shippingDetailsService,
-            ReviewService reviewService
+            ReviewService reviewService,
+            DiscountService discountService
     ) {
         this.userService = userService;
         this.shippingDetailsService = shippingDetailsService;
         this.reviewService = reviewService;
+        this.discountService = discountService;
     }
 
     // ADMIN -- CRUD Requests
@@ -418,6 +422,21 @@ public class UserController {
             String confirmation = reviewService.deleteReview(reviewId);
 
             return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, "user", username));
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    // USER (Authenticated) - Discount Requests
+    @GetMapping("/auth/{username}/discounts")
+    public ResponseEntity<List<String>> getAllAuthUserDiscounts(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            List<String> discounts = discountService.getAllAuthUserDiscounts(username);
+
+            return ResponseEntity.ok().body(discounts);
         } else {
             throw new BadRequestException("Used token is not valid");
         }
