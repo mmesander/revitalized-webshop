@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -148,7 +149,23 @@ public class UserController {
     }
 
     // ADMIN - Discount Requests
+    @GetMapping(value = "/{username}/discounts-all")
+    public ResponseEntity<Object> getAllUserDiscounts(
+            @PathVariable("username") String username
+    ) {
+        Set<String> discounts = userService.getAllUserDiscounts(username);
 
+        return ResponseEntity.ok().body(discounts);
+    }
+
+    @DeleteMapping(value = "/{username}/discounts-all")
+    public ResponseEntity<Object> removeAllUserDiscounts(
+            @PathVariable("username") String username
+    ) {
+        String confirmation = userService.removeAllUserDiscounts(username);
+
+        return ResponseEntity.ok().body(confirmation);
+    }
 
     // USER (Authenticated) - CRUD Requests
     @GetMapping(value = "/auth/{username}")
