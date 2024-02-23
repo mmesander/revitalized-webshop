@@ -294,4 +294,34 @@ public class DiscountService {
             throw new UsernameNotFoundException(username);
         }
     }
+
+    // Relation - Authenticated User Methods
+    public List<String> getAllAuthUserDiscounts(String username) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Set<Discount> discounts;
+        List<DiscountShortDto> shortDtos = new ArrayList<>();
+
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException(username);
+        } else {
+            discounts = optionalUser.get().getDiscounts();
+        }
+
+        for (Discount discount : discounts) {
+            DiscountShortDto shortDto = discountToShortDto(discount);
+            shortDtos.add(shortDto);
+        }
+
+        if (shortDtos.isEmpty()) {
+            throw new RecordNotFoundException("No discounts found for user: " + username);
+        } else {
+            shortDtos.sort(Comparator.comparing(DiscountShortDto::getValue).reversed());
+            List<String> strings = new ArrayList<>();
+            for (DiscountShortDto shortDto : shortDtos) {
+                strings.add(shortDto.getValue() + "% discount with code: " + shortDto.getName());
+            }
+
+            return strings;
+        }
+    }
 }

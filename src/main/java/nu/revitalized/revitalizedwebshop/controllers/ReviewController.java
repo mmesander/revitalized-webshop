@@ -104,7 +104,7 @@ public class ReviewController {
         return ResponseEntity.ok().body(confirmation);
     }
 
-    // Review Requests
+    // Relation - Product Requests
     @PutMapping("/products/{productId}/reviews/{reviewId}")
     public ResponseEntity<Object> assignReviewToProduct(
             @PathVariable("productId") Long productId,

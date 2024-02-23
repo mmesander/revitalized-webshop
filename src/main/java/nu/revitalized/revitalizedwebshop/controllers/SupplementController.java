@@ -128,7 +128,7 @@ public class SupplementController {
         return ResponseEntity.ok().body(confirmation);
     }
 
-    // Allergen Requests
+    // Relation - Allergen Requests
     @PostMapping(value = "/products/supplements/{id}/allergens")
     public ResponseEntity<Object> addAllergenToSupplement(
             @PathVariable("id") Long id,
