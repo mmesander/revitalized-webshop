@@ -277,7 +277,7 @@ public class ShippingDetailsService {
     }
 
     // Relation - Authenticated User Methods
-    public List<ShippingDetailsDto> getAllPersonalShippingDetails(String username) {
+    public List<ShippingDetailsDto> getAllAuthUserShippingDetails(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Set<ShippingDetails> shippingDetailsSet;
         List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
