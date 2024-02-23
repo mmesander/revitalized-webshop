@@ -67,8 +67,4 @@ public class Checklist {
     // update shipping details for order?
 
     // Finish order Send/Pay order (hier de discount bij)
-
-
-
-
 }

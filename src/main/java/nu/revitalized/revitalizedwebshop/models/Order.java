@@ -24,5 +24,9 @@ public class Order {
     private boolean isPayed;
 
     // Relations
-    //
+    // List<Supplement>
+    // List<Garment>
+    // List<Product> ?
+    // ShippingDetails
+    // User
 }
