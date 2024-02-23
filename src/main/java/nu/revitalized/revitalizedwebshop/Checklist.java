@@ -1,13 +1,6 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    // DISCOUNT
-    // USER (auth)
-    // GET ALL DISCOUNTS
-    // GET SPECIFIC DISCOUNT
-
-
-
     // ORDER
     // TODO: Model
     // TODO: Repository
