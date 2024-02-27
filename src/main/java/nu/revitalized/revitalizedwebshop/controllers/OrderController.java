@@ -1,16 +1,19 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriOrderNumber;
+
 import jakarta.validation.Valid;
-import nu.revitalized.revitalizedwebshop.dtos.input.OrderInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
 import java.util.List;
 
@@ -70,7 +73,7 @@ public class OrderController {
             @Valid
             @RequestBody OrderInputDto inputDto,
             BindingResult bindingResult
-            ) {
+    ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
@@ -98,14 +101,52 @@ public class OrderController {
         }
     }
 
-    @PatchMapping("/users/orders/{orderNumber}")
-    public ResponseEntity<OrderDto> patchOrder(
+    @PutMapping("/users/orders/{orderNumber}-status")
+    public ResponseEntity<OrderDto> updateOrderStatus(
             @PathVariable("orderNumber") Long orderNumber,
-            @RequestBody OrderInputDto inputDto
+            @Valid
+            @RequestBody OrderStatusInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        OrderDto dto = orderService.patchOrder(inputDto, orderNumber);
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.updateOrderStatus(inputDto, orderNumber);
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PutMapping("/users/orders/{orderNumber}-payment")
+    public ResponseEntity<OrderDto> updateOrderPayment(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody OrderIsPayedInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.updateOrderPayment(inputDto, orderNumber);
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PutMapping("/users/orders/{orderNumber}-discount")
+    public ResponseEntity<OrderDto> updateOrderDiscount(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody OrderDiscountInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.updateOrderDiscount(inputDto, orderNumber);
+
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping("/users/orders/{orderNumber}")

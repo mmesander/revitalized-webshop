@@ -5,7 +5,8 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
-import nu.revitalized.revitalizedwebshop.dtos.input.OrderInputDto;
+
+import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Order;
@@ -160,27 +161,44 @@ public class OrderService {
         }
     }
 
-    public OrderDto patchOrder(OrderInputDto inputDto, Long orderNumber) {
+    public OrderDto updateOrderStatus(OrderStatusInputDto inputDto, Long orderNumber) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
 
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
+            order.setStatus(inputDto.getStatus());
+            order.setOrderDate(createDate());
+            Order updatedOrder = orderRepository.save(order);
 
-            if (inputDto.getStatus() != null) {
-                order.setStatus(inputDto.getStatus());
-            }
+            return orderToDto(updatedOrder);
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+    }
+    public OrderDto updateOrderPayment(OrderIsPayedInputDto inputDto, Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
 
-            if (inputDto.getIsPayed() != null) {
-               order.setIsPayed(inputDto.getIsPayed());
-            }
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setIsPayed(inputDto.getIsPayed());
+            order.setOrderDate(createDate());
+            Order updatedOrder = orderRepository.save(order);
 
-            if (inputDto.getDiscountCode() != null) {
-                order.setDiscountCode(inputDto.getDiscountCode());
-            }
+            return orderToDto(updatedOrder);
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+    }
+    public OrderDto updateOrderDiscount(OrderDiscountInputDto inputDto, Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
 
-            Order patchedOrder = orderRepository.save(order);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setDiscountCode(inputDto.getDiscountCode());
+            order.setOrderDate(createDate());
+            Order updatedOrder = orderRepository.save(order);
 
-            return orderToDto(patchedOrder);
+            return orderToDto(updatedOrder);
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
         }

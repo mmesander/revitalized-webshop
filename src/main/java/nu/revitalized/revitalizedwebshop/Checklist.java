@@ -38,6 +38,7 @@ public class Checklist {
     // changeOrderStatus
     // changeMultipleOrderStatus
     // changeOrderPayment
+    // updateOrder
 
     // assign products to order
     // remove products from order
