@@ -396,7 +396,8 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("reviewId") Long reviewId,
-            @RequestBody ReviewInputDto inputDto,
+            @Valid
+            @RequestBody ReviewPatchInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
