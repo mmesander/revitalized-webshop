@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
@@ -22,7 +21,6 @@ import nu.revitalized.revitalizedwebshop.repositories.OrderRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
