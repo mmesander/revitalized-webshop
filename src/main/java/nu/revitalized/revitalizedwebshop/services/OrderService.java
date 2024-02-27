@@ -5,6 +5,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateTotalAmount.calculateTotalAmount;
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
@@ -100,7 +101,6 @@ public class OrderService {
         }
 
         orderDto.setProducts(orderItemDtos);
-
 
         return orderDto;
     }
@@ -300,6 +300,7 @@ public class OrderService {
 
             supplements.add(supplement);
             order.setSupplements(supplements);
+            order.setTotalAmount(calculateTotalAmount(order));
             orderRepository.save(order);
 
             return orderToDto(order);
@@ -309,6 +310,7 @@ public class OrderService {
 
             garments.add(garment);
             order.setGarments(garments);
+            order.setTotalAmount(calculateTotalAmount(order));
             orderRepository.save(order);
 
             return orderToDto(order);
@@ -338,6 +340,7 @@ public class OrderService {
             } else {
                 supplements.remove(supplement);
                 order.setSupplements(supplements);
+                order.setTotalAmount(calculateTotalAmount(order));
                 orderRepository.save(order);
 
                 return orderToDto(order);
@@ -352,6 +355,7 @@ public class OrderService {
             } else {
                 garments.remove(garment);
                 order.setGarments(garments);
+                order.setTotalAmount(calculateTotalAmount(order));
                 orderRepository.save(order);
 
                 return orderToDto(order);
