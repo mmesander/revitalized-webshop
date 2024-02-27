@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class OrderController {
@@ -101,7 +102,7 @@ public class OrderController {
         }
     }
 
-    @PutMapping("/users/orders/{orderNumber}-status")
+    @PutMapping("/users/orders/{orderNumber}/status")
     public ResponseEntity<OrderDto> updateOrderStatus(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -117,7 +118,7 @@ public class OrderController {
         }
     }
 
-    @PutMapping("/users/orders/{orderNumber}-payment")
+    @PutMapping("/users/orders/{orderNumber}/payment")
     public ResponseEntity<OrderDto> updateOrderPayment(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -133,7 +134,7 @@ public class OrderController {
         }
     }
 
-    @PutMapping("/users/orders/{orderNumber}-discount")
+    @PutMapping("/users/orders/{orderNumber}/discount")
     public ResponseEntity<OrderDto> updateOrderDiscount(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid

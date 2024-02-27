@@ -2,8 +2,6 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // ORDER
-    // TODO: Service
-    // TODO: Controller
     // TODO: Relations:
     // TODO: Relation - Products
     // TODO: Relation - ShippingDetails
@@ -24,21 +22,6 @@ public class Checklist {
     // Rowan
     // TODO: Vragen hoe de foto's geimporteerd worden
 
-
-
-    // ADMIN
-    // get all orders
-    // get specific order
-    // get order by param
-    // create order
-    // update order
-    // patch order
-    // remove order
-
-    // changeOrderStatus
-    // changeMultipleOrderStatus
-    // changeOrderPayment
-    // updateOrder
 
     // assign products to order
     // remove products from order
