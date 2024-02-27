@@ -4,11 +4,9 @@ package nu.revitalized.revitalizedwebshop.interfaces;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.lang.annotation.*;
 
-@NotNull(message = "Stock is required")
 @PositiveOrZero(message = "Stock can't be negative")
 @Digits(integer = 10, fraction = 0, message = "Stock should contain only digits without decimals")
 @Constraint(validatedBy = {})
