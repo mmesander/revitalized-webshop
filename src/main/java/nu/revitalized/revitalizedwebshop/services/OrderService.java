@@ -54,7 +54,7 @@ public class OrderService {
 
         copyProperties(order, orderDto);
 
-        List<OrderItemDto> orderItemDtos = null;
+        List<OrderItemDto> orderItemDtos = new ArrayList<>();
 
         if (order.getSupplements() != null) {
             List<OrderItemDto> orderItems = new ArrayList<>();
@@ -75,6 +75,7 @@ public class OrderService {
 
             orderItemDtos.addAll(orderItems);
         }
+
 
         orderDto.setProducts(orderItemDtos);
 
@@ -308,20 +309,30 @@ public class OrderService {
             Supplement supplement = optionalSupplement.get();
             List<Supplement> supplements = order.getSupplements();
 
-            supplements.remove(supplement);
-            order.setSupplements(supplements);
-            orderRepository.save(order);
+            if (!order.getSupplements().contains(supplement)) {
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " does not contain product: " + supplement.getName() + " with id: " + productId);
+            } else {
+                supplements.remove(supplement);
+                order.setSupplements(supplements);
+                orderRepository.save(order);
 
-            return orderToDto(order);
+                return orderToDto(order);
+            }
         } else if (optionalGarment.isPresent()) {
             Garment garment = optionalGarment.get();
             List<Garment> garments = order.getGarments();
 
-            garments.remove(garment);
-            order.setGarments(garments);
-            orderRepository.save(order);
+            if (!order.getGarments().contains(garment)) {
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " does not contain product: " + garment.getName() + " with id: " + productId);
+            } else {
+                garments.remove(garment);
+                order.setGarments(garments);
+                orderRepository.save(order);
 
-            return orderToDto(order);
+                return orderToDto(order);
+            }
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
