@@ -2,12 +2,6 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // ORDER
-    // TODO: Model
-    // TODO: Repository
-    // TODO: Input & Output Dto's
-    // TODO: Specifications
-    // TODO: Service
-    // TODO: Controller
     // TODO: Relations:
     // TODO: Relation - Products
     // TODO: Relation - ShippingDetails
@@ -15,31 +9,20 @@ public class Checklist {
 
 
     // Overig
+    // TODO: Zorgen dat de patchmethods alleen de nul dingen eruit gaan en de rest wel gevalideerd wordt
     // TODO: User (Athenticated) Get ShippingDetails BY ID
     // TODO: De url van authenticate aanpassen op users/authenticate
     // TODO: Zorgen dat de reviews ook worden toegevoegd als je de super ophaalt
     // TODO: -- Door in de productDto de reviews toe te voegen en ze in de transfer methods in product service erin knallen
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op imports etc.
-    // TODO: een BuildIdNotFound helper maken die een string geeft
     // TODO: checken in de services of de methods bij de owner of target kant staan (discount voorbeeld)
+    // TODO: de shipping details op een andere URL zetten /users/shipping-details
 
 
     // Rowan
     // TODO: Vragen hoe de foto's geimporteerd worden
 
-
-
-    // ADMIN
-    // get all orders
-    // get specific order
-    // get order by param
-    // create order
-    // update order
-    // patch order
-    // remove order
-
-    // change order status/payment
 
     // assign products to order
     // remove products from order
@@ -67,4 +50,7 @@ public class Checklist {
     // update shipping details for order?
 
     // Finish order Send/Pay order (hier de discount bij)
+    // Deze kan niet verzonden worden indien er geen shippingdetails bij zit!
+    // En ook niet als er geen producten in zitten
+    // En ook niet als de discount niet geldig is
 }

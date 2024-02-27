@@ -18,10 +18,10 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_seq")
     private Long orderNumber;
     private Date orderDate;
+    private String status;
+    private Boolean isPayed;
     private String discountCode;
     private Double totalAmount;
-    private String status;
-    private boolean isPayed;
 
     // Relations
     // List<Supplement>

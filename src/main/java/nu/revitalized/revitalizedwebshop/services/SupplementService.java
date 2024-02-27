@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
@@ -101,7 +102,7 @@ public class SupplementService {
         if (supplement.isPresent()) {
             return supplementToDto(supplement.get());
         } else {
-            throw new RecordNotFoundException("No supplement found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Supplement", id));
         }
     }
 
@@ -208,7 +209,7 @@ public class SupplementService {
 
             return supplementToDto(updatedSupplement);
         } else {
-            throw new RecordNotFoundException("No supplement found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Supplement", id));
         }
     }
 
@@ -241,7 +242,7 @@ public class SupplementService {
 
             return supplementToDto(patchedSupplement);
         } else {
-            throw new RecordNotFoundException("No supplement found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Supplement", id));
         }
     }
 
@@ -253,7 +254,7 @@ public class SupplementService {
 
             return buildSpecificConfirmation("Supplement", supplement.get().getName(), id);
         } else {
-            throw new RecordNotFoundException("No supplement found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Supplement", id));
         }
     }
 
@@ -285,9 +286,9 @@ public class SupplementService {
                         + supplementId + " and allergen with id: "
                         + allergenId + " are not found");
             } else if (optionalSupplement.isEmpty()) {
-                throw new RecordNotFoundException("Supplement with id: " + supplementId + " is not found");
+                throw new RecordNotFoundException(buildIdNotFound("Supplement", supplementId));
             } else {
-                throw new RecordNotFoundException("Allergen with id: " + allergenId + " is not found");
+                throw new RecordNotFoundException(buildIdNotFound("Allergen", allergenId));
             }
         }
     }
@@ -319,9 +320,9 @@ public class SupplementService {
                         + supplementId + " and allergen with id: "
                         + allergenId + " are not found");
             } else if (optionalSupplement.isEmpty()) {
-                throw new RecordNotFoundException("Supplement with id: " + supplementId + " is not found");
+                throw new RecordNotFoundException(buildIdNotFound("Supplement", supplementId));
             } else {
-                throw new RecordNotFoundException("Allergen with id: " + allergenId + " is not found");
+                throw new RecordNotFoundException(buildIdNotFound("Allergen", allergenId));
             }
         }
     }

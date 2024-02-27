@@ -8,6 +8,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHo
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
@@ -98,7 +99,7 @@ public class ShippingDetailsService {
         if (shippingDetails.isPresent()) {
             return shippingDetailsToDto(shippingDetails.get());
         } else {
-            throw new RecordNotFoundException("No shipping details found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
         }
     }
 
@@ -178,7 +179,7 @@ public class ShippingDetailsService {
 
             return shippingDetailsToDto(updatedShippingDetails);
         } else {
-            throw new RecordNotFoundException("No shipping details found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
         }
     }
 
@@ -226,7 +227,7 @@ public class ShippingDetailsService {
 
             return shippingDetailsToDto(patchedShippingDetails);
         } else {
-            throw new RecordNotFoundException("No shipping details found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
         }
     }
 
@@ -239,7 +240,7 @@ public class ShippingDetailsService {
 
             return buildSpecificConfirmation("Shipping Details", optionalShippingDetails.get().getDetailsName(), id);
         } else {
-            throw new RecordNotFoundException("No shipping details found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
         }
     }
 
@@ -249,7 +250,7 @@ public class ShippingDetailsService {
         Optional<User> optionalUser = userRepository.findById(username);
 
         if (optionalShippingDetails.isEmpty()) {
-            throw new RecordNotFoundException("Shipping details with id: " + id + " not found");
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
         }
 
         Set<ShippingDetails> shippingDetailsSet;

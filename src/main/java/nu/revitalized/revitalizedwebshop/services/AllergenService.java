@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToShortDto;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
@@ -81,7 +82,7 @@ public class AllergenService {
         if (allergen.isPresent()) {
             return allergenToDto(allergen.get());
         } else {
-            throw new RecordNotFoundException("No allergen found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Allergen", id));
         }
     }
 
@@ -126,7 +127,7 @@ public class AllergenService {
 
             return allergenToDto(updatedAllergen);
         } else {
-            throw new RecordNotFoundException("No allergen found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Allergen", id));
         }
     }
 
@@ -138,7 +139,7 @@ public class AllergenService {
 
             return buildSpecificConfirmation("Allergen", allergen.get().getName(), id);
         } else {
-            throw new RecordNotFoundException("No allergen found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Allergen", id));
         }
     }
 }

@@ -2,6 +2,7 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.*;
 import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
@@ -93,7 +94,7 @@ public class DiscountService {
         if (discount.isPresent()) {
             return discountToDto(discount.get());
         } else {
-            throw new RecordNotFoundException("No discount found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
         }
     }
 
@@ -186,7 +187,7 @@ public class DiscountService {
 
             return discountToDto(updatedDiscount);
         } else {
-            throw new RecordNotFoundException("No discount found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
         }
     }
 
@@ -206,7 +207,7 @@ public class DiscountService {
 
             return discountToDto(patchedDiscount);
         } else {
-            throw new RecordNotFoundException("No discount found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
         }
     }
 
@@ -223,7 +224,7 @@ public class DiscountService {
                 return buildSpecificConfirmation("Discount", discount.getName(), id);
             }
         } else {
-            throw new RecordNotFoundException("No discount found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
         }
 
     }
@@ -234,7 +235,7 @@ public class DiscountService {
         Optional<User> optionalUser = userRepository.findById(username);
 
         if (optionalDiscount.isEmpty()) {
-            throw new RecordNotFoundException("No discount found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
         }
 
         Set<User> users;
@@ -270,7 +271,7 @@ public class DiscountService {
         Optional<Discount> optionalDiscount = discountRepository.findById(id);
 
         if (optionalDiscount.isEmpty()) {
-            throw new RecordNotFoundException("No discount found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
         }
 
         Set<User> users;

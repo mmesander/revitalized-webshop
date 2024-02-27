@@ -3,6 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.GarmentSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
@@ -75,7 +76,7 @@ public class GarmentService {
         if (garment.isPresent()) {
             return garmentToDto(garment.get());
         } else {
-            throw new RecordNotFoundException("No garment found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Garment", id));
         }
     }
 
@@ -185,7 +186,7 @@ public class GarmentService {
 
             return garmentToDto(updatedGarment);
         } else {
-            throw new RecordNotFoundException("No garment found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Garment", id));
         }
     }
 
@@ -227,7 +228,7 @@ public class GarmentService {
 
             return garmentToDto(patchedGarment);
         } else {
-            throw new RecordNotFoundException("No garment found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Garment", id));
         }
     }
 
@@ -239,7 +240,7 @@ public class GarmentService {
 
             return buildSpecificConfirmation("Garment", garment.get().getName(), id);
         } else {
-            throw new RecordNotFoundException("No garment found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Garment", id));
         }
     }
 }
