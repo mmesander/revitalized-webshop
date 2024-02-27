@@ -1,8 +1,10 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
+
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountPatchInputDto;
@@ -134,21 +136,31 @@ public class DiscountController {
     public ResponseEntity<Object> assignDiscountToUser(
             @PathVariable("username") String username,
             @Valid
-            @RequestBody IdInputDto inputDto
-            ) {
-        DiscountDto dto = discountService.assignDiscountToUser(username, inputDto.getId());
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            DiscountDto dto = discountService.assignDiscountToUser(username, inputDto.getId());
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping(value = "/users/{username}/discounts")
     public ResponseEntity<Object> removeDiscountFromUser(
             @PathVariable("username") String username,
             @Valid
-            @RequestBody IdInputDto inputDto
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        String confirmation = discountService.removeDiscountFromUser(username, inputDto.getId());
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            String confirmation = discountService.removeDiscountFromUser(username, inputDto.getId());
 
-        return ResponseEntity.ok().body(confirmation);
+            return ResponseEntity.ok().body(confirmation);
+        }
     }
 }
