@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class UserShortDto implements IdentifiableUsername {
+public class ShortUserDto implements IdentifiableUsername {
     // Variables
     private String username;
     private String password;

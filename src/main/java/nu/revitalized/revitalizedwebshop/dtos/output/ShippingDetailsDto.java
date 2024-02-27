@@ -20,5 +20,5 @@ public class ShippingDetailsDto implements IdentifiableId {
     private String email;
 
     // Relations
-    private UserShortDto user;
+    private ShortUserDto user;
 }
