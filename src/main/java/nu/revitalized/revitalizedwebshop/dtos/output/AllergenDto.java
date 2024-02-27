@@ -16,5 +16,5 @@ public class AllergenDto implements IdentifiableId {
 
 
     // Relations
-    private Set<SupplementShortDto> supplements;
+    private Set<ShortSupplementDto> supplements;
 }

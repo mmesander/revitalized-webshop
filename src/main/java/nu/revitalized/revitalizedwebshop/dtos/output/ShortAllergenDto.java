@@ -6,7 +6,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DiscountShortDto {
+public class ShortAllergenDto {
+    // Variables
+    private Long id;
     private String name;
-    private Double value;
 }

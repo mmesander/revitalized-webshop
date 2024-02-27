@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SupplementShortDto {
+public class ShortSupplementDto {
     // Variables
     private Long id;
     private String name;

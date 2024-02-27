@@ -13,7 +13,7 @@ import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSp
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShortShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -68,8 +68,8 @@ public class ShippingDetailsService {
         return shippingDetailsDto;
     }
 
-    public static ShippingDetailsShortDto shippingDetailsToShortDto(ShippingDetails shippingDetails) {
-        ShippingDetailsShortDto shortDto = new ShippingDetailsShortDto();
+    public static ShortShippingDetailsDto shippingDetailsToShortDto(ShippingDetails shippingDetails) {
+        ShortShippingDetailsDto shortDto = new ShortShippingDetailsDto();
 
         copyProperties(shippingDetails, shortDto);
 

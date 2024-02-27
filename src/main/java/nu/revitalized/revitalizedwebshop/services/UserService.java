@@ -72,7 +72,7 @@ public class UserService {
         copyProperties(user, userDto);
 
         if (user.getShippingDetails() != null) {
-            Set<ShippingDetailsShortDto> dtos = new TreeSet<>(Comparator.comparingLong(ShippingDetailsShortDto::getId));
+            Set<ShortShippingDetailsDto> dtos = new TreeSet<>(Comparator.comparingLong(ShortShippingDetailsDto::getId));
             for (ShippingDetails shippingDetails : user.getShippingDetails()) {
                 dtos.add(shippingDetailsToShortDto(shippingDetails));
             }
@@ -88,10 +88,10 @@ public class UserService {
         }
 
         if (user.getDiscounts() != null) {
-            Set<DiscountShortDto> discounts = new HashSet<>();
+            Set<ShortDiscountDto> discounts = new HashSet<>();
 
             for (Discount discount : user.getDiscounts()) {
-                DiscountShortDto shortDto = discountToShortDto(discount);
+                ShortDiscountDto shortDto = discountToShortDto(discount);
                 discounts.add(shortDto);
             }
             userDto.setDiscounts(discounts);
@@ -289,7 +289,7 @@ public class UserService {
     }
 
     // Relation - Discount Methods
-    public Set<DiscountShortDto> getAllUserDiscounts(String username) {
+    public Set<ShortDiscountDto> getAllUserDiscounts(String username) {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {

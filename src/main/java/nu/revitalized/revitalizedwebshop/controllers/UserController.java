@@ -5,7 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsern
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildPersonalConfirmation;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
-import nu.revitalized.revitalizedwebshop.dtos.output.DiscountShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShortDiscountDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
@@ -158,7 +158,7 @@ public class UserController {
     public ResponseEntity<Object> getAllUserDiscounts(
             @PathVariable("username") String username
     ) {
-        Set<DiscountShortDto> discounts = userService.getAllUserDiscounts(username);
+        Set<ShortDiscountDto> discounts = userService.getAllUserDiscounts(username);
 
         return ResponseEntity.ok().body(discounts);
     }

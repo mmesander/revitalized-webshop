@@ -8,7 +8,7 @@ import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecifica
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.DiscountShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShortDiscountDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -62,8 +62,8 @@ public class DiscountService {
         return discountDto;
     }
 
-    public static DiscountShortDto discountToShortDto(Discount discount) {
-        DiscountShortDto shortDto = new DiscountShortDto();
+    public static ShortDiscountDto discountToShortDto(Discount discount) {
+        ShortDiscountDto shortDto = new ShortDiscountDto();
 
         copyProperties(discount, shortDto);
 
@@ -301,7 +301,7 @@ public class DiscountService {
     public List<String> getAllAuthUserDiscounts(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         Set<Discount> discounts;
-        List<DiscountShortDto> shortDtos = new ArrayList<>();
+        List<ShortDiscountDto> shortDtos = new ArrayList<>();
 
         if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException(username);
@@ -310,16 +310,16 @@ public class DiscountService {
         }
 
         for (Discount discount : discounts) {
-            DiscountShortDto shortDto = discountToShortDto(discount);
+            ShortDiscountDto shortDto = discountToShortDto(discount);
             shortDtos.add(shortDto);
         }
 
         if (shortDtos.isEmpty()) {
             throw new RecordNotFoundException("No discounts found for user: " + username);
         } else {
-            shortDtos.sort(Comparator.comparing(DiscountShortDto::getValue).reversed());
+            shortDtos.sort(Comparator.comparing(ShortDiscountDto::getValue).reversed());
             List<String> strings = new ArrayList<>();
-            for (DiscountShortDto shortDto : shortDtos) {
+            for (ShortDiscountDto shortDto : shortDtos) {
                 strings.add(shortDto.getValue() + "% discount with code: " + shortDto.getName());
             }
 

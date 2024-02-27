@@ -20,6 +20,6 @@ public class SupplementDto implements IdentifiableId {
     private String contains;
 
     // Relations
-    private Set<AllergenShortDto> allergens;
+    private Set<ShortAllergenDto> allergens;
     private Set<ReviewDto> reviews;
 }

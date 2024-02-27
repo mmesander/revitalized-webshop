@@ -7,8 +7,8 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildS
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import nu.revitalized.revitalizedwebshop.dtos.input.AllergenInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShortAllergenDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShortSupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
@@ -40,22 +40,22 @@ public class AllergenService {
         copyProperties(allergen, allergenDto);
 
         if (allergen.getSupplements() != null) {
-            Set<SupplementShortDto> supplementShortDtos = new HashSet<>();
+            Set<ShortSupplementDto> shortSupplementDtos = new HashSet<>();
             for (Supplement supplement : allergen.getSupplements()) {
-                supplementShortDtos.add(supplementToShortDto(supplement));
+                shortSupplementDtos.add(supplementToShortDto(supplement));
             }
-            allergenDto.setSupplements(supplementShortDtos);
+            allergenDto.setSupplements(shortSupplementDtos);
         }
 
         return allergenDto;
     }
 
-    public static AllergenShortDto allergenToShortDto(Allergen allergen) {
-        AllergenShortDto allergenShortDto = new AllergenShortDto();
+    public static ShortAllergenDto allergenToShortDto(Allergen allergen) {
+        ShortAllergenDto shortAllergenDto = new ShortAllergenDto();
 
-        copyProperties(allergen, allergenShortDto);
+        copyProperties(allergen, shortAllergenDto);
 
-        return allergenShortDto;
+        return shortAllergenDto;
     }
 
     // CRUD Methods

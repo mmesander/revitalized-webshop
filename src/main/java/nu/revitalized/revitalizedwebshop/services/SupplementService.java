@@ -50,11 +50,11 @@ public class SupplementService {
         copyProperties(supplement, supplementDto);
 
         if (supplement.getAllergens() != null) {
-            Set<AllergenShortDto> allergenShortDtos = new HashSet<>();
+            Set<ShortAllergenDto> shortAllergenDtos = new HashSet<>();
             for (Allergen allergen : supplement.getAllergens()) {
-                allergenShortDtos.add(allergenToShortDto(allergen));
+                shortAllergenDtos.add(allergenToShortDto(allergen));
             }
-            supplementDto.setAllergens(allergenShortDtos);
+            supplementDto.setAllergens(shortAllergenDtos);
         }
 
         if (supplement.getReviews() != null) {
@@ -68,12 +68,12 @@ public class SupplementService {
         return supplementDto;
     }
 
-    public static SupplementShortDto supplementToShortDto(Supplement supplement) {
-        SupplementShortDto supplementShortDto = new SupplementShortDto();
+    public static ShortSupplementDto supplementToShortDto(Supplement supplement) {
+        ShortSupplementDto shortSupplementDto = new ShortSupplementDto();
 
-        copyProperties(supplement, supplementShortDto);
+        copyProperties(supplement, shortSupplementDto);
 
-        return supplementShortDto;
+        return shortSupplementDto;
     }
 
     public static OrderItemDto supplementToOrderItemDto(Supplement supplement) {
