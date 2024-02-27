@@ -292,4 +292,38 @@ public class OrderService {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
     }
+
+    public OrderDto removeProductFromOrder(Long orderNumber, Long productId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+
+        if (optionalOrder.isEmpty()) {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        Order order = optionalOrder.get();
+
+        if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            List<Supplement> supplements = order.getSupplements();
+
+            supplements.remove(supplement);
+            order.setSupplements(supplements);
+            orderRepository.save(order);
+
+            return orderToDto(order);
+        } else if (optionalGarment.isPresent()) {
+            Garment garment = optionalGarment.get();
+            List<Garment> garments = order.getGarments();
+
+            garments.remove(garment);
+            order.setGarments(garments);
+            orderRepository.save(order);
+
+            return orderToDto(order);
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Product", productId));
+        }
+    }
 }
