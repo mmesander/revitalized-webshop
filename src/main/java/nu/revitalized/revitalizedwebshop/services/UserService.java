@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.services.OrderService.*;
 import static nu.revitalized.revitalizedwebshop.services.DiscountService.*;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
@@ -95,6 +96,16 @@ public class UserService {
                 discounts.add(shortDto);
             }
             userDto.setDiscounts(discounts);
+        }
+
+        if (user.getOrders() != null) {
+            List<ShortOrderDto> shortOrderDtos = new ArrayList<>();
+
+            for (Order order : user.getOrders()) {
+                ShortOrderDto shortOrderDto = orderToShortDto(order);
+                shortOrderDtos.add(shortOrderDto);
+            }
+            userDto.setOrders(shortOrderDtos);
         }
 
         return userDto;

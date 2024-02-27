@@ -12,6 +12,7 @@ import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShortOrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -110,6 +111,14 @@ public class OrderService {
         orderDto.setProducts(orderItemDtos);
 
         return orderDto;
+    }
+
+    public static ShortOrderDto orderToShortDto(Order order) {
+        ShortOrderDto shortOrderDto = new ShortOrderDto();
+
+        copyProperties(order, shortOrderDto);
+
+        return shortOrderDto;
     }
 
     // CRUD Methods

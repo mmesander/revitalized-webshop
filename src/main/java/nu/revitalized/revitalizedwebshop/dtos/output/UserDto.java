@@ -25,5 +25,5 @@ public class UserDto implements IdentifiableUsername {
     private Set<ShortShippingDetailsDto> shippingDetails;
     private Set<ReviewDto> reviews;
     private Set<ShortDiscountDto> discounts;
-    private List<Order> orders;
+    private List<ShortOrderDto> orders;
 }
