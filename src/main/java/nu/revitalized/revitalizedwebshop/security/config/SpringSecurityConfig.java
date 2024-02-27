@@ -132,7 +132,7 @@ public class SpringSecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/products/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/authenticated").authenticated()
-                        .requestMatchers("/authenticate").permitAll()
+                        .requestMatchers("/users/authenticate").permitAll()
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

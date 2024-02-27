@@ -36,7 +36,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(principal);
     }
 
-    @PostMapping(value = "/authenticate")
+    @PostMapping(value = "/users/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         String username = authenticationRequest.getUsername();
         String password = authenticationRequest.getPassword();

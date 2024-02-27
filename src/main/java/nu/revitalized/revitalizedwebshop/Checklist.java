@@ -10,7 +10,6 @@ public class Checklist {
 
     // Overig
     // TODO: User (Athenticated) Get ShippingDetails BY ID
-    // TODO: Overal waar @valid staat checken of binding result owrdt toegepast
     // TODO: De url van authenticate aanpassen op users/authenticate
     // TODO: Zorgen dat de reviews ook worden toegevoegd als je de super ophaalt
     // TODO: -- Door in de productDto de reviews toe te voegen en ze in de transfer methods in product service erin knallen
