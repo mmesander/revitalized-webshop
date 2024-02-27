@@ -18,6 +18,7 @@ public class Checklist {
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op imports etc.
     // TODO: checken in de services of de methods bij de owner of target kant staan (discount voorbeeld)
+    // TODO: de shipping details op een andere URL zetten /users/shipping-details
 
 
     // Rowan
