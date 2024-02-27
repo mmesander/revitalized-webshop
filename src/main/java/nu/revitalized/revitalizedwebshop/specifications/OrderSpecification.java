@@ -3,29 +3,9 @@ package nu.revitalized.revitalizedwebshop.specifications;
 // Imports
 import nu.revitalized.revitalizedwebshop.models.Order;
 import org.springframework.data.jpa.domain.Specification;
-import java.util.Date;
-
 
 public class OrderSpecification {
     private OrderSpecification() {}
-
-    // Request Filter: Order date
-    public static Specification<Order> getOrderDateLikeFilter(Date dateLike) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .equal(root.get("orderDate"), dateLike));
-    }
-
-    // Request Filter: Order afterDate
-    public static Specification<Order> getOrderAfterDateFilter(Date afterDate) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .greaterThanOrEqualTo(root.get("orderDate"), afterDate));
-    }
-
-    // Request Filter: Order beforeDate
-    public static Specification<Order> getOrderBeforeDateFilter(Date beforeDate) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .lessThanOrEqualTo(root.get("orderDate"), beforeDate));
-    }
 
     // Request Filter: Order totalPrice
     public static Specification<Order> getOrderPriceLikeFilter(Double totalPriceLike) {

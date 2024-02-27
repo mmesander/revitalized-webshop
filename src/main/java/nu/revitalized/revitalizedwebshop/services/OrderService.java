@@ -69,18 +69,12 @@ public class OrderService {
     }
 
     public List<OrderDto> getALlOrdersByParam(
-            Date orderDate,
-            Date beforeDate,
-            Date afterDate,
             Double price,
             Double minPrice,
             Double maxPrice
     ) {
         Specification<Order> params = Specification.where
-                (orderDate == null ? null : getOrderDateLikeFilter(orderDate))
-                .and(beforeDate == null ? null : getOrderBeforeDateFilter(beforeDate))
-                .and(afterDate == null ? null : getOrderAfterDateFilter(afterDate))
-                .and(price == null ? null : getOrderPriceLikeFilter(price))
+                (price == null ? null : getOrderPriceLikeFilter(price))
                 .and(minPrice == null ? null : getOrderPriceMoreThanFilter(minPrice))
                 .and(maxPrice == null ? null : getOrderPriceLessThanFilter(maxPrice));
 

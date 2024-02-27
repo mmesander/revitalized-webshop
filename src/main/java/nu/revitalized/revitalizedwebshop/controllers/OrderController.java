@@ -42,15 +42,12 @@ public class OrderController {
 
     @GetMapping("/users/orders/search")
     public ResponseEntity<List<OrderDto>> getOrdersByParam(
-            @RequestParam(required = false) Date orderDate,
-            @RequestParam(required = false) Date beforeDate,
-            @RequestParam(required = false) Date afterDate,
             @RequestParam(required = false) Double price,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice
     ) {
         List<OrderDto> dtos = orderService.getALlOrdersByParam(
-                orderDate, beforeDate, afterDate, price, minPrice, maxPrice
+                price, minPrice, maxPrice
         );
 
         return ResponseEntity.ok().body(dtos);
