@@ -34,7 +34,9 @@ public class Checklist {
     // patch order
     // remove order
 
-    // change order status/payment
+    // changeOrderStatus
+    // changeMultipleOrderStatus
+    // changeOrderPayment
 
     // assign products to order
     // remove products from order
