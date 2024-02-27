@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -59,7 +60,15 @@ public class OrderService {
         }
     }
 
-    public OrderDto getOrderById() {}
+    public OrderDto getOrderByOrderNumber(Long orderNumber) {
+        Optional<Order> order = orderRepository.findById(orderNumber);
+
+        if (order.isPresent()) {
+            return orderToDto(order.get());
+        } else {
+            throw new RecordNotFoundException("Order with id: " + orderNumber + " not found");
+        }
+    }
     public List<Order> getALlOrdersByParam() {}
     public List<Order> getAllPayedOrders() {}
     public List<Order> getAllUnpayedOrders() {}
