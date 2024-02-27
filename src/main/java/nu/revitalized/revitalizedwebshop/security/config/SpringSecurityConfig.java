@@ -81,17 +81,19 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users/*/discounts-all").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/*/discounts-all").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "/users/auth/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/users/auth/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.PUT, "/users/auth/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.PATCH, "/users/auth/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.DELETE, "/users/auth/**").hasAnyRole("ADMIN", "USER")
-
                         .requestMatchers(HttpMethod.GET, "/shipping-details/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/shipping-details/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/shipping-details/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/shipping-details/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/shipping-details/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/users/orders").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/users/auth/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/users/auth/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/users/auth/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PATCH, "/users/auth/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/users/auth/**").hasAnyRole("ADMIN", "USER")
 
                         .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
