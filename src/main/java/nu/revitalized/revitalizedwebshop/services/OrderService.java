@@ -6,9 +6,11 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
-
+import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
+import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
@@ -51,6 +53,30 @@ public class OrderService {
         OrderDto orderDto = new OrderDto();
 
         copyProperties(order, orderDto);
+
+        List<OrderItemDto> orderItemDtos = null;
+
+        if (order.getSupplements() != null) {
+            List<OrderItemDto> orderItems = new ArrayList<>();
+
+            for (Supplement supplement : order.getSupplements()) {
+                orderItems.add(supplementToOrderItemDto(supplement));
+            }
+
+            orderItemDtos.addAll(orderItems);
+        }
+
+        if (order.getGarments() != null) {
+            List<OrderItemDto> orderItems = new ArrayList<>();
+
+            for (Garment garment : order.getGarments()) {
+                orderItems.add(garmentToOrderItemDto(garment));
+            }
+
+            orderItemDtos.addAll(orderItems);
+        }
+
+        orderDto.setProducts(orderItemDtos);
 
         return orderDto;
     }
@@ -233,7 +259,7 @@ public class OrderService {
     }
 
     // Relation - Product Methods
-    public OrderDto assignProductToOrder(Long orderNumber, Long productId) {
+    public OrderDto addProductToOrder(Long orderNumber, Long productId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
@@ -243,11 +269,27 @@ public class OrderService {
         }
 
         Order order = optionalOrder.get();
-        OrderDto orderDto;
 
         if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            List<Supplement> supplements = order.getSupplements();
 
+            supplements.add(supplement);
+            order.setSupplements(supplements);
+            orderRepository.save(order);
+
+            return orderToDto(order);
+        } else if (optionalGarment.isPresent()) {
+            Garment garment = optionalGarment.get();
+            List<Garment> garments = order.getGarments();
+
+            garments.add(garment);
+            order.setGarments(garments);
+            orderRepository.save(order);
+
+            return orderToDto(order);
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
-
     }
 }
