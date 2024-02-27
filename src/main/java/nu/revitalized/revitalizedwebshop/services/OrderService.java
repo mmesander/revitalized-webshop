@@ -111,7 +111,7 @@ public class OrderService {
         List<OrderDto> orderDtos = new ArrayList<>();
 
         for (Order order : orders) {
-            if (order.isPayed()) {
+            if (order.getIsPayed()) {
                 OrderDto orderDto = orderToDto(order);
                 orderDtos.add(orderDto);
             }
@@ -131,7 +131,7 @@ public class OrderService {
         List<OrderDto> orderDtos = new ArrayList<>();
 
         for (Order order : orders) {
-            if (!order.isPayed()) {
+            if (!order.getIsPayed()) {
                 OrderDto orderDto = orderToDto(order);
                 orderDtos.add(orderDto);
             }
