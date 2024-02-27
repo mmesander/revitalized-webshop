@@ -195,7 +195,7 @@ public class OrderController {
 
     // Relation - User Requests
     @PutMapping(value = "/users/{username}/orders")
-    public ResponseEntity<UserDto> assignOrderToUser(
+    public ResponseEntity<OrderDto> assignOrderToUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -204,14 +204,14 @@ public class OrderController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = orderService.assignOrderToUser(username, inputDto.getId());
+            OrderDto dto = orderService.assignOrderToUser(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
     @DeleteMapping(value = "/users/{username}/orders")
-    public ResponseEntity<UserDto> removeOrderFromUser(
+    public ResponseEntity<OrderDto> removeOrderFromUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -220,7 +220,7 @@ public class OrderController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = orderService.removeOrderFromUser(username, inputDto.getId());
+            OrderDto dto = orderService.removeOrderFromUser(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
