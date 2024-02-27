@@ -402,4 +402,34 @@ public class OrderService {
             throw new UsernameNotFoundException(username);
         }
     }
+
+    public UserDto removeOrderFromUser(String username, Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<User> optionalUser = userRepository.findById(username);
+
+        if (optionalOrder.isEmpty()) {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+
+        if (optionalUser.isPresent()) {
+            Order order = optionalOrder.get();
+            User user = optionalUser.get();
+
+            List<Order> orders = user.getOrders();
+
+            if (!user.getOrders().contains(order)) {
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " is not assigned to user: " + username);
+            } else {
+                orders.remove(order);
+                user.setOrders(orders);
+                order.setUser(user);
+                orderRepository.save(order);
+
+                return userToDto(user);
+            }
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
 }
