@@ -9,7 +9,6 @@ public class Checklist {
 
 
     // Overig
-    // TODO: Zorgen dat de patchmethods alleen de nul dingen eruit gaan en de rest wel gevalideerd wordt
     // TODO: User (Athenticated) Get ShippingDetails BY ID
     // TODO: De url van authenticate aanpassen op users/authenticate
     // TODO: Zorgen dat de reviews ook worden toegevoegd als je de super ophaalt
