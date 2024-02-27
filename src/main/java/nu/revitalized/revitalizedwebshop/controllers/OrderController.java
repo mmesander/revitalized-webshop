@@ -8,6 +8,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriOrder
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -187,6 +188,39 @@ public class OrderController {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
             OrderDto dto = orderService.removeProductFromOrder(orderNumber, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    // Relation - User Requests
+    @PutMapping(value = "/users/{username}/orders")
+    public ResponseEntity<UserDto> assignOrderToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = orderService.assignOrderToUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping(value = "/users/{username}/orders")
+    public ResponseEntity<UserDto> removeOrderFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = orderService.removeOrderFromUser(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
