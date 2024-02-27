@@ -150,8 +150,11 @@ public class OrderService {
         Order order = dtoToOrder(inputDto);
 
         order.setOrderDate(createDate());
+        orderRepository.save(order);
 
+        return orderToDto(order);
     }
+
 //    public OrderDto updateOrder() {}
 //    public OrderDto patchOrder() {}
 //    public String deleteOrder() {}
