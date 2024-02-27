@@ -86,4 +86,39 @@ public class OrderController {
             return ResponseEntity.created(uri).body(dto);
         }
     }
+
+    @PutMapping("/users/orders/{orderNumber}")
+    public ResponseEntity<OrderDto> updateOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody OrderInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.updateOrder(inputDto, orderNumber);
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PatchMapping("/users/orders/{orderNumber}")
+    public ResponseEntity<OrderDto> patchOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @RequestBody OrderInputDto inputDto
+    ) {
+        OrderDto dto = orderService.patchOrder(inputDto, orderNumber);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping("/users/orders/{orderNumber}")
+    public ResponseEntity<Object> deleteOrder(
+            @PathVariable("orderNumber") Long orderNumber
+    ) {
+        String confirmation = orderService.deleteOrder(orderNumber);
+
+        return ResponseEntity.ok().body(confirmation);
+    }
 }
