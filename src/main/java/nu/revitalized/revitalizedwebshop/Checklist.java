@@ -67,4 +67,7 @@ public class Checklist {
     // update shipping details for order?
 
     // Finish order Send/Pay order (hier de discount bij)
+    // Deze kan niet verzonden worden indien er geen shippingdetails bij zit!
+    // En ook niet als er geen producten in zitten
+    // En ook niet als de discount niet geldig is
 }
