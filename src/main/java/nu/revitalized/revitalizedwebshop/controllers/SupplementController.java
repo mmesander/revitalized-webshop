@@ -5,6 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.SupplementService;
@@ -112,11 +113,16 @@ public class SupplementController {
     @PatchMapping("/products/supplements/{id}")
     public ResponseEntity<SupplementDto> patchSupplement(
             @PathVariable("id") Long id,
-            @RequestBody SupplementInputDto inputDto
+            @RequestBody SupplementPatchInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        SupplementDto dto = supplementService.patchSupplement(id, inputDto);
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            SupplementDto dto = supplementService.patchSupplement(id, inputDto);
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping("/products/supplements/{id}")

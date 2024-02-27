@@ -5,6 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.DiscountPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -106,11 +107,17 @@ public class DiscountController {
     @PatchMapping("/users/discounts/{id}")
     public ResponseEntity<DiscountDto> patchDiscount(
             @PathVariable("id") Long id,
-            @RequestBody DiscountInputDto inputDto
+            @Valid
+            @RequestBody DiscountPatchInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        DiscountDto dto = discountService.patchDiscount(id, inputDto);
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            DiscountDto dto = discountService.patchDiscount(id, inputDto);
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping("/users/discounts/{id}")

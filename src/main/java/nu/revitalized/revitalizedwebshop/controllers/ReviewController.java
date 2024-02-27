@@ -5,6 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.ReviewPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.ReviewService;
@@ -88,11 +89,17 @@ public class ReviewController {
     @PatchMapping("/products/reviews/{id}")
     public ResponseEntity<ReviewDto> patchReview(
             @PathVariable("id") Long id,
-            @RequestBody ReviewInputDto inputDto
+            @Valid
+            @RequestBody ReviewPatchInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        ReviewDto dto = reviewService.patchReview(id, inputDto);
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            ReviewDto dto = reviewService.patchReview(id, inputDto);
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping("/products/reviews/{id}")

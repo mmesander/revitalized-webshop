@@ -286,7 +286,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id,
-            @RequestBody ShippingDetailsInputDto inputDto,
+            @RequestBody ShippingDetailsPatchInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
@@ -396,7 +396,8 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("reviewId") Long reviewId,
-            @RequestBody ReviewInputDto inputDto,
+            @Valid
+            @RequestBody ReviewPatchInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {

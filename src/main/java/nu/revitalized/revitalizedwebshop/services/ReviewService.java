@@ -10,6 +10,7 @@ import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.ReviewPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -167,7 +168,7 @@ public class ReviewService {
         }
     }
 
-    public ReviewDto patchReview(Long id, ReviewInputDto inputDto) {
+    public ReviewDto patchReview(Long id, ReviewPatchInputDto inputDto) {
         Optional<Review> optionalReview = reviewRepository.findById(id);
 
         if (optionalReview.isPresent()) {

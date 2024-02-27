@@ -18,13 +18,15 @@ public class SupplementInputDto {
     @ValidText(fieldName = "Brand")
     private String brand;
 
-    @NotNull
+    @NotNull(message = "Description is required")
     @Size(min = 10, max = 200, message = "Description must be between 2 and 200 characters")
     private String description;
 
+    @NotNull(message = "Price is required")
     @ValidPrice
     private Double price;
 
+    @NotNull(message = "Stock is required")
     @ValidStock
     private Integer stock;
 

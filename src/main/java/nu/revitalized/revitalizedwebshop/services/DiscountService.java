@@ -6,6 +6,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdN
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.*;
 import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.DiscountPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountShortDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
@@ -191,7 +192,7 @@ public class DiscountService {
         }
     }
 
-    public DiscountDto patchDiscount(Long id, DiscountInputDto inputDto) {
+    public DiscountDto patchDiscount(Long id, DiscountPatchInputDto inputDto) {
         Optional<Discount> optionalDiscount = discountRepository.findById(id);
 
         if (optionalDiscount.isPresent()) {

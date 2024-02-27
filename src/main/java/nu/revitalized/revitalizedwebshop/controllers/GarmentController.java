@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.controllers;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.GarmentPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.GarmentService;
@@ -113,11 +114,17 @@ public class GarmentController {
     @PatchMapping("/products/garments/{id}")
     public ResponseEntity<GarmentDto> patchGarment(
             @PathVariable("id") Long id,
-            @RequestBody GarmentInputDto inputDto
+            @Valid
+            @RequestBody GarmentPatchInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        GarmentDto dto = garmentService.patchGarment(id, inputDto);
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            GarmentDto dto = garmentService.patchGarment(id, inputDto);
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping("/products/garments/{id}")

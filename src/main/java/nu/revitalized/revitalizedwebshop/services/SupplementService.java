@@ -8,6 +8,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdN
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
@@ -213,7 +214,7 @@ public class SupplementService {
         }
     }
 
-    public SupplementDto patchSupplement(Long id, SupplementInputDto inputDto) {
+    public SupplementDto patchSupplement(Long id, SupplementPatchInputDto inputDto) {
         Optional<Supplement> optionalSupplement = supplementRepository.findById(id);
 
         if (optionalSupplement.isPresent()) {

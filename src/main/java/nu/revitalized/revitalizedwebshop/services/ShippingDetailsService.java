@@ -3,14 +3,15 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.*;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.*;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
@@ -183,7 +184,7 @@ public class ShippingDetailsService {
         }
     }
 
-    public ShippingDetailsDto patchShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
+    public ShippingDetailsDto patchShippingDetails(Long id, ShippingDetailsPatchInputDto inputDto) {
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
 
         if (optionalShippingDetails.isPresent()) {
@@ -195,7 +196,7 @@ public class ShippingDetailsService {
 
             if ((inputDto.getFirstName() != null && inputDto.getMiddleName() != null && inputDto.getLastName() != null)
                     || (inputDto.getFirstName() != null && inputDto.getLastName() != null)) {
-                shippingDetails.setDetailsName(buildFullName(inputDto));
+                shippingDetails.setDetailsName(buildFullNamePatch(inputDto));
             }
 
             if (inputDto.getCountry() != null) {
@@ -216,7 +217,7 @@ public class ShippingDetailsService {
 
             if ((inputDto.getHouseNumber() != null && inputDto.getHouseNumberAddition() != null) ||
                     inputDto.getHouseNumber() != null) {
-                shippingDetails.setHouseNumber(buildHouseNumber(inputDto));
+                shippingDetails.setHouseNumber(buildHouseNumberPatch(inputDto));
             }
 
             if (inputDto.getEmail() != null) {
