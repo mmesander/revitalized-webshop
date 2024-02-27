@@ -3,6 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.OrderInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
@@ -145,10 +146,15 @@ public class OrderService {
         }
     }
 
-    public OrderDto createOrder() {}
-    public OrderDto updateOrder() {}
-    public OrderDto patchOrder() {}
-    public String deleteOrder() {}
+    public OrderDto createOrder(OrderInputDto inputDto) {
+        Order order = dtoToOrder(inputDto);
+
+        order.setOrderDate(createDate());
+
+    }
+//    public OrderDto updateOrder() {}
+//    public OrderDto patchOrder() {}
+//    public String deleteOrder() {}
 
 
 }
