@@ -80,7 +80,7 @@ public class SupplementService {
         OrderItemDto orderItemDto = new OrderItemDto();
 
         copyProperties(supplement, orderItemDto);
-//        orderItemDto.setQuantity(1);
+        orderItemDto.setQuantity(1);
 
         return orderItemDto;
     }

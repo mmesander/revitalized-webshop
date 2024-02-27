@@ -58,7 +58,7 @@ public class GarmentService {
         OrderItemDto orderItemDto = new OrderItemDto();
 
         copyProperties(garment, orderItemDto);
-//        orderItemDto.setQuantity(1);
+        orderItemDto.setQuantity(1);
 
         return orderItemDto;
     }

@@ -60,9 +60,20 @@ public class OrderService {
             List<OrderItemDto> orderItems = new ArrayList<>();
 
             for (Supplement supplement : order.getSupplements()) {
-                orderItems.add(supplementToOrderItemDto(supplement));
-            }
+                OrderItemDto orderItemDto = supplementToOrderItemDto(supplement);
 
+                boolean exists = false;
+                for (OrderItemDto item : orderItems)
+                    if (item.getId() == orderItemDto.getId()) {
+                        item.setQuantity(item.getQuantity() + 1);
+                        exists = true;
+                        break;
+                    }
+
+                if (!exists) {
+                    orderItems.add(orderItemDto);
+                }
+            }
             orderItemDtos.addAll(orderItems);
         }
 
@@ -70,14 +81,26 @@ public class OrderService {
             List<OrderItemDto> orderItems = new ArrayList<>();
 
             for (Garment garment : order.getGarments()) {
-                orderItems.add(garmentToOrderItemDto(garment));
+                OrderItemDto orderItemDto = garmentToOrderItemDto(garment);
+
+                boolean exists = false;
+                for (OrderItemDto item : orderItems)
+                    if (item.getId() == orderItemDto.getId()) {
+                        item.setQuantity(item.getQuantity() + 1);
+                        exists = true;
+                        break;
+                    }
+
+                if (!exists) {
+                    orderItems.add(orderItemDto);
+                }
             }
 
             orderItemDtos.addAll(orderItems);
         }
 
-
         orderDto.setProducts(orderItemDtos);
+
 
         return orderDto;
     }
