@@ -7,7 +7,7 @@ import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
 
 @Getter
 @Setter
-public class ShippingDetailsShortDto implements IdentifiableId {
+public class ShortShippingDetailsDto implements IdentifiableId {
     // Variables
     private Long id;
     private String detailsName;

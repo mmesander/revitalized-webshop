@@ -5,11 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableOrderNumber;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
-public class OrderDto implements IdentifiableOrderNumber {
+public class ShortOrderDto implements IdentifiableOrderNumber {
     // Variables
     private Long orderNumber;
     private Date orderDate;
@@ -17,8 +16,4 @@ public class OrderDto implements IdentifiableOrderNumber {
     private Boolean isPayed;
     private String discountCode;
     private Double totalAmount;
-
-    // Relations
-    List<OrderItemDto> products;
-    private String username;
 }

@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.*;
@@ -10,11 +11,13 @@ import static nu.revitalized.revitalizedwebshop.services.UserService.userToShort
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShortShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
@@ -25,6 +28,7 @@ import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
@@ -68,8 +72,8 @@ public class ShippingDetailsService {
         return shippingDetailsDto;
     }
 
-    public static ShippingDetailsShortDto shippingDetailsToShortDto(ShippingDetails shippingDetails) {
-        ShippingDetailsShortDto shortDto = new ShippingDetailsShortDto();
+    public static ShortShippingDetailsDto shippingDetailsToShortDto(ShippingDetails shippingDetails) {
+        ShortShippingDetailsDto shortDto = new ShortShippingDetailsDto();
 
         copyProperties(shippingDetails, shortDto);
 
@@ -254,25 +258,24 @@ public class ShippingDetailsService {
             throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
         }
 
-        Set<ShippingDetails> shippingDetailsSet;
-
         if (optionalUser.isPresent()) {
             ShippingDetails shippingDetails = optionalShippingDetails.get();
             User user = optionalUser.get();
 
-            shippingDetailsSet = user.getShippingDetails();
+            Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
 
 
-            if (!shippingDetailsSet.isEmpty()) {
-                shippingDetailsSet.addAll(user.getShippingDetails());
+            if (shippingDetails.getUser() != null) {
+                throw new BadRequestException("Shipping Details with id: " + id
+                        + " is already assigned to user: " + username);
+            } else {
+                shippingDetailsSet.add(shippingDetails);
+                user.setShippingDetails(shippingDetailsSet);
+                shippingDetails.setUser(user);
+                shippingDetailsRepository.save(shippingDetails);
+
+                return userToDto(user);
             }
-
-            shippingDetailsSet.add(shippingDetails);
-            user.setShippingDetails(shippingDetailsSet);
-            shippingDetails.setUser(user);
-            shippingDetailsRepository.save(shippingDetails);
-
-            return userToDto(user);
         } else {
             throw new UsernameNotFoundException(username);
         }

@@ -11,14 +11,18 @@ import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.ShortOrderDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Order;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
+import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.OrderRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -26,17 +30,21 @@ import java.util.*;
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final GarmentRepository garmentRepository;
     private final SupplementRepository supplementRepository;
+    private final GarmentRepository garmentRepository;
+    private final UserRepository userRepository;
+
 
     public OrderService(
             OrderRepository orderRepository,
             SupplementRepository supplementRepository,
-            GarmentRepository garmentRepository
+            GarmentRepository garmentRepository,
+            UserRepository userRepository
     ) {
         this.orderRepository = orderRepository;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
+        this.userRepository = userRepository;
     }
 
     // Transfer Methods
@@ -100,7 +108,19 @@ public class OrderService {
 
         orderDto.setProducts(orderItemDtos);
 
+        if (order.getUser() != null) {
+            orderDto.setUsername(order.getUser().getUsername());
+        }
+
         return orderDto;
+    }
+
+    public static ShortOrderDto orderToShortDto(Order order) {
+        ShortOrderDto shortOrderDto = new ShortOrderDto();
+
+        copyProperties(order, shortOrderDto);
+
+        return shortOrderDto;
     }
 
     // CRUD Methods
@@ -360,6 +380,63 @@ public class OrderService {
             }
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
+        }
+    }
+
+    // Relation - User Methods
+    public OrderDto assignOrderToUser(String username, Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<User> optionalUser = userRepository.findById(username);
+
+        if (optionalOrder.isEmpty()) {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+
+        if (optionalUser.isPresent()) {
+            Order order = optionalOrder.get();
+            User user = optionalUser.get();
+
+            List<Order> orders = user.getOrders();
+
+            if (user.getOrders().contains(order)) {
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " is already assigned to user: " + username);
+            } else {
+                orders.add(order);
+                user.setOrders(orders);
+                order.setUser(user);
+                orderRepository.save(order);
+
+                return orderToDto(order);
+            }
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
+    public OrderDto removeOrderFromUser(String username, Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<User> optionalUser = userRepository.findById(username);
+
+        if (optionalOrder.isEmpty()) {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+
+        if (optionalUser.isPresent()) {
+            Order order = optionalOrder.get();
+            User presentUser = order.getUser();
+
+            if (presentUser == null || !presentUser.getUsername().equalsIgnoreCase(username)) {
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " is not assigned to user: " + username);
+            } else {
+                order.setUser(null);
+                orderRepository.save(order);
+
+                return orderToDto(order);
+            }
+        } else {
+            throw new UsernameNotFoundException(username);
         }
     }
 }

@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableUsername;
 import nu.revitalized.revitalizedwebshop.models.Authority;
+import nu.revitalized.revitalizedwebshop.models.Order;
+
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -19,7 +22,8 @@ public class UserDto implements IdentifiableUsername {
     // Relations
     @JsonSerialize
     private Set<Authority> authorities;
-    private Set<ShippingDetailsShortDto> shippingDetails;
+    private Set<ShortShippingDetailsDto> shippingDetails;
     private Set<ReviewDto> reviews;
-    private Set<DiscountShortDto> discounts;
+    private Set<ShortDiscountDto> discounts;
+    private List<ShortOrderDto> orders;
 }
