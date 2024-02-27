@@ -5,20 +5,25 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.CalculateTotalAmount.calculateTotalAmount;
+import static nu.revitalized.revitalizedwebshop.services.UserService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Order;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
+import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.OrderRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -26,17 +31,21 @@ import java.util.*;
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final GarmentRepository garmentRepository;
     private final SupplementRepository supplementRepository;
+    private final GarmentRepository garmentRepository;
+    private final UserRepository userRepository;
+
 
     public OrderService(
             OrderRepository orderRepository,
             SupplementRepository supplementRepository,
-            GarmentRepository garmentRepository
+            GarmentRepository garmentRepository,
+            UserRepository userRepository
     ) {
         this.orderRepository = orderRepository;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
+        this.userRepository = userRepository;
     }
 
     // Transfer Methods
@@ -360,6 +369,37 @@ public class OrderService {
             }
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
+        }
+    }
+
+    // Relation - User Methods
+    public UserDto assignOrderToUser(String username, Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<User> optionalUser = userRepository.findById(username);
+
+        if (optionalOrder.isEmpty()) {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+
+        if (optionalUser.isPresent()) {
+            Order order = optionalOrder.get();
+            User user = optionalUser.get();
+
+            List<Order> orders = user.getOrders();
+
+            if (order.getUser() != null) {
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " is already assigned to user: " + username);
+            } else {
+                orders.add(order);
+                user.setOrders(orders);
+                order.setUser(user);
+                orderRepository.save(order);
+
+                return userToDto(user);
+            }
+        } else {
+            throw new UsernameNotFoundException(username);
         }
     }
 }
