@@ -7,6 +7,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdN
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.GarmentSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.GarmentPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -190,7 +191,7 @@ public class GarmentService {
         }
     }
 
-    public GarmentDto patchGarment(Long id, GarmentInputDto inputDto) {
+    public GarmentDto patchGarment(Long id, GarmentPatchInputDto inputDto) {
         Optional<Garment> optionalGarment = garmentRepository.findById(id);
 
         if (optionalGarment.isPresent()) {
