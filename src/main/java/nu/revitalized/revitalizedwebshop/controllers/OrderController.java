@@ -11,9 +11,7 @@ import nu.revitalized.revitalizedwebshop.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 
 @RestController
