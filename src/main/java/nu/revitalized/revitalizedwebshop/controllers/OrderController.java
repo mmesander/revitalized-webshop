@@ -164,11 +164,16 @@ public class OrderController {
     public ResponseEntity<Object> addProductToOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
-            @RequestBody IdInputDto inputDto
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        OrderDto dto = orderService.addProductToOrder(orderNumber, inputDto.getId());
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.addProductToOrder(orderNumber, inputDto.getId());
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping(value = "/users/orders/{orderNumber}/remove/product")
