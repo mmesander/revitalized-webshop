@@ -155,7 +155,24 @@ public class OrderService {
         return orderToDto(order);
     }
 
-//    public OrderDto updateOrder() {}
+    public OrderDto updateOrder(OrderInputDto inputDto, Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+
+            copyProperties(inputDto, order);
+            order.setOrderDate(createDate());
+            Order updatedOrder = orderRepository.save(order);
+
+            return orderToDto(updatedOrder);
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+
+
+    }
+
 //    public OrderDto patchOrder() {}
 //    public String deleteOrder() {}
 
