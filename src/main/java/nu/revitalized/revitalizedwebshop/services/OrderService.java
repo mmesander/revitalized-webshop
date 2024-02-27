@@ -169,11 +169,34 @@ public class OrderService {
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
         }
-
-
     }
 
-//    public OrderDto patchOrder() {}
+    public OrderDto patchOrder(OrderInputDto inputDto, Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+
+            if (inputDto.getStatus() != null) {
+                order.setStatus(inputDto.getStatus());
+            }
+
+            if (inputDto.getIsPayed() != null) {
+               order.setIsPayed(inputDto.getIsPayed());
+            }
+
+            if (inputDto.getDiscountCode() != null) {
+                order.setDiscountCode(inputDto.getDiscountCode());
+            }
+
+            Order patchedOrder = orderRepository.save(order);
+
+            return orderToDto(patchedOrder);
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+    }
+
 //    public String deleteOrder() {}
 
 

@@ -19,7 +19,7 @@ public class Order {
     private Long orderNumber;
     private Date orderDate;
     private String status;
-    private boolean isPayed;
+    private Boolean isPayed;
     private String discountCode;
     private Double totalAmount;
 
