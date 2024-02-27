@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -47,11 +48,19 @@ public class User {
     )
     private Set<Review> reviews;
 
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.EAGER
+    )
+    private List<Order> orders;
+
     @ManyToMany(
             mappedBy = "users",
             fetch = FetchType.EAGER
     )
     private Set<Discount> discounts;
+
+
 
     // Methods
     public void addAuthority(Authority authority) {

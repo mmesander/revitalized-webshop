@@ -41,7 +41,10 @@ public class Order {
     )
     private List<Supplement> supplements;
 
+    @ManyToOne
+    @JoinColumn(name = "user_orders")
+    private User user;
 
     // ShippingDetails
-    // User
+
 }
