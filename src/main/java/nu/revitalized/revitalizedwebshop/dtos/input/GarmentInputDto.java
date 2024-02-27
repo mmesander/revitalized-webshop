@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidPrice;
+import nu.revitalized.revitalizedwebshop.interfaces.ValidSize;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidStock;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 
@@ -33,6 +34,7 @@ public class GarmentInputDto {
     private Integer stock;
 
     @NotNull(message = "Size is required")
+    @ValidSize
     private String size;
 
     @NotNull(message = "Color is required")
