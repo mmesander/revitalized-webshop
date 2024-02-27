@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
@@ -98,7 +99,7 @@ public class ReviewService {
         if (review.isPresent()) {
             return reviewToDto(review.get());
         } else {
-            throw new RecordNotFoundException("Review with id: " + id + " not found");
+            throw new RecordNotFoundException(buildIdNotFound("Review", id));
         }
     }
 
@@ -162,7 +163,7 @@ public class ReviewService {
 
             return reviewToDto(updatedReview);
         } else {
-            throw new RecordNotFoundException("No review found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Review", id));
         }
     }
 
@@ -200,7 +201,7 @@ public class ReviewService {
 
             return reviewToDto(patchedReview);
         } else {
-            throw new RecordNotFoundException("No review found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Review", id));
         }
     }
 
@@ -230,7 +231,7 @@ public class ReviewService {
                 return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate()) + " is removed";
             }
         } else {
-            throw new RecordNotFoundException("No review found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Review", id));
         }
     }
 
@@ -241,7 +242,7 @@ public class ReviewService {
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
 
         if (optionalReview.isEmpty()) {
-            throw new BadRequestException("No review found with id:" + reviewId);
+            throw new BadRequestException(buildIdNotFound("Review", reviewId));
         }
 
         Review review = optionalReview.get();
@@ -268,7 +269,7 @@ public class ReviewService {
 
             objectDto = garmentToDto(updatedGarment);
         } else {
-            throw new BadRequestException("No product found with id: " + productId);
+            throw new BadRequestException(buildIdNotFound("Product", productId));
         }
 
         reviewRepository.save(review);
@@ -281,7 +282,7 @@ public class ReviewService {
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
 
         if (optionalReview.isEmpty()) {
-            throw new BadRequestException("No review found with id: " + reviewId);
+            throw new BadRequestException(buildIdNotFound("Review", reviewId));
         }
 
         Review review = optionalReview.get();
@@ -302,7 +303,7 @@ public class ReviewService {
 
             objectDto = garmentToDto(updatedGarment);
         } else {
-            throw new BadRequestException("No product found with id: " + productId);
+            throw new BadRequestException(buildIdNotFound("Product", productId));
         }
 
         return objectDto;

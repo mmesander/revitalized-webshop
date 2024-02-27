@@ -5,6 +5,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import nu.revitalized.revitalizedwebshop.dtos.output.ProductDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
@@ -80,7 +81,7 @@ public class ProductService {
         } else if (garment.isPresent()) {
             return garmentToDto(garment.get());
         } else {
-            throw new RecordNotFoundException("No products found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Product", id));
         }
     }
 
@@ -149,7 +150,7 @@ public class ProductService {
 
             return buildSpecificConfirmation("Garment", garment.get().getName(), id);
         } else {
-            throw new RecordNotFoundException("No products found with id: " + id);
+            throw new RecordNotFoundException(buildIdNotFound("Product", id));
         }
     }
 }

@@ -2,13 +2,12 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import nu.revitalized.revitalizedwebshop.dtos.input.OrderInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Order;
 import nu.revitalized.revitalizedwebshop.repositories.OrderRepository;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class OrderService {
         if (order.isPresent()) {
             return orderToDto(order.get());
         } else {
-            throw new RecordNotFoundException("Order with id: " + orderNumber + " not found");
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
         }
     }
     public List<Order> getALlOrdersByParam() {}
