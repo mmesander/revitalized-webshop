@@ -22,7 +22,7 @@ public class ValidTextValidator implements ConstraintValidator<ValidText, String
         }
 
         if (!value.matches("[a-zA-Z \\-.,?!]+")) {
-            context.buildConstraintViolationWithTemplate(fieldName + " should contain only letters and symbols: ").addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(fieldName + " should contain only letters and symbols: .,?!").addConstraintViolation();
             return false;
         }
 
