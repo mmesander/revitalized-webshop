@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
@@ -8,19 +9,33 @@ import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecificatio
 
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Order;
+import nu.revitalized.revitalizedwebshop.models.Supplement;
+import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.OrderRepository;
+import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final GarmentRepository garmentRepository;
+    private final SupplementRepository supplementRepository;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(
+            OrderRepository orderRepository,
+            SupplementRepository supplementRepository,
+            GarmentRepository garmentRepository
+    ) {
         this.orderRepository = orderRepository;
+        this.supplementRepository = supplementRepository;
+        this.garmentRepository = garmentRepository;
     }
 
     // Transfer Methods
@@ -75,7 +90,7 @@ public class OrderService {
             Double maxPrice
     ) {
         Specification<Order> params = Specification.where
-                (price == null ? null : getOrderPriceLikeFilter(price))
+                        (price == null ? null : getOrderPriceLikeFilter(price))
                 .and(minPrice == null ? null : getOrderPriceMoreThanFilter(minPrice))
                 .and(maxPrice == null ? null : getOrderPriceLessThanFilter(maxPrice));
 
@@ -175,6 +190,7 @@ public class OrderService {
             throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
         }
     }
+
     public OrderDto updateOrderPayment(OrderIsPayedInputDto inputDto, Long orderNumber) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
 
@@ -189,6 +205,7 @@ public class OrderService {
             throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
         }
     }
+
     public OrderDto updateOrderDiscount(OrderDiscountInputDto inputDto, Long orderNumber) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
 
@@ -213,5 +230,24 @@ public class OrderService {
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
         }
+    }
+
+    // Relation - Product Methods
+    public OrderDto assignProductToOrder(Long orderNumber, Long productId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+
+        if (optionalOrder.isEmpty()) {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        Order order = optionalOrder.get();
+        OrderDto orderDto;
+
+        if (optionalSupplement.isPresent()) {
+
+        }
+
     }
 }
