@@ -4,6 +4,8 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 public class ProductDto {
@@ -15,4 +17,7 @@ public class ProductDto {
     private Double price;
     private Integer stock;
     private Double averageRating;
+
+    // Relations
+    private Set<ReviewDto> reviews;
 }
