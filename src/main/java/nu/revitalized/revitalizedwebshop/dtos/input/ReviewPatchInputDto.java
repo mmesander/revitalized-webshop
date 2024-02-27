@@ -3,6 +3,7 @@ package nu.revitalized.revitalizedwebshop.dtos.input;
 // Imports
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
@@ -10,7 +11,7 @@ import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 @Getter
 @Setter
 public class ReviewPatchInputDto {
-    @ValidText
+    @Size(min = 10, max = 255, message = "Description must be between 2 and 255 characters")
     private String review;
 
     @Min(value = 1, message = "Rating must be 1 or higher")

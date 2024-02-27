@@ -1,20 +1,16 @@
 package nu.revitalized.revitalizedwebshop.dtos.input;
 
 // Imports
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 
 @Getter
 @Setter
 public class DiscountInputDto {
     // Variables
     @NotNull(message = "Name is required")
-    @ValidText(fieldName = "Name")
+    @Size(min = 5, max = 30, message = "Discount must be between 2 and 30 characters")
     private String name;
 
     @NotNull(message = "Value is required")

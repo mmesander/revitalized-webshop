@@ -4,15 +4,15 @@ package nu.revitalized.revitalizedwebshop.dtos.input;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 
 @Getter
 @Setter
 public class DiscountPatchInputDto {
     // Variables
-    @ValidText(fieldName = "Name")
+    @Size(min = 5, max = 30, message = "Discount must be between 2 and 30 characters")
     private String name;
 
     @DecimalMin(value = "0.01", message = "Value must be greater than 0")
