@@ -105,8 +105,46 @@ public class OrderService {
         }
     }
 
-    public List<OrderD> getAllPayedOrders() {}
-    public List<Order> getAllUnpayedOrders() {}
+    public List<OrderDto> getAllPayedOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderDto> orderDtos = new ArrayList<>();
+
+        for (Order order : orders) {
+            if (order.isPayed()) {
+                OrderDto orderDto = orderToDto(order);
+                orderDtos.add(orderDto);
+            }
+        }
+
+        if (orderDtos.isEmpty()) {
+            throw new RecordNotFoundException("No payed orders found");
+        } else {
+            orderDtos.sort(Comparator.comparing(OrderDto::getOrderNumber));
+
+            return orderDtos;
+        }
+    }
+
+    public List<OrderDto> getAllUnpayedOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderDto> orderDtos = new ArrayList<>();
+
+        for (Order order : orders) {
+            if (!order.isPayed()) {
+                OrderDto orderDto = orderToDto(order);
+                orderDtos.add(orderDto);
+            }
+        }
+
+        if (orderDtos.isEmpty()) {
+            throw new RecordNotFoundException("No unpayed orders found");
+        } else {
+            orderDtos.sort(Comparator.comparing(OrderDto::getOrderNumber));
+
+            return orderDtos;
+        }
+    }
+
     public OrderDto createOrder() {}
     public OrderDto updateOrder() {}
     public OrderDto patchOrder() {}
