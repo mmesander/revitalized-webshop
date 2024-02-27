@@ -158,4 +158,37 @@ public class OrderController {
 
         return ResponseEntity.ok().body(confirmation);
     }
+
+    // Relation - Product Requests
+    @PostMapping(value = "/users/orders/{orderNumber}/add/product")
+    public ResponseEntity<Object> addProductToOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.addProductToOrder(orderNumber, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping(value = "/users/orders/{orderNumber}/remove/product")
+    public ResponseEntity<Object> removeProductFromOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.removeProductFromOrder(orderNumber, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
 }

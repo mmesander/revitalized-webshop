@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
+
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -29,4 +31,7 @@ public class Supplement extends Product implements IdentifiableProduct {
             fetch = FetchType.EAGER
     )
     private Set<Review> reviews;
+
+    @ManyToMany(mappedBy = "supplements")
+    List<Order> orders;
 }

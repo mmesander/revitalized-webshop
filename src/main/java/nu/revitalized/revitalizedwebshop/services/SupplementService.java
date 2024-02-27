@@ -9,10 +9,7 @@ import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.AllergenShortDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SupplementDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.SupplementShortDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
@@ -77,6 +74,15 @@ public class SupplementService {
         copyProperties(supplement, supplementShortDto);
 
         return supplementShortDto;
+    }
+
+    public static OrderItemDto supplementToOrderItemDto(Supplement supplement) {
+        OrderItemDto orderItemDto = new OrderItemDto();
+
+        copyProperties(supplement, orderItemDto);
+        orderItemDto.setQuantity(1);
+
+        return orderItemDto;
     }
 
     // CRUD Methods

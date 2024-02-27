@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,9 +25,23 @@ public class Order {
     private Double totalAmount;
 
     // Relations
-    // List<Supplement>
-    // List<Garment>
-    // List<Product> ?
+    @ManyToMany
+    @JoinTable(
+            name = "order_garments",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "garment_id")
+    )
+    private List<Garment> garments;
+
+    @ManyToMany
+    @JoinTable(
+            name = "order_supplements",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "supplement_id")
+    )
+    private List<Supplement> supplements;
+
+
     // ShippingDetails
     // User
 }
