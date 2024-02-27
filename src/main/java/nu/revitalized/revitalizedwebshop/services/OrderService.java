@@ -197,7 +197,14 @@ public class OrderService {
         }
     }
 
-//    public String deleteOrder() {}
+    public String deleteOrder(Long orderNumber) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
 
-
+        if (optionalOrder.isPresent()) {
+            orderRepository.deleteById(orderNumber);
+            return "Order with order number: " + orderNumber + " is removed";
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        }
+    }
 }
