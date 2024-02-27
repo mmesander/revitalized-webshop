@@ -9,6 +9,7 @@ import static nu.revitalized.revitalizedwebshop.specifications.GarmentSpecificat
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.GarmentPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.GarmentDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -51,6 +52,15 @@ public class GarmentService {
         }
 
         return garmentDto;
+    }
+
+    public static OrderItemDto garmentToOrderItemDto(Garment garment) {
+        OrderItemDto orderItemDto = new OrderItemDto();
+
+        copyProperties(garment, orderItemDto);
+        orderItemDto.setQuantity(1);
+
+        return orderItemDto;
     }
 
     // CRUD Methods
