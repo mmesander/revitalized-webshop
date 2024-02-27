@@ -6,6 +6,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.hand
 
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
@@ -105,11 +106,17 @@ public class ShippingDetailsController {
     @PatchMapping("/shipping-details/{id}")
     public ResponseEntity<ShippingDetailsDto> patchShippingDetails(
             @PathVariable("id") Long id,
-            @RequestBody ShippingDetailsInputDto inputDto
+            @Valid
+            @RequestBody ShippingDetailsPatchInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping("/shipping-details/{id}")

@@ -286,7 +286,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id,
-            @RequestBody ShippingDetailsInputDto inputDto,
+            @RequestBody ShippingDetailsPatchInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
