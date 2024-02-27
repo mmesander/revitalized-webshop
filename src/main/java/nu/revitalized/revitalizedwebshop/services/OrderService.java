@@ -12,12 +12,7 @@ import nu.revitalized.revitalizedwebshop.models.Order;
 import nu.revitalized.revitalizedwebshop.repositories.OrderRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -74,9 +69,9 @@ public class OrderService {
     }
 
     public List<OrderDto> getALlOrdersByParam(
-            LocalDate orderDate,
-            LocalDate beforeDate,
-            LocalDate afterDate,
+            Date orderDate,
+            Date beforeDate,
+            Date afterDate,
             Double price,
             Double minPrice,
             Double maxPrice
