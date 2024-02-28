@@ -94,6 +94,7 @@ public class UserController {
     @PutMapping("/{username}")
     public ResponseEntity<UserDto> updateUserEmail(
             @PathVariable("username") String username,
+            @Valid
             @RequestBody UserEmailInputDto inputDto,
             BindingResult bindingResult
     ) {
@@ -286,6 +287,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id,
+            @Valid
             @RequestBody ShippingDetailsPatchInputDto inputDto,
             BindingResult bindingResult
     ) {

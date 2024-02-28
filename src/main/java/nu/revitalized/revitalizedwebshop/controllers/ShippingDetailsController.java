@@ -3,7 +3,6 @@ package nu.revitalized.revitalizedwebshop.controllers;
 // Imports
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
@@ -12,7 +11,6 @@ import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
-import nu.revitalized.revitalizedwebshop.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,25 +23,23 @@ import java.util.List;
 @RestController
 public class ShippingDetailsController {
     private final ShippingDetailsService shippingDetailsService;
-    private final UserService userService;
+
 
     public ShippingDetailsController(
-            ShippingDetailsService shippingDetailsService,
-            UserService userService
+            ShippingDetailsService shippingDetailsService
     ) {
         this.shippingDetailsService = shippingDetailsService;
-        this.userService = userService;
     }
 
     // CRUD Requests
-    @GetMapping("/shipping-details")
+    @GetMapping("/users/shipping-details")
     public ResponseEntity<List<ShippingDetailsDto>> getAllShippingDetails() {
         List<ShippingDetailsDto> dtos = shippingDetailsService.getAllShippingDetails();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/shipping-details/{id}")
+    @GetMapping("/users/shipping-details/{id}")
     public ResponseEntity<ShippingDetailsDto> getShippingDetailsById(
             @PathVariable("id") Long id
     ) {
@@ -52,7 +48,7 @@ public class ShippingDetailsController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping("/shipping-details/search")
+    @GetMapping("/users/shipping-details/search")
     public ResponseEntity<List<ShippingDetailsDto>> getShippingDetailsByParam(
             @RequestParam(required = false) String detailsName,
             @RequestParam(required = false) String name,
@@ -69,7 +65,7 @@ public class ShippingDetailsController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @PostMapping("/shipping-details")
+    @PostMapping("/users/shipping-details")
     public ResponseEntity<ShippingDetailsDto> createShippingDetails(
             @Valid
             @AuthenticationPrincipal UserDetails userDetails,
@@ -87,7 +83,7 @@ public class ShippingDetailsController {
         }
     }
 
-    @PutMapping("/shipping-details/{id}")
+    @PutMapping("/users/shipping-details/{id}")
     public ResponseEntity<ShippingDetailsDto> updateShippingDetails(
             @PathVariable("id") Long id,
             @Valid
@@ -103,7 +99,7 @@ public class ShippingDetailsController {
         }
     }
 
-    @PatchMapping("/shipping-details/{id}")
+    @PatchMapping("/users/shipping-details/{id}")
     public ResponseEntity<ShippingDetailsDto> patchShippingDetails(
             @PathVariable("id") Long id,
             @Valid
@@ -119,7 +115,7 @@ public class ShippingDetailsController {
         }
     }
 
-    @DeleteMapping("/shipping-details/{id}")
+    @DeleteMapping("/users/shipping-details/{id}")
     public ResponseEntity<Object> deleteShippingDetails(
             @PathVariable("id") Long id
     ) {

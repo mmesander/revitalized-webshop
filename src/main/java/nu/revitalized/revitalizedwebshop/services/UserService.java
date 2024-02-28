@@ -111,12 +111,12 @@ public class UserService {
         return userDto;
     }
 
-    public static UserShortDto userToShortDto(User user) {
-        UserShortDto userShortDto = new UserShortDto();
+    public static ShortUserDto userToShortDto(User user) {
+        ShortUserDto shortUserDto = new ShortUserDto();
 
-        copyProperties(user, userShortDto);
+        copyProperties(user, shortUserDto);
 
-        return userShortDto;
+        return shortUserDto;
     }
 
     // CRUD Methods

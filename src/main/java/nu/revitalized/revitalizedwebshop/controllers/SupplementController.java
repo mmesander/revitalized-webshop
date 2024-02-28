@@ -1,8 +1,10 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
 import java.net.URI;
 import java.util.List;
 
@@ -113,6 +116,7 @@ public class SupplementController {
     @PatchMapping("/products/supplements/{id}")
     public ResponseEntity<SupplementDto> patchSupplement(
             @PathVariable("id") Long id,
+            @Valid
             @RequestBody SupplementPatchInputDto inputDto,
             BindingResult bindingResult
     ) {
@@ -138,20 +142,32 @@ public class SupplementController {
     @PostMapping(value = "/products/supplements/{id}/allergens")
     public ResponseEntity<Object> addAllergenToSupplement(
             @PathVariable("id") Long id,
-            @Valid @RequestBody IdInputDto inputDto
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        SupplementDto dto = supplementService.assignAllergenToSupplement(id, inputDto.getId());
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            SupplementDto dto = supplementService.assignAllergenToSupplement(id, inputDto.getId());
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 
     @DeleteMapping(value = "/products/supplements/{id}/allergens")
     public ResponseEntity<Object> removeAllergenFromSupplement(
             @PathVariable("id") Long id,
-            @Valid @RequestBody IdInputDto inputDto
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        SupplementDto dto = supplementService.removeAllergenFromSupplement(id, inputDto.getId());
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            SupplementDto dto = supplementService.removeAllergenFromSupplement(id, inputDto.getId());
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 }

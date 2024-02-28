@@ -64,8 +64,6 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/users/*/authorities").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/*/authorities/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.PUT, "/users/*/shipping-details").hasRole("ADMIN")
-
                         .requestMatchers(HttpMethod.GET, "/users/discounts").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users/discounts").hasRole("ADMIN")
 
@@ -81,11 +79,14 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users/*/discounts-all").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/*/discounts-all").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "/shipping-details/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/shipping-details/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/shipping-details/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/shipping-details/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/shipping-details/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/shipping-details").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/shipping-details/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/users/shipping-details").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/shipping-details/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/users/shipping-details/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/shipping-details/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/users/*/shipping-details").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/users/orders").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users/orders/**").hasRole("ADMIN")
@@ -131,7 +132,7 @@ public class SpringSecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/products/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/authenticated").authenticated()
-                        .requestMatchers("/authenticate").permitAll()
+                        .requestMatchers("/users/authenticate").permitAll()
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
