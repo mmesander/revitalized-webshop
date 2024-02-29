@@ -15,14 +15,8 @@ import nu.revitalized.revitalizedwebshop.dtos.output.ShortOrderDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
-import nu.revitalized.revitalizedwebshop.models.Garment;
-import nu.revitalized.revitalizedwebshop.models.Order;
-import nu.revitalized.revitalizedwebshop.models.Supplement;
-import nu.revitalized.revitalizedwebshop.models.User;
-import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
-import nu.revitalized.revitalizedwebshop.repositories.OrderRepository;
-import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
-import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
+import nu.revitalized.revitalizedwebshop.models.*;
+import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -33,18 +27,21 @@ public class OrderService {
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
     private final UserRepository userRepository;
+    private final ShippingDetailsRepository shippingDetailsRepository;
 
 
     public OrderService(
             OrderRepository orderRepository,
             SupplementRepository supplementRepository,
             GarmentRepository garmentRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            ShippingDetailsRepository shippingDetailsRepository
     ) {
         this.orderRepository = orderRepository;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
         this.userRepository = userRepository;
+        this.shippingDetailsRepository = shippingDetailsRepository;
     }
 
     // Transfer Methods
@@ -439,4 +436,28 @@ public class OrderService {
             throw new UsernameNotFoundException(username);
         }
     }
+
+    public OrderDto assignShippingDetailsToOrder(Long orderNumber, Long shippingDetailsId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(shippingDetailsId);
+
+        if (optionalOrder.isEmpty()) {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        Order order = optionalOrder.get();
+
+        if (optionalShippingDetails.isPresent()) {
+            ShippingDetails shippingDetails = optionalShippingDetails.get();
+
+            order.setShippingDetails(shippingDetails);
+            orderRepository.save(order);
+
+            return orderToDto(order);
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
+        }
+    }
+
+
 }
