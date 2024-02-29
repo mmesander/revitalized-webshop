@@ -4,6 +4,8 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableOrderNumber;
+import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
+
 import java.util.Date;
 import java.util.List;
 
@@ -21,4 +23,5 @@ public class OrderDto implements IdentifiableOrderNumber {
     // Relations
     List<OrderItemDto> products;
     private String username;
+    private ShippingDetails shippingDetails;
 }
