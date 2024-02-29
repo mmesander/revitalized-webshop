@@ -225,4 +225,37 @@ public class OrderController {
             return ResponseEntity.ok().body(dto);
         }
     }
+
+    // Relation - ShippingDetails Requests
+    @PutMapping(value = "/users/orders/{orderNumber}/add/shipping-details")
+    public ResponseEntity<Object> assignShippingDetailsToOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.assignShippingDetailsToOrder(orderNumber, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping(value = "/users/orders/{orderNumber}/remove/shipping-details")
+    public ResponseEntity<Object> removeShippingDetailsFromOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.removeShippingDetailsFromOrder(orderNumber, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
 }
