@@ -25,6 +25,7 @@ public class Checklist {
     // TODO: Order Relation - ShippingDetails
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op fouten
+    // TODO: Kijken of de code korter kan
     // TODO: Alles nalopen op imports etc.
 
     // Rowan
