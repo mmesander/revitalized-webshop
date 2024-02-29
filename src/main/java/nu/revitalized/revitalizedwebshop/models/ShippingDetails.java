@@ -28,4 +28,7 @@ public class ShippingDetails {
     @ManyToOne
     @JoinColumn(name = "user_shipping_details")
     private User user;
+
+    @OneToOne(mappedBy = "shippingDetails")
+    private Order order;
 }

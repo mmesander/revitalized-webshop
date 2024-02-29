@@ -38,7 +38,7 @@ public class SpringSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
+    public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
         var auth = new DaoAuthenticationProvider();
         auth.setPasswordEncoder(passwordEncoder);
         auth.setUserDetailsService(customUserDetailService);
@@ -95,9 +95,6 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/users/orders/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/orders/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.PUT, "users/*/orders").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "users/*/orders").hasRole("ADMIN")
-
                         .requestMatchers(HttpMethod.GET, "/users/auth/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/users/auth/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/users/auth/**").hasAnyRole("ADMIN", "USER")
@@ -107,12 +104,12 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "products/reviews").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "products/reviews/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "products/reviews").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "products/reviews/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "products/reviews/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "products/reviews/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/products/reviews").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/products/reviews/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/products/reviews").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/products/reviews/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/products/reviews/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products/reviews/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/products/garments").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/products/garments/**").hasRole("ADMIN")

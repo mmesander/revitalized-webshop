@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
@@ -8,6 +9,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CalculateTotalAmount.cal
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
@@ -15,16 +17,11 @@ import nu.revitalized.revitalizedwebshop.dtos.output.ShortOrderDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
-import nu.revitalized.revitalizedwebshop.models.Garment;
-import nu.revitalized.revitalizedwebshop.models.Order;
-import nu.revitalized.revitalizedwebshop.models.Supplement;
-import nu.revitalized.revitalizedwebshop.models.User;
-import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
-import nu.revitalized.revitalizedwebshop.repositories.OrderRepository;
-import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
-import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
+import nu.revitalized.revitalizedwebshop.models.*;
+import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
@@ -33,18 +30,21 @@ public class OrderService {
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
     private final UserRepository userRepository;
+    private final ShippingDetailsRepository shippingDetailsRepository;
 
 
     public OrderService(
             OrderRepository orderRepository,
             SupplementRepository supplementRepository,
             GarmentRepository garmentRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            ShippingDetailsRepository shippingDetailsRepository
     ) {
         this.orderRepository = orderRepository;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
         this.userRepository = userRepository;
+        this.shippingDetailsRepository = shippingDetailsRepository;
     }
 
     // Transfer Methods
@@ -301,7 +301,7 @@ public class OrderService {
     }
 
     // Relation - Product Methods
-    public OrderDto addProductToOrder(Long orderNumber, Long productId) {
+    public OrderDto assignProductToOrder(Long orderNumber, Long productId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
@@ -384,7 +384,7 @@ public class OrderService {
     }
 
     // Relation - User Methods
-    public OrderDto assignOrderToUser(String username, Long orderNumber) {
+    public OrderDto assignUserToOrder(String username, Long orderNumber) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<User> optionalUser = userRepository.findById(username);
 
@@ -414,7 +414,7 @@ public class OrderService {
         }
     }
 
-    public OrderDto removeOrderFromUser(String username, Long orderNumber) {
+    public OrderDto removeUserFromOrder(String username, Long orderNumber) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<User> optionalUser = userRepository.findById(username);
 
@@ -437,6 +437,62 @@ public class OrderService {
             }
         } else {
             throw new UsernameNotFoundException(username);
+        }
+    }
+
+    public OrderDto assignShippingDetailsToOrder(Long orderNumber, Long shippingDetailsId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(shippingDetailsId);
+
+        if (optionalOrder.isEmpty()) {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        Order order = optionalOrder.get();
+
+        if (optionalShippingDetails.isPresent()) {
+            ShippingDetails shippingDetails = optionalShippingDetails.get();
+
+            if (shippingDetails.getUser() == null) {
+                throw new BadRequestException("Shipping details with id: " + shippingDetailsId
+                        + " is not assigned to any user, assign shipping details to user first");
+            } else if (shippingDetails.getUser() != order.getUser()) {
+                throw new BadRequestException("Assign user: " + shippingDetails.getUser().getUsername() +
+                        " to current order first if you want to assign shipping details with id: " + shippingDetailsId
+                        + " from user: " + shippingDetails.getUser().getUsername() + " to current order");
+            } else {
+                order.setShippingDetails(shippingDetails);
+                orderRepository.save(order);
+
+                return orderToDto(order);
+            }
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
+        }
+    }
+
+    public OrderDto removeShippingDetailsFromOrder(Long orderNumber, Long shippingDetailsId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(shippingDetailsId);
+
+        if (optionalOrder.isEmpty()) {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        Order order = optionalOrder.get();
+
+        if (optionalShippingDetails.isPresent()) {
+            if (!order.getShippingDetails().getId().equals(shippingDetailsId)) {
+                throw new BadRequestException("Shipping Details with id: " + shippingDetailsId
+                        + " is not assigned to order: " + orderNumber);
+            } else {
+                order.setShippingDetails(null);
+                orderRepository.save(order);
+
+                return orderToDto(order);
+            }
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
         }
     }
 }
