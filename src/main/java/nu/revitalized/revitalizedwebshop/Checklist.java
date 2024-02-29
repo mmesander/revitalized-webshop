@@ -22,6 +22,7 @@ public class Checklist {
     // En ook niet als de discount niet geldig is
 
     // Overig
+    // TODO: checken of ik op de juiste plekken post/put heb gebruikt en de securityconfig updaten
     // TODO: Order Relation - ShippingDetails
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op fouten
