@@ -453,20 +453,19 @@ public class OrderService {
         if (optionalShippingDetails.isPresent()) {
             ShippingDetails shippingDetails = optionalShippingDetails.get();
 
-            if (shippingDetails.getUser().getUsername() == null) {
+            if (shippingDetails.getUser() == null) {
                 throw new BadRequestException("Shipping details with id: " + shippingDetailsId
-                        + " is not assigned to any user. Assign shipping details to user first");
-            }
-
-            if (!shippingDetails.getUser().getUsername().equalsIgnoreCase(order.getUser().getUsername())) {
+                        + " is not assigned to any user, assign shipping details to user first");
+            } else if (shippingDetails.getUser() != order.getUser()) {
                 throw new BadRequestException("Assign user: " + shippingDetails.getUser().getUsername() +
-                        " if you want to assign shipping details with id: " + shippingDetailsId + " to current order");
+                        " to current order first if you want to assign shipping details with id: " + shippingDetailsId
+                        + " from user: " + shippingDetails.getUser().getUsername() + " to current order");
+            } else {
+                order.setShippingDetails(shippingDetails);
+                orderRepository.save(order);
+
+                return orderToDto(order);
             }
-
-            order.setShippingDetails(shippingDetails);
-            orderRepository.save(order);
-
-            return orderToDto(order);
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
         }
