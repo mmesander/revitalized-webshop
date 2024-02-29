@@ -301,7 +301,7 @@ public class OrderService {
     }
 
     // Relation - Product Methods
-    public OrderDto addProductToOrder(Long orderNumber, Long productId) {
+    public OrderDto assignProductToOrder(Long orderNumber, Long productId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);

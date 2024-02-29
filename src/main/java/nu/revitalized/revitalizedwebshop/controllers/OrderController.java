@@ -8,7 +8,6 @@ import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriOrder
 import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.services.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 public class OrderController {
@@ -161,8 +159,8 @@ public class OrderController {
     }
 
     // Relation - Product Requests
-    @PostMapping(value = "/users/orders/{orderNumber}/add/product")
-    public ResponseEntity<Object> addProductToOrder(
+    @PutMapping(value = "/users/orders/{orderNumber}/add/product")
+    public ResponseEntity<Object> assignProductToOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -171,7 +169,7 @@ public class OrderController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            OrderDto dto = orderService.addProductToOrder(orderNumber, inputDto.getId());
+            OrderDto dto = orderService.assignProductToOrder(orderNumber, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
