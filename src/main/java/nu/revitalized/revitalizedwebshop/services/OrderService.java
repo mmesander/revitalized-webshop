@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
@@ -8,6 +9,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CalculateTotalAmount.cal
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
@@ -19,6 +21,7 @@ import nu.revitalized.revitalizedwebshop.models.*;
 import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
@@ -449,6 +452,16 @@ public class OrderService {
 
         if (optionalShippingDetails.isPresent()) {
             ShippingDetails shippingDetails = optionalShippingDetails.get();
+
+            if (shippingDetails.getUser().getUsername() == null) {
+                throw new BadRequestException("Shipping details with id: " + shippingDetailsId
+                        + " is not assigned to any user. Assign shipping details to user first");
+            }
+
+            if (!shippingDetails.getUser().getUsername().equalsIgnoreCase(order.getUser().getUsername())) {
+                throw new BadRequestException("Assign user: " + shippingDetails.getUser().getUsername() +
+                        " if you want to assign shipping details with id: " + shippingDetailsId + " to current order");
+            }
 
             order.setShippingDetails(shippingDetails);
             orderRepository.save(order);
