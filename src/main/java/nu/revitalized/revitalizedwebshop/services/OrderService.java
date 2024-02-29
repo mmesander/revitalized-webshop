@@ -384,7 +384,7 @@ public class OrderService {
     }
 
     // Relation - User Methods
-    public OrderDto assignOrderToUser(String username, Long orderNumber) {
+    public OrderDto assignUserToOrder(String username, Long orderNumber) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<User> optionalUser = userRepository.findById(username);
 
@@ -414,7 +414,7 @@ public class OrderService {
         }
     }
 
-    public OrderDto removeOrderFromUser(String username, Long orderNumber) {
+    public OrderDto removeUserFromOrder(String username, Long orderNumber) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<User> optionalUser = userRepository.findById(username);
 
