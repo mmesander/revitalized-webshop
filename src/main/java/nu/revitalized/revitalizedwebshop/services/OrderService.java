@@ -459,5 +459,28 @@ public class OrderService {
         }
     }
 
+    public OrderDto removeShippingDetailsFromOrder(Long orderNumber, Long shippingDetailsId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(shippingDetailsId);
 
+        if (optionalOrder.isEmpty()) {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        Order order = optionalOrder.get();
+
+        if (optionalShippingDetails.isPresent()) {
+            if (!order.getShippingDetails().getId().equals(shippingDetailsId)) {
+                throw new BadRequestException("Shipping Details with id: " + shippingDetailsId
+                        + " is not assigned to order: " + orderNumber);
+            } else {
+                order.setShippingDetails(null);
+                orderRepository.save(order);
+
+                return orderToDto(order);
+            }
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
+        }
+    }
 }
