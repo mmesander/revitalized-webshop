@@ -2,9 +2,6 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // ORDER
-    // TODO: Relations:
-    // TODO: AssignShippingDetailsToOrder
-    // TODO: RemoveShippingDetailsFromOrder
     // TODO: User (Auth) Requests in userService:
     // TODO: getAllAuthUserOrders()
     // TODO: getAuthUserOrderById()
@@ -31,6 +28,5 @@ public class Checklist {
     // TODO: Alles nalopen op imports etc.
 
     // Rowan
-    // TODO: De fout met rowan in postman checken (gericht op shippingdetails)
     // TODO: Vragen hoe de foto's geimporteerd worden
 }
