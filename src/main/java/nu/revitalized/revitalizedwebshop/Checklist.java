@@ -2,9 +2,6 @@ package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
     // ORDER
-    // TODO: Relations:
-    // TODO: AssignShippingDetailsToOrder
-    // TODO: RemoveShippingDetailsFromOrder
     // TODO: User (Auth) Requests in userService:
     // TODO: getAllAuthUserOrders()
     // TODO: getAuthUserOrderById()
@@ -24,6 +21,10 @@ public class Checklist {
     // Overig
     // TODO: checken of ik op de juiste plekken post/put heb gebruikt en de securityconfig updaten
     // TODO: Alle URLs nalopen en checken of het beter kan
+    // TODO: Geen add/remove in de url zetten
+    // TODO: SEcurity config de overbodige shit weghalen
+    // TODO: InputDto maken die een ID een een user name verwacht en dan de username uit de path halen (ID_and_username_input_dto)
+    // TODO: bij de securityconfig de * weghalen en username neerzetten {username}
     // TODO: Order Relation - ShippingDetails
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op fouten
@@ -31,6 +32,5 @@ public class Checklist {
     // TODO: Alles nalopen op imports etc.
 
     // Rowan
-    // TODO: De fout met rowan in postman checken (gericht op shippingdetails)
     // TODO: Vragen hoe de foto's geimporteerd worden
 }

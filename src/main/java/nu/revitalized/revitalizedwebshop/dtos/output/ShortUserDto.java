@@ -20,5 +20,5 @@ public class ShortUserDto implements IdentifiableUsername {
     // Relations
     @JsonSerialize
     private Set<Authority> authorities;
-    private Set<Review> reviews;
+    private Set<ReviewDto> reviews;
 }

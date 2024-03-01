@@ -6,6 +6,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyPrope
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.CalculateTotalAmount.calculateTotalAmount;
+import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
@@ -107,6 +108,10 @@ public class OrderService {
         }
 
         orderDto.setProducts(orderItemDtos);
+
+        if (order.getShippingDetails() != null) {
+            orderDto.setShippingDetails(shippingDetailsToShortDto(order.getShippingDetails()));
+        }
 
         if (order.getUser() != null) {
             orderDto.setUsername(order.getUser().getUsername());
