@@ -23,5 +23,5 @@ public class OrderDto implements IdentifiableOrderNumber {
     // Relations
     List<OrderItemDto> products;
     private String username;
-    private ShippingDetails shippingDetails;
+    private ShortShippingDetailsDto shippingDetails;
 }
