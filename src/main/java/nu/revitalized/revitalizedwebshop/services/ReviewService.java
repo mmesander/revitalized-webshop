@@ -237,7 +237,7 @@ public class ReviewService {
     }
 
     // Relation - Product Methods
-    public Object assignProductToReview(Long productId, Long reviewId) {
+    public Object assignReviewToProduct(Long productId, Long reviewId) {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
@@ -277,7 +277,7 @@ public class ReviewService {
         return objectDto;
     }
 
-    public Object removeProductFromReview(Long productId, Long reviewId) {
+    public Object removeReviewFromProduct(Long productId, Long reviewId) {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);

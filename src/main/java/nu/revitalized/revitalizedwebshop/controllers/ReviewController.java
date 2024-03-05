@@ -113,21 +113,21 @@ public class ReviewController {
 
     // Relation - Product Requests
     @PutMapping("/products/{productId}/reviews/{reviewId}")
-    public ResponseEntity<Object> assignProductToReview(
+    public ResponseEntity<Object> assignReviewToProduct(
             @PathVariable("productId") Long productId,
             @PathVariable("reviewId") Long reviewId
     ) {
-        Object dto = reviewService.assignProductToReview(productId, reviewId);
+        Object dto = reviewService.assignReviewToProduct(productId, reviewId);
 
         return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/products/{productId}/reviews/{reviewId}")
-    public ResponseEntity<Object> removeProductFromReview(
+    public ResponseEntity<Object> removeReviewFromProduct(
             @PathVariable("productId") Long productId,
             @PathVariable("reviewId") Long reviewId
     ) {
-        Object dto = reviewService.removeProductFromReview(productId, reviewId);
+        Object dto = reviewService.removeReviewFromProduct(productId, reviewId);
 
         return ResponseEntity.ok().body(dto);
     }

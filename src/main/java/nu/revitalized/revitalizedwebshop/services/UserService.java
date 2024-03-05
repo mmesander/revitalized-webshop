@@ -415,7 +415,7 @@ public class UserService {
                     + " written by user: " + username);
         } else {
             createdReview = reviewService.createPersonalReview(inputDto, username);
-            dto = reviewService.assignProductToReview(productId, createdReview.getId());
+            dto = reviewService.assignReviewToProduct(productId, createdReview.getId());
             return dto;
         }
     }
