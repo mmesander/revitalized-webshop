@@ -82,13 +82,10 @@ public class GarmentService {
     }
 
     public GarmentDto getGarmentById(Long id) {
-        Optional<Garment> garment = garmentRepository.findById(id);
+        Garment garment = garmentRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Garment", id)));
 
-        if (garment.isPresent()) {
-            return garmentToDto(garment.get());
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Garment", id));
-        }
+        return garmentToDto(garment);
     }
 
     public List<GarmentDto> getGarmentsByParam(
@@ -186,19 +183,13 @@ public class GarmentService {
     }
 
     public GarmentDto updateGarment(Long id, GarmentInputDto inputDto) {
-        Optional<Garment> optionalGarment = garmentRepository.findById(id);
+        Garment garment = garmentRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Garment", id)));
 
-        if (optionalGarment.isPresent()) {
-            Garment garment = optionalGarment.get();
+        copyProperties(inputDto, garment);
+        Garment updatedGarment = garmentRepository.save(garment);
 
-            copyProperties(inputDto, garment);
-
-            Garment updatedGarment = garmentRepository.save(garment);
-
-            return garmentToDto(updatedGarment);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Garment", id));
-        }
+        return garmentToDto(updatedGarment);
     }
 
     public GarmentDto patchGarment(Long id, GarmentPatchInputDto inputDto) {

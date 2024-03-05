@@ -174,18 +174,13 @@ public class DiscountService {
     }
 
     public DiscountDto updateDiscount(Long id, DiscountInputDto inputDto) {
-        Optional<Discount> optionalDiscount = discountRepository.findById(id);
+        Discount discount = discountRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Discount", id)));
 
-        if (optionalDiscount.isPresent()) {
-            Discount discount = optionalDiscount.get();
+        copyProperties(inputDto, discount);
+        Discount updatedDiscount = discountRepository.save(discount);
 
-            copyProperties(inputDto, discount);
-            Discount updatedDiscount = discountRepository.save(discount);
-
-            return discountToDto(updatedDiscount);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
-        }
+        return discountToDto(updatedDiscount);
     }
 
     public DiscountDto patchDiscount(Long id, DiscountPatchInputDto inputDto) {
