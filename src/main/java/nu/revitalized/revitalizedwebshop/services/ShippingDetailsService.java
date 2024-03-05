@@ -305,4 +305,33 @@ public class ShippingDetailsService {
             return shippingDetailsDtos;
         }
     }
+
+    public ShippingDetailsDto getAuthUserShippingDetailsById(String username, Long id) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+        Set<ShippingDetails> shippingDetailsSet;
+        ShippingDetailsDto dto = null;
+
+        if (optionalUser.isPresent()) {
+            shippingDetailsSet = optionalUser.get().getShippingDetails();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        if (optionalShippingDetails.isPresent()) {
+            for (ShippingDetails shippingDetails : shippingDetailsSet) {
+                if (shippingDetails.getId().equals(id)) {
+                    dto = shippingDetailsToDto(shippingDetails);
+                }
+            }
+        } else {
+            throw new BadRequestException(buildIdNotFound("Shipping details", id));
+        }
+
+        if (dto != null) {
+            return dto;
+        } else {
+            throw new BadRequestException("User: " + username + " does not have shipping details with id: " + id);
+        }
+    }
 }

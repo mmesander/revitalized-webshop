@@ -225,13 +225,13 @@ public class UserController {
     }
 
     @GetMapping("/auth/{username}/shipping-details/{id}")
-    public ResponseEntity<ShippingDetailsDto> getAuthUserShippingDetails(
+    public ResponseEntity<ShippingDetailsDto> getAuthUserShippingDetailsById(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("id") Long id
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            ShippingDetailsDto dto = shippingDetailsService.getShippingDetailsById(id);
+            ShippingDetailsDto dto = shippingDetailsService.getAuthUserShippingDetailsById(username, id);
 
             return ResponseEntity.ok().body(dto);
         } else {
@@ -444,4 +444,7 @@ public class UserController {
             throw new BadRequestException("Used token is not valid");
         }
     }
+
+    // USER (Authenticated) - Order Requests
+
 }

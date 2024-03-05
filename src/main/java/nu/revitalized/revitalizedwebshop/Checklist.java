@@ -4,7 +4,7 @@ public class Checklist {
     // ORDER
     // TODO: User (Auth) Requests in userService:
     // TODO: getAllAuthUserOrders()
-    // TODO: getAuthUserOrderById()
+    // TODO: getAuthUserOrder()
     // TODO: createAuthUserOrder()
     // TODO: addProductsToAuthUserOrder()
     // TODO: removeProductsFromAuthUserOrder()
@@ -19,7 +19,7 @@ public class Checklist {
     // En ook niet als de discount niet geldig is
 
     // Overig
-    // TODO: Order Relation - ShippingDetails
+    // TODO: ID not found exception maken
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op fouten
     // TODO: Kijken of de code korter kan

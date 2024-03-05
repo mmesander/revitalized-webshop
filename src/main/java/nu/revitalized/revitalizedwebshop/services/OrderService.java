@@ -105,6 +105,7 @@ public class OrderService {
             }
 
             orderItemDtos.addAll(orderItems);
+            orderItemDtos.sort(Comparator.comparing(OrderItemDto::getId));
         }
 
         orderDto.setProducts(orderItemDtos);
@@ -342,50 +343,91 @@ public class OrderService {
         }
     }
 
-    public OrderDto removeProductFromOrder(Long orderNumber, Long productId) {
+    public OrderDto assignMultipleProductsToOrder(Long orderNumber, List<Long> productIds) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
-        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+
+        List<Supplement> newSupplements = new ArrayList<>();
+        List<Garment> newGarments = new ArrayList<>();
 
         if (optionalOrder.isEmpty()) {
             throw new BadRequestException(buildIdNotFound("Order", orderNumber));
         }
 
+        for (Long productId : productIds) {
+            Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+            Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+
+            if (optionalSupplement.isPresent()) {
+                newSupplements.add(optionalSupplement.get());
+            } else if (optionalGarment.isPresent()) {
+                newGarments.add(optionalGarment.get());
+            } else {
+                throw new BadRequestException(buildIdNotFound("Product", productId));
+            }
+        }
+
         Order order = optionalOrder.get();
 
-        if (optionalSupplement.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
-            List<Supplement> supplements = order.getSupplements();
+        order.getSupplements().addAll(newSupplements);
+        order.getGarments().addAll(newGarments);
+        order.setTotalAmount(calculateTotalAmount(order));
+        orderRepository.save(order);
 
-            if (!order.getSupplements().contains(supplement)) {
+        return orderToDto(order);
+    }
+
+    public OrderDto removeMultipleProductsFromOrder(Long orderNumber, List<Long> productIds) {
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
+
+        for (Long productId : productIds) {
+            if (supplementRepository.existsById(productId)) {
+                Supplement supplement = supplementRepository.findById(productId).orElseThrow();
+                if (!order.getSupplements().remove(supplement)) {
+                    throw new BadRequestException("Order with order-number: " + orderNumber
+                            + " does not contain product: " + supplement.getName() + " with id: " + productId);
+                }
+            } else if (garmentRepository.existsById(productId)) {
+                Garment garment = garmentRepository.findById(productId).orElseThrow();
+                if (!order.getGarments().remove(garment)) {
+                    throw new BadRequestException("Order with order-number: " + orderNumber
+                            + " does not contain product: " + garment.getName() + " with id: " + productId);
+                }
+            } else {
+                throw new BadRequestException(buildIdNotFound("Product", productId));
+            }
+        }
+
+        order.setTotalAmount(calculateTotalAmount(order));
+        orderRepository.save(order);
+
+        return orderToDto(order);
+    }
+
+    public OrderDto removeProductFromOrder(Long orderNumber, Long productId) {
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
+
+        if (supplementRepository.existsById(productId)) {
+            Supplement supplement = supplementRepository.findById(productId).orElseThrow();
+            if (!order.getSupplements().remove(supplement)) {
                 throw new BadRequestException("Order with order-number: " + orderNumber
                         + " does not contain product: " + supplement.getName() + " with id: " + productId);
-            } else {
-                supplements.remove(supplement);
-                order.setSupplements(supplements);
-                order.setTotalAmount(calculateTotalAmount(order));
-                orderRepository.save(order);
-
-                return orderToDto(order);
             }
-        } else if (optionalGarment.isPresent()) {
-            Garment garment = optionalGarment.get();
-            List<Garment> garments = order.getGarments();
-
-            if (!order.getGarments().contains(garment)) {
+        } else if (garmentRepository.existsById(productId)) {
+            Garment garment = garmentRepository.findById(productId).orElseThrow();
+            if (!order.getGarments().remove(garment)) {
                 throw new BadRequestException("Order with order-number: " + orderNumber
                         + " does not contain product: " + garment.getName() + " with id: " + productId);
-            } else {
-                garments.remove(garment);
-                order.setGarments(garments);
-                order.setTotalAmount(calculateTotalAmount(order));
-                orderRepository.save(order);
-
-                return orderToDto(order);
             }
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
+
+        order.setTotalAmount(calculateTotalAmount(order));
+        orderRepository.save(order);
+
+        return orderToDto(order);
     }
 
     // Relation - User Methods
@@ -501,6 +543,61 @@ public class OrderService {
             }
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
+        }
+    }
+
+    // Relation - Authenticated User Methods
+    public List<OrderDto> getAllAuthUserOrders(String username) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        List<Order> orders;
+        List<OrderDto> orderDtos = new ArrayList<>();
+
+        if (optionalUser.isPresent()) {
+            orders = optionalUser.get().getOrders();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        for (Order order : orders) {
+            OrderDto orderDto = orderToDto(order);
+            orderDtos.add(orderDto);
+        }
+
+        if (orderDtos.isEmpty()) {
+            throw new RecordNotFoundException("No orders found from user: " + username);
+        } else {
+            orderDtos.sort(Comparator.comparing(OrderDto::getOrderDate).reversed());
+            return orderDtos;
+        }
+    }
+
+    public OrderDto getAuthUserOrderById(String username, Long orderNumber) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        List<Order> orders;
+        OrderDto dto = null;
+
+        if (optionalUser.isPresent()) {
+            orders = optionalUser.get().getOrders();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        if (optionalOrder.isPresent()) {
+            for (Order order : orders) {
+                if (order.getOrderNumber().equals(orderNumber)) {
+                    dto = orderToDto(order);
+                }
+            }
+        } else {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        if (dto != null) {
+            return dto;
+        } else {
+            throw new BadRequestException("User: " + username + " does not have order with order-number: "
+                    + orderNumber);
         }
     }
 }
