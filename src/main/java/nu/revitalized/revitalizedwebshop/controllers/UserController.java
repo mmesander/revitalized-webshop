@@ -156,19 +156,19 @@ public class UserController {
 
     // ADMIN - Discount Requests
     @GetMapping(value = "/{username}/discounts-all")
-    public ResponseEntity<Object> getAllUserDiscounts(
+    public ResponseEntity<Object> getAllDiscountsFromUser(
             @PathVariable("username") String username
     ) {
-        Set<ShortDiscountDto> discounts = userService.getAllUserDiscounts(username);
+        Set<ShortDiscountDto> discounts = userService.getAllDiscountsFromUser(username);
 
         return ResponseEntity.ok().body(discounts);
     }
 
     @DeleteMapping(value = "/{username}/discounts-all")
-    public ResponseEntity<Object> removeAllUserDiscounts(
+    public ResponseEntity<Object> removeAllDiscountsFromUser(
             @PathVariable("username") String username
     ) {
-        String confirmation = userService.removeAllUserDiscounts(username);
+        String confirmation = userService.removeAllDiscountsFromUser(username);
 
         return ResponseEntity.ok().body(confirmation);
     }

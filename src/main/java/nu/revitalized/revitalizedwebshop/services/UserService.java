@@ -300,7 +300,7 @@ public class UserService {
     }
 
     // Relation - Discount Methods
-    public Set<ShortDiscountDto> getAllUserDiscounts(String username) {
+    public Set<ShortDiscountDto> getAllDiscountsFromUser(String username) {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
@@ -316,7 +316,7 @@ public class UserService {
         }
     }
 
-    public String removeAllUserDiscounts(String username) {
+    public String removeAllDiscountsFromUser(String username) {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
