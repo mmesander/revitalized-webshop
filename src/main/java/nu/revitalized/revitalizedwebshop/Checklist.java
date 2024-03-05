@@ -4,10 +4,11 @@ public class Checklist {
     // ORDER
     // TODO: User (Auth) Requests in userService:
     // TODO: getAllAuthUserOrders()
-    // TODO: getAuthUserOrder()
+    // TODO: getAuthUserOrderById()
     // TODO: createAuthUserOrder()
     // TODO: addProductsToAuthUserOrder()
-    // TODO: removeProductsFromAuthUserOrder()
+    // TODO: removeProductFromAuthUserOrder()
+    // TODO: removeMultipleProductsFromAuthUserOrder()
     // TODO: assignShippingDetailsToAuthUserOrder()
     // TODO: removeShippingDetailsFromAuthUserOrder()
     // TODO: addDiscountToAuthUserOrder()
@@ -19,10 +20,8 @@ public class Checklist {
     // En ook niet als de discount niet geldig is
 
     // Overig
-    // TODO: ID not found exception maken
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op fouten
-    // TODO: Kijken of de code korter kan
     // TODO: Alles nalopen op imports en code netjes maken
 
     // Rowan
