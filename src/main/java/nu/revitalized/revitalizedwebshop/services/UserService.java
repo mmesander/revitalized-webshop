@@ -243,7 +243,7 @@ public class UserService {
         }
     }
 
-    public UserDto addAuthority(String username, String authority) {
+    public UserDto assignAuthorityToUser(String username, String authority) {
         Optional<User> user = userRepository.findById(username);
         Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCase(authority);
 
