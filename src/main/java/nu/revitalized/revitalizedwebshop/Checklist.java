@@ -19,7 +19,6 @@ public class Checklist {
     // En ook niet als de discount niet geldig is
 
     // Overig
-    // TODO: Order Relation - ShippingDetails
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op fouten
     // TODO: Kijken of de code korter kan
