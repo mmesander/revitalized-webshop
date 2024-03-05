@@ -139,8 +139,8 @@ public class SupplementController {
     }
 
     // Relation - Allergen Requests
-    @PostMapping(value = "/products/supplements/{id}/allergens")
-    public ResponseEntity<Object> addAllergenToSupplement(
+    @PutMapping(value = "/products/supplements/{id}/allergens")
+    public ResponseEntity<Object> assignAllergenToSupplement(
             @PathVariable("id") Long id,
             @Valid
             @RequestBody IdInputDto inputDto,
