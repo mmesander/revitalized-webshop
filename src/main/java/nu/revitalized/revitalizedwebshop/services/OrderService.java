@@ -196,7 +196,7 @@ public class OrderService {
         }
 
         if (orderDtos.isEmpty()) {
-            throw new RecordNotFoundException("No payed orders found");
+            throw new RecordNotFoundException("No paid orders found");
         } else {
             orderDtos.sort(Comparator.comparing(OrderDto::getOrderNumber));
 
@@ -216,7 +216,7 @@ public class OrderService {
         }
 
         if (orderDtos.isEmpty()) {
-            throw new RecordNotFoundException("No unpayed orders found");
+            throw new RecordNotFoundException("No unpaid orders found");
         } else {
             orderDtos.sort(Comparator.comparing(OrderDto::getOrderNumber));
 
