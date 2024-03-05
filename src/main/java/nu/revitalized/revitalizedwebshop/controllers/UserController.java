@@ -124,8 +124,8 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserAuthorities(username));
     }
 
-    @PostMapping(value = "/{username}/authorities")
-    public ResponseEntity<Object> addUserAuthority(
+    @PutMapping(value = "/{username}/authorities")
+    public ResponseEntity<Object> assignAuthorityToUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody AuthorityInputDto authority,
@@ -145,7 +145,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{username}/authorities/{authority}")
-    public ResponseEntity<Object> deleteUserAuthority(
+    public ResponseEntity<Object> removeAuthorityFromUser(
             @PathVariable("username") String username,
             @PathVariable("authority") String authority
     ) {
