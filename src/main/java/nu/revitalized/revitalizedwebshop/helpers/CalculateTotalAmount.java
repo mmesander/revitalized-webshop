@@ -5,7 +5,6 @@ import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Order;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 
-
 public class CalculateTotalAmount {
     public static Double calculateTotalAmount(Order order) {
         Double totalAmount = 0.00;
