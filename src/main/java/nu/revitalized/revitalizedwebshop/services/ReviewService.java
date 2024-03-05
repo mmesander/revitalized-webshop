@@ -290,6 +290,10 @@ public class ReviewService {
         Object objectDto;
 
         if (optionalSupplement.isPresent()) {
+            if (review.getSupplement() == null || !review.getSupplement().getId().equals(productId)) {
+                throw new BadRequestException("Review with id: " + reviewId
+                        + " is not assigned to product: " + productId);
+            }
             Supplement updatedSupplement = supplementRepository.save(
                     updateSupplementRating(review, review.getSupplement(), true, false));
 
@@ -297,6 +301,10 @@ public class ReviewService {
 
             objectDto = supplementToDto(updatedSupplement);
         } else if (optionalGarment.isPresent()) {
+            if (review.getGarment() == null || !review.getGarment().getId().equals(productId)) {
+                throw new BadRequestException("Review with id: " + reviewId
+                        + " is not assigned to product: " + productId);
+            }
             Garment updatedGarment = garmentRepository.save(
                     updateGarmentRating(review, review.getGarment(), true, false));
 

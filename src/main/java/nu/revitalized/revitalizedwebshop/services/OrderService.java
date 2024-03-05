@@ -184,7 +184,7 @@ public class OrderService {
         }
     }
 
-    public List<OrderDto> getAllPayedOrders() {
+    public List<OrderDto> getAllPaidOrders() {
         List<Order> orders = orderRepository.findAll();
         List<OrderDto> orderDtos = new ArrayList<>();
 
@@ -196,7 +196,7 @@ public class OrderService {
         }
 
         if (orderDtos.isEmpty()) {
-            throw new RecordNotFoundException("No payed orders found");
+            throw new RecordNotFoundException("No paid orders found");
         } else {
             orderDtos.sort(Comparator.comparing(OrderDto::getOrderNumber));
 
@@ -204,7 +204,7 @@ public class OrderService {
         }
     }
 
-    public List<OrderDto> getAllUnpayedOrders() {
+    public List<OrderDto> getAllUnpaidOrders() {
         List<Order> orders = orderRepository.findAll();
         List<OrderDto> orderDtos = new ArrayList<>();
 
@@ -216,7 +216,7 @@ public class OrderService {
         }
 
         if (orderDtos.isEmpty()) {
-            throw new RecordNotFoundException("No unpayed orders found");
+            throw new RecordNotFoundException("No unpaid orders found");
         } else {
             orderDtos.sort(Comparator.comparing(OrderDto::getOrderNumber));
 
@@ -389,7 +389,7 @@ public class OrderService {
     }
 
     // Relation - User Methods
-    public OrderDto assignUserToOrder(String username, Long orderNumber) {
+    public OrderDto assignUserToOrder(Long orderNumber, String username) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<User> optionalUser = userRepository.findById(username);
 
@@ -419,7 +419,7 @@ public class OrderService {
         }
     }
 
-    public OrderDto removeUserFromOrder(String username, Long orderNumber) {
+    public OrderDto removeUserFromOrder(Long orderNumber, String username) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<User> optionalUser = userRepository.findById(username);
 
@@ -487,7 +487,10 @@ public class OrderService {
         Order order = optionalOrder.get();
 
         if (optionalShippingDetails.isPresent()) {
-            if (!order.getShippingDetails().getId().equals(shippingDetailsId)) {
+            if (order.getShippingDetails() == null) {
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " does not contain any shipping details");
+            } else if (!order.getShippingDetails().equals(optionalShippingDetails.get())) {
                 throw new BadRequestException("Shipping Details with id: " + shippingDetailsId
                         + " is not assigned to order: " + orderNumber);
             } else {

@@ -132,8 +132,8 @@ public class DiscountController {
     }
 
     // Relation - User Requests
-    @PostMapping(value = "/users/{username}/discounts")
-    public ResponseEntity<Object> assignDiscountToUser(
+    @PutMapping(value = "/users/{username}/discounts")
+    public ResponseEntity<Object> assignUserToDiscount(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -142,14 +142,14 @@ public class DiscountController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            DiscountDto dto = discountService.assignDiscountToUser(username, inputDto.getId());
+            DiscountDto dto = discountService.assignUserToDiscount(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
     @DeleteMapping(value = "/users/{username}/discounts")
-    public ResponseEntity<Object> removeDiscountFromUser(
+    public ResponseEntity<Object> removeUserFromDiscount(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -158,7 +158,7 @@ public class DiscountController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            String confirmation = discountService.removeDiscountFromUser(username, inputDto.getId());
+            String confirmation = discountService.removeUserFromDiscount(username, inputDto.getId());
 
             return ResponseEntity.ok().body(confirmation);
         }

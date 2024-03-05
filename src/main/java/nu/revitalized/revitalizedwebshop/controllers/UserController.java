@@ -124,8 +124,8 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserAuthorities(username));
     }
 
-    @PostMapping(value = "/{username}/authorities")
-    public ResponseEntity<Object> addUserAuthority(
+    @PutMapping(value = "/{username}/authorities")
+    public ResponseEntity<Object> assignAuthorityToUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody AuthorityInputDto authority,
@@ -135,7 +135,7 @@ public class UserController {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
             try {
-                userService.addAuthority(username, authority.getAuthority().toUpperCase());
+                userService.assignAuthorityToUser(username, authority.getAuthority().toUpperCase());
 
                 return ResponseEntity.ok().body(userService.getUser(username));
             } catch (Exception exception) {
@@ -145,30 +145,30 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{username}/authorities/{authority}")
-    public ResponseEntity<Object> deleteUserAuthority(
+    public ResponseEntity<Object> removeAuthorityFromUser(
             @PathVariable("username") String username,
             @PathVariable("authority") String authority
     ) {
-        String confirmation = userService.removeAuthority(username, authority);
+        String confirmation = userService.removeAuthorityFromUser(username, authority);
 
         return ResponseEntity.ok().body(confirmation);
     }
 
     // ADMIN - Discount Requests
     @GetMapping(value = "/{username}/discounts-all")
-    public ResponseEntity<Object> getAllUserDiscounts(
+    public ResponseEntity<Object> getAllDiscountsFromUser(
             @PathVariable("username") String username
     ) {
-        Set<ShortDiscountDto> discounts = userService.getAllUserDiscounts(username);
+        Set<ShortDiscountDto> discounts = userService.getAllDiscountsFromUser(username);
 
         return ResponseEntity.ok().body(discounts);
     }
 
     @DeleteMapping(value = "/{username}/discounts-all")
-    public ResponseEntity<Object> removeAllUserDiscounts(
+    public ResponseEntity<Object> removeAllDiscountsFromUser(
             @PathVariable("username") String username
     ) {
-        String confirmation = userService.removeAllUserDiscounts(username);
+        String confirmation = userService.removeAllDiscountsFromUser(username);
 
         return ResponseEntity.ok().body(confirmation);
     }

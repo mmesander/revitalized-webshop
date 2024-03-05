@@ -250,7 +250,7 @@ public class ShippingDetailsService {
     }
 
     // Relation - User Methods
-    public UserDto assignShippingDetailsToUser(String username, Long id) {
+    public UserDto assignUserToShippingDetails(String username, Long id) {
         Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
         Optional<User> optionalUser = userRepository.findById(username);
 

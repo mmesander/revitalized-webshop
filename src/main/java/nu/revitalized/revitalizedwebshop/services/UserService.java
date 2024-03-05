@@ -243,7 +243,7 @@ public class UserService {
         }
     }
 
-    public UserDto addAuthority(String username, String authority) {
+    public UserDto assignAuthorityToUser(String username, String authority) {
         Optional<User> user = userRepository.findById(username);
         Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCase(authority);
 
@@ -265,7 +265,7 @@ public class UserService {
         }
     }
 
-    public String removeAuthority(String username, String authority) {
+    public String removeAuthorityFromUser(String username, String authority) {
         Optional<User> optionalUser = userRepository.findById(username);
 
         if (optionalUser.isPresent()) {
@@ -300,7 +300,7 @@ public class UserService {
     }
 
     // Relation - Discount Methods
-    public Set<ShortDiscountDto> getAllUserDiscounts(String username) {
+    public Set<ShortDiscountDto> getAllDiscountsFromUser(String username) {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
@@ -316,7 +316,7 @@ public class UserService {
         }
     }
 
-    public String removeAllUserDiscounts(String username) {
+    public String removeAllDiscountsFromUser(String username) {
         Optional<User> user = userRepository.findById(username);
 
         if (user.isPresent()) {
@@ -327,7 +327,7 @@ public class UserService {
             }
 
             for (Discount discount : discounts) {
-                discountService.removeDiscountFromUser(username, discount.getId());
+                discountService.removeUserFromDiscount(username, discount.getId());
             }
             return "All discounts from user: " + username + " are removed";
         } else {
@@ -359,7 +359,7 @@ public class UserService {
             }
 
             if (presentShippingDetails != null) {
-                shippingDetailsService.assignShippingDetailsToUser(username, presentShippingDetails.getId());
+                shippingDetailsService.assignUserToShippingDetails(username, presentShippingDetails.getId());
             } else {
                 throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
                         + " is not found");

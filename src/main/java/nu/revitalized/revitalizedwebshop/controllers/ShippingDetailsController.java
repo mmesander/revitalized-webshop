@@ -126,7 +126,7 @@ public class ShippingDetailsController {
 
     // Relation - User Requests
     @PutMapping(value = "users/{username}/shipping-details")
-    public ResponseEntity<Object> assignShippingDetailsToUser(
+    public ResponseEntity<Object> assignUserToShippingDetails(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto idInputDto,
@@ -136,7 +136,7 @@ public class ShippingDetailsController {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
             try {
-                UserDto dto = shippingDetailsService.assignShippingDetailsToUser(username, idInputDto.getId());
+                UserDto dto = shippingDetailsService.assignUserToShippingDetails(username, idInputDto.getId());
 
                 return ResponseEntity.ok().body(dto);
             } catch (Exception exception) {

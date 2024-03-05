@@ -54,16 +54,16 @@ public class OrderController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/users/orders-payed")
-    public ResponseEntity<List<OrderDto>> getAllPayedOrders() {
-        List<OrderDto> dtos = orderService.getAllPayedOrders();
+    @GetMapping("/users/orders-paid")
+    public ResponseEntity<List<OrderDto>> getAllPaidOrders() {
+        List<OrderDto> dtos = orderService.getAllPaidOrders();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/users/orders-unpayed")
-    public ResponseEntity<List<OrderDto>> getAllUnpayedOrders() {
-        List<OrderDto> dtos = orderService.getAllUnpayedOrders();
+    @GetMapping("/users/orders-unpaid")
+    public ResponseEntity<List<OrderDto>> getAllUnpaidOrders() {
+        List<OrderDto> dtos = orderService.getAllUnpaidOrders();
 
         return ResponseEntity.ok().body(dtos);
     }
@@ -159,7 +159,7 @@ public class OrderController {
     }
 
     // Relation - Product Requests
-    @PutMapping(value = "/users/orders/{orderNumber}/add/product")
+    @PutMapping(value = "/users/orders/{orderNumber}/product")
     public ResponseEntity<Object> assignProductToOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -175,7 +175,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping(value = "/users/orders/{orderNumber}/remove/product")
+    @DeleteMapping(value = "/users/orders/{orderNumber}/product")
     public ResponseEntity<Object> removeProductFromOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -192,40 +192,40 @@ public class OrderController {
     }
 
     // Relation - User Requests
-    @PutMapping(value = "/users/orders/add/{username}")
+    @PutMapping(value = "/users/orders/{orderNumber}/user")
     public ResponseEntity<OrderDto> assignUserToOrder(
-            @PathVariable("username") String username,
+            @PathVariable("orderNumber") Long orderNumber,
             @Valid
-            @RequestBody IdInputDto inputDto,
+            @RequestBody UsernameInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            OrderDto dto = orderService.assignUserToOrder(username, inputDto.getId());
+            OrderDto dto = orderService.assignUserToOrder(orderNumber, inputDto.getUsername());
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
-    @DeleteMapping(value = "/users/orders/remove/{username}")
+    @DeleteMapping(value = "/users/orders/{orderNumber}/user")
     public ResponseEntity<OrderDto> removeUserFromOrder(
-            @PathVariable("username") String username,
+            @PathVariable("orderNumber") Long orderNumber,
             @Valid
-            @RequestBody IdInputDto inputDto,
+            @RequestBody UsernameInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            OrderDto dto = orderService.removeUserFromOrder(username, inputDto.getId());
+            OrderDto dto = orderService.removeUserFromOrder(orderNumber, inputDto.getUsername());
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
     // Relation - ShippingDetails Requests
-    @PutMapping(value = "/users/orders/{orderNumber}/add/shipping-details")
+    @PutMapping(value = "/users/orders/{orderNumber}/shipping-details")
     public ResponseEntity<Object> assignShippingDetailsToOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -241,7 +241,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping(value = "/users/orders/{orderNumber}/remove/shipping-details")
+    @DeleteMapping(value = "/users/orders/{orderNumber}/shipping-details")
     public ResponseEntity<Object> removeShippingDetailsFromOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
