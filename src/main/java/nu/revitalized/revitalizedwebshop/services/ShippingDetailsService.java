@@ -331,7 +331,7 @@ public class ShippingDetailsService {
         if (dto != null) {
             return dto;
         } else {
-            throw new BadRequestException("User: " + username + " doesn't have shipping details with id: " + id);
+            throw new BadRequestException("User: " + username + " does not have shipping details with id: " + id);
         }
     }
 }
