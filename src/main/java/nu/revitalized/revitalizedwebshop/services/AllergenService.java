@@ -122,7 +122,6 @@ public class AllergenService {
             Allergen newAllergen = allergen.get();
 
             newAllergen.setName(inputDto.getName());
-
             Allergen updatedAllergen = allergenRepository.save(newAllergen);
 
             return allergenToDto(updatedAllergen);
