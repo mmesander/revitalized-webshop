@@ -1,12 +1,14 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.output.ProductDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -85,18 +87,16 @@ public class ProductService {
             throw new RecordNotFoundException("No products found");
         } else {
             productDtos.sort(Comparator.comparing(ProductDto::getId));
+
             return productDtos;
         }
     }
 
     public Object getProductById(Long id) {
-        Optional<Supplement> supplement = supplementRepository.findById(id);
-        Optional<Garment> garment = garmentRepository.findById(id);
-
-        if (supplement.isPresent()) {
-            return supplementToDto(supplement.get());
-        } else if (garment.isPresent()) {
-            return garmentToDto(garment.get());
+        if (supplementRepository.existsById(id)) {
+            return supplementToDto(supplementRepository.findById(id).orElseThrow());
+        } else if (garmentRepository.existsById(id)) {
+            return garmentToDto(garmentRepository.findById(id).orElseThrow());
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Product", id));
         }
@@ -124,6 +124,8 @@ public class ProductService {
         if (productDtos.isEmpty()) {
             throw new RecordNotFoundException("No products out of stock found");
         } else {
+            productDtos.sort(Comparator.comparing(ProductDto::getId));
+
             return productDtos;
         }
     }
@@ -150,22 +152,23 @@ public class ProductService {
         if (productDtos.isEmpty()) {
             throw new RecordNotFoundException("No products in stock found");
         } else {
+            productDtos.sort(Comparator.comparing(ProductDto::getId));
+
             return productDtos;
         }
     }
 
     public String deleteProduct(Long id) {
-        Optional<Supplement> supplement = supplementRepository.findById(id);
-        Optional<Garment> garment = garmentRepository.findById(id);
-
-        if (supplement.isPresent()) {
+        if (supplementRepository.existsById(id)) {
+            Supplement supplement = supplementRepository.findById(id).orElseThrow();
             supplementRepository.deleteById(id);
 
-            return buildSpecificConfirmation("Supplement", supplement.get().getName(), id);
-        } else if (garment.isPresent()) {
+            return buildSpecificConfirmation("Supplement", supplement.getName(), id);
+        } else if (garmentRepository.existsById(id)) {
+            Garment garment = garmentRepository.findById(id).orElseThrow();
             garmentRepository.deleteById(id);
 
-            return buildSpecificConfirmation("Garment", garment.get().getName(), id);
+            return buildSpecificConfirmation("Garment", garment.getName(), id);
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Product", id));
         }
