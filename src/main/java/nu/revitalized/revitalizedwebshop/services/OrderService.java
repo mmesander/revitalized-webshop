@@ -409,17 +409,22 @@ public class OrderService {
 
         if (supplementRepository.existsById(productId)) {
             Supplement supplement = supplementRepository.findById(productId).get();
-            if (!order.getSupplements().remove(supplement)) {
+            List<Supplement> supplements = order.getSupplements();
+            if (!supplements.contains(supplement)) {
                 throw new BadRequestException("Order with order-number: " + orderNumber
                         + " does not contain product: " + supplement.getName() + " with id: " + productId);
             }
+            supplements.remove(supplement);
+            order.setSupplements(supplements);
         } else if (garmentRepository.existsById(productId)) {
             Garment garment = garmentRepository.findById(productId).get();
-
-            if (!order.getGarments().contains(garment)) {
+            List<Garment> garments = order.getGarments();
+            if (!garments.contains(garment)) {
                 throw new BadRequestException("Order with order-number: " + orderNumber
                         + " does not contain product: " + garment.getName() + " with id: " + productId);
             }
+            garments.remove(garment);
+            order.setGarments(garments);
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
