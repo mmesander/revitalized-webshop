@@ -231,7 +231,7 @@ public class DiscountService {
     }
 
     // Relation - User Methods
-    public DiscountDto assignDiscountToUser(String username, Long id) {
+    public DiscountDto assignUserToDiscount(String username, Long id) {
         Optional<Discount> optionalDiscount = discountRepository.findById(id);
         Optional<User> optionalUser = userRepository.findById(username);
 
@@ -267,7 +267,7 @@ public class DiscountService {
         }
     }
 
-    public String removeDiscountFromUser(String username, Long id) {
+    public String removeUserFromDiscount(String username, Long id) {
         Optional<User> optionalUser = userRepository.findById(username);
         Optional<Discount> optionalDiscount = discountRepository.findById(id);
 
