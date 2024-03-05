@@ -159,6 +159,22 @@ public class OrderController {
     }
 
     // Relation - Product Requests
+    @PutMapping(value = "/users/orders/{orderNumber}/shoppinglist")
+    public ResponseEntity<Object> assignMultipleProductsToOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.assignMultipleProductsToOrder(orderNumber, inputDto.getProductIds());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
     @PutMapping(value = "/users/orders/{orderNumber}/product")
     public ResponseEntity<Object> assignProductToOrder(
             @PathVariable("orderNumber") Long orderNumber,

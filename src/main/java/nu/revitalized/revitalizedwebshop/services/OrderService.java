@@ -306,6 +306,61 @@ public class OrderService {
     }
 
     // Relation - Product Methods
+    public OrderDto assignMultipleProductsToOrder(Long orderNumber, List<Long> productIds) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+
+        List<Supplement> newSupplements = new ArrayList<>();
+        List<Garment> newGarments = new ArrayList<>();
+
+        if (optionalOrder.isEmpty()) {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        for (Long productId : productIds) {
+            Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+            Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+
+            if (optionalSupplement.isPresent()) {
+                newSupplements.add(optionalSupplement.get());
+            } else if (optionalGarment.isPresent()) {
+                newGarments.add(optionalGarment.get());
+            } else {
+                throw new BadRequestException(buildIdNotFound("Product", productId));
+            }
+        }
+
+        Order order = optionalOrder.get();
+        List<Supplement> allSupplements;
+        List<Garment> allGarments;
+
+        if (!newSupplements.isEmpty() && !newGarments.isEmpty()) {
+            allSupplements = order.getSupplements();
+            allSupplements.addAll(newSupplements);
+            order.setSupplements(allSupplements);
+
+            allGarments = order.getGarments();
+            allGarments.addAll(newGarments);
+            order.setGarments(allGarments);
+
+            order.setTotalAmount(calculateTotalAmount(order));
+            orderRepository.save(order);
+        } else if (!newSupplements.isEmpty()) {
+            allSupplements = order.getSupplements();
+            allSupplements.addAll(newSupplements);
+            order.setSupplements(allSupplements);
+            order.setTotalAmount(calculateTotalAmount(order));
+            orderRepository.save(order);
+        } else if (!newGarments.isEmpty()) {
+            allGarments = order.getGarments();
+            allGarments.addAll(newGarments);
+            order.setGarments(allGarments);
+            order.setTotalAmount(calculateTotalAmount(order));
+            orderRepository.save(order);
+        }
+
+        return orderToDto(order);
+    }
+
     public OrderDto assignProductToOrder(Long orderNumber, Long productId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
