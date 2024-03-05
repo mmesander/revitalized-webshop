@@ -55,15 +55,10 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "/users/{username}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/users/{username}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/users/{username}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/users/{username}").hasRole("ADMIN")
-
-                        .requestMatchers(HttpMethod.GET, "/users/{username}/authorities").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/{username}/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users/{username}/authorities").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/users/{username}/authorities/**").hasRole("ADMIN")
-
+                        .requestMatchers(HttpMethod.PUT, "/users/{username}/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/{username}/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/users/discounts/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users/discounts/**").hasRole("ADMIN")
@@ -71,22 +66,12 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/users/discounts/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/discounts/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.POST, "/users/{username}/discounts").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/users/{username}/discounts").hasRole("ADMIN")
-
-                        .requestMatchers(HttpMethod.GET, "/users/{username}/discounts-all").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/users/{username}/discounts-all").hasRole("ADMIN")
-
-                        .requestMatchers(HttpMethod.GET, "/users/shipping-details").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users/shipping-details/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users/shipping-details").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/shipping-details/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/users/shipping-details/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/shipping-details/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.PUT, "/users/{username}/shipping-details").hasRole("ADMIN")
-
-                        .requestMatchers(HttpMethod.GET, "/users/orders").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users/orders/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users/orders/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/orders/**").hasRole("ADMIN")
