@@ -192,7 +192,7 @@ public class OrderController {
     }
 
     // Relation - User Requests
-    @PutMapping(value = "/users/orders/{orderNumber}/username")
+    @PutMapping(value = "/users/orders/{orderNumber}/user")
     public ResponseEntity<OrderDto> assignUserToOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -208,7 +208,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping(value = "/users/orders/{orderNumber}/username")
+    @DeleteMapping(value = "/users/orders/{orderNumber}/user")
     public ResponseEntity<OrderDto> removeUserFromOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid

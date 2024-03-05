@@ -487,7 +487,10 @@ public class OrderService {
         Order order = optionalOrder.get();
 
         if (optionalShippingDetails.isPresent()) {
-            if (!order.getShippingDetails().getId().equals(shippingDetailsId)) {
+            if (order.getShippingDetails() == null) {
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " does not contain any shipping details");
+            } else if (!order.getShippingDetails().equals(optionalShippingDetails.get())) {
                 throw new BadRequestException("Shipping Details with id: " + shippingDetailsId
                         + " is not assigned to order: " + orderNumber);
             } else {
