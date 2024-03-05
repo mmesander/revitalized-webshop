@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.*;
@@ -11,7 +10,6 @@ import static nu.revitalized.revitalizedwebshop.services.UserService.userToShort
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
@@ -28,7 +26,6 @@ import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -99,13 +96,10 @@ public class ShippingDetailsService {
     }
 
     public ShippingDetailsDto getShippingDetailsById(Long id) {
-        Optional<ShippingDetails> shippingDetails = shippingDetailsRepository.findById(id);
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
 
-        if (shippingDetails.isPresent()) {
-            return shippingDetailsToDto(shippingDetails.get());
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
-        }
+        return shippingDetailsToDto(shippingDetails);
     }
 
     public List<ShippingDetailsDto> getShippingDetailsByParam(
@@ -166,132 +160,95 @@ public class ShippingDetailsService {
     }
 
     public ShippingDetailsDto updateShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
 
-        if (optionalShippingDetails.isPresent()) {
-            ShippingDetails shippingDetails = optionalShippingDetails.get();
+        shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
+        shippingDetails.setName(buildFullName(inputDto));
+        shippingDetails.setCountry(formatName(inputDto.getCountry()));
+        shippingDetails.setCity(formatName(inputDto.getCity()));
+        shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
+        shippingDetails.setStreet(formatName(inputDto.getStreet()));
+        shippingDetails.setHouseNumber(buildHouseNumber(inputDto));
+        shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
+        ShippingDetails updatedShippingDetails = shippingDetailsRepository.save(shippingDetails);
 
-            shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
-            shippingDetails.setName(buildFullName(inputDto));
-            shippingDetails.setCountry(formatName(inputDto.getCountry()));
-            shippingDetails.setCity(formatName(inputDto.getCity()));
-            shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
-            shippingDetails.setStreet(formatName(inputDto.getStreet()));
-            shippingDetails.setHouseNumber(buildHouseNumber(inputDto));
-            shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
-
-            ShippingDetails updatedShippingDetails = shippingDetailsRepository.save(shippingDetails);
-
-            return shippingDetailsToDto(updatedShippingDetails);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
-        }
+        return shippingDetailsToDto(updatedShippingDetails);
     }
 
     public ShippingDetailsDto patchShippingDetails(Long id, ShippingDetailsPatchInputDto inputDto) {
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
 
-        if (optionalShippingDetails.isPresent()) {
-            ShippingDetails shippingDetails = optionalShippingDetails.get();
-
-            if (inputDto.getDetailsName() != null) {
-                shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
-            }
-
-            if ((inputDto.getFirstName() != null && inputDto.getMiddleName() != null && inputDto.getLastName() != null)
-                    || (inputDto.getFirstName() != null && inputDto.getLastName() != null)) {
-                shippingDetails.setDetailsName(buildFullNamePatch(inputDto));
-            }
-
-            if (inputDto.getCountry() != null) {
-                shippingDetails.setCountry(formatName(inputDto.getCountry()));
-            }
-
-            if (inputDto.getCity() != null) {
-                shippingDetails.setCity(formatName(inputDto.getCity()));
-            }
-
-            if (inputDto.getZipCode() != null) {
-                shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
-            }
-
-            if (inputDto.getStreet() != null) {
-                shippingDetails.setStreet(formatName(inputDto.getStreet()));
-            }
-
-            if ((inputDto.getHouseNumber() != null && inputDto.getHouseNumberAddition() != null) ||
-                    inputDto.getHouseNumber() != null) {
-                shippingDetails.setHouseNumber(buildHouseNumberPatch(inputDto));
-            }
-
-            if (inputDto.getEmail() != null) {
-                shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
-            }
-
-            ShippingDetails patchedShippingDetails = shippingDetailsRepository.save(shippingDetails);
-
-            return shippingDetailsToDto(patchedShippingDetails);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
+        if (inputDto.getDetailsName() != null) {
+            shippingDetails.setDetailsName(inputDto.getDetailsName().toUpperCase());
         }
+        if ((inputDto.getFirstName() != null && inputDto.getMiddleName() != null && inputDto.getLastName() != null)
+                || (inputDto.getFirstName() != null && inputDto.getLastName() != null)) {
+            shippingDetails.setDetailsName(buildFullNamePatch(inputDto));
+        }
+        if (inputDto.getCountry() != null) {
+            shippingDetails.setCountry(formatName(inputDto.getCountry()));
+        }
+        if (inputDto.getCity() != null) {
+            shippingDetails.setCity(formatName(inputDto.getCity()));
+        }
+        if (inputDto.getZipCode() != null) {
+            shippingDetails.setZipCode(inputDto.getZipCode().toUpperCase());
+        }
+        if (inputDto.getStreet() != null) {
+            shippingDetails.setStreet(formatName(inputDto.getStreet()));
+        }
+        if ((inputDto.getHouseNumber() != null && inputDto.getHouseNumberAddition() != null) ||
+                inputDto.getHouseNumber() != null) {
+            shippingDetails.setHouseNumber(buildHouseNumberPatch(inputDto));
+        }
+        if (inputDto.getEmail() != null) {
+            shippingDetails.setEmail(inputDto.getEmail().toLowerCase());
+        }
+        ShippingDetails patchedShippingDetails = shippingDetailsRepository.save(shippingDetails);
+
+        return shippingDetailsToDto(patchedShippingDetails);
     }
 
     public String deleteShippingDetailsById(Long id) {
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
 
-        if (optionalShippingDetails.isPresent()) {
+        shippingDetailsRepository.deleteById(id);
 
-            shippingDetailsRepository.deleteById(id);
-
-            return buildSpecificConfirmation("Shipping Details", optionalShippingDetails.get().getDetailsName(), id);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
-        }
+        return buildSpecificConfirmation("Shipping Details", shippingDetails.getDetailsName(), id);
     }
 
     // Relation - User Methods
     public UserDto assignUserToShippingDetails(String username, Long id) {
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
-        Optional<User> optionalUser = userRepository.findById(username);
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
 
-        if (optionalShippingDetails.isEmpty()) {
-            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", id));
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        if (shippingDetails.getUser() != null) {
+            throw new BadRequestException("Shipping Details with id: " + id
+                    + " is already assigned to user: " + shippingDetails.getUser().getUsername());
         }
 
-        if (optionalUser.isPresent()) {
-            ShippingDetails shippingDetails = optionalShippingDetails.get();
-            User user = optionalUser.get();
+        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
+        shippingDetailsSet.add(shippingDetails);
+        user.setShippingDetails(shippingDetailsSet);
+        shippingDetails.setUser(user);
+        shippingDetailsRepository.save(shippingDetails);
 
-            Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
-
-
-            if (shippingDetails.getUser() != null) {
-                throw new BadRequestException("Shipping Details with id: " + id
-                        + " is already assigned to user: " + username);
-            } else {
-                shippingDetailsSet.add(shippingDetails);
-                user.setShippingDetails(shippingDetailsSet);
-                shippingDetails.setUser(user);
-                shippingDetailsRepository.save(shippingDetails);
-
-                return userToDto(user);
-            }
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        return userToDto(user);
     }
 
     // Relation - Authenticated User Methods
     public List<ShippingDetailsDto> getAllAuthUserShippingDetails(String username) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Set<ShippingDetails> shippingDetailsSet;
-        List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isPresent()) {
-            shippingDetailsSet = optionalUser.get().getShippingDetails();
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
+        List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
 
         for (ShippingDetails shippingDetails : shippingDetailsSet) {
             ShippingDetailsDto shippingDetailsDto = shippingDetailsToDto(shippingDetails);
@@ -307,31 +264,25 @@ public class ShippingDetailsService {
     }
 
     public ShippingDetailsDto getAuthUserShippingDetailsById(String username, Long id) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(id);
-        Set<ShippingDetails> shippingDetailsSet;
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
+
+        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
         ShippingDetailsDto dto = null;
 
-        if (optionalUser.isPresent()) {
-            shippingDetailsSet = optionalUser.get().getShippingDetails();
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
-
-        if (optionalShippingDetails.isPresent()) {
-            for (ShippingDetails shippingDetails : shippingDetailsSet) {
-                if (shippingDetails.getId().equals(id)) {
-                    dto = shippingDetailsToDto(shippingDetails);
-                }
+        for (ShippingDetails foundShippingDetails : shippingDetailsSet) {
+            if (foundShippingDetails.equals(shippingDetails)) {
+                dto = shippingDetailsToDto(shippingDetails);
             }
-        } else {
-            throw new BadRequestException(buildIdNotFound("Shipping details", id));
         }
 
-        if (dto != null) {
-            return dto;
-        } else {
+        if (dto == null) {
             throw new BadRequestException("User: " + username + " does not have shipping details with id: " + id);
         }
+
+        return dto;
     }
 }
