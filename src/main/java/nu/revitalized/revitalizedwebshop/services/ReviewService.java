@@ -311,15 +311,11 @@ public class ReviewService {
 
     // Relation - Authenticated User Methods
     public List<ReviewDto> getAllAuthUserReviews(String username) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Set<Review> reviews;
-        List<ReviewDto> reviewDtos = new ArrayList<>();
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isPresent()) {
-            reviews = optionalUser.get().getReviews();
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        Set<Review> reviews = user.getReviews();
+        List<ReviewDto> reviewDtos = new ArrayList<>();
 
         for (Review review : reviews) {
             ReviewDto reviewDto = reviewToDto(review);
@@ -335,17 +331,15 @@ public class ReviewService {
         }
     }
 
-    public ReviewDto createPersonalReview(ReviewInputDto inputDto, String username) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Review review = dtoToReview(inputDto);
+    public ReviewDto createAuthUserReview(ReviewInputDto inputDto, String username) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isPresent()) {
-            review.setDate(createDate());
-            review.setUser(optionalUser.get());
-            reviewRepository.save(review);
-            return reviewToDto(review);
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        Review review = dtoToReview(inputDto);
+        review.setDate(createDate());
+        review.setUser(user);
+        reviewRepository.save(review);
+
+        return reviewToDto(review);
     }
 }

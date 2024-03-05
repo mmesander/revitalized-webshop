@@ -414,7 +414,7 @@ public class UserService {
             throw new BadRequestException("Product: " + productId + " already has a review with id: " + existingId
                     + " written by user: " + username);
         } else {
-            createdReview = reviewService.createPersonalReview(inputDto, username);
+            createdReview = reviewService.createAuthUserReview(inputDto, username);
             dto = reviewService.assignReviewToProduct(productId, createdReview.getId());
             return dto;
         }
