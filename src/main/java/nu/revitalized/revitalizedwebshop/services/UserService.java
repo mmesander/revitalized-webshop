@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.services.OrderService.*;
 import static nu.revitalized.revitalizedwebshop.services.DiscountService.*;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
@@ -138,13 +139,10 @@ public class UserService {
     }
 
     public UserDto getUser(String username) {
-        Optional<User> user = userRepository.findById(username);
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (user.isPresent()) {
-            return userToDto(user.get());
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        return userToDto(user);
     }
 
     public List<UserDto> getUsersByParam(
@@ -186,11 +184,8 @@ public class UserService {
             throw new InvalidInputException("Email: " + inputDto.getEmail().toLowerCase()
                     + " is already in use");
         } else {
-
             userRepository.save(user);
-
             user.addAuthority(new Authority(user.getUsername(), "ROLE_USER"));
-
             userRepository.save(user);
 
             return userToDto(user);
@@ -198,55 +193,41 @@ public class UserService {
     }
 
     public UserDto updateUserEmail(String username, UserEmailInputDto inputDto) {
-        Optional<User> optionalUser = userRepository.findById(username);
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        user.setEmail(inputDto.getEmail());
+        User updatedUser = userRepository.save(user);
 
-
-            user.setEmail(inputDto.getEmail());
-
-            User updatedUser = userRepository.save(user);
-
-            return userToDto(updatedUser);
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        return userToDto(updatedUser);
     }
 
     public String deleteUser(String username) {
-        Optional<User> user = userRepository.findById(username);
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (user.isPresent()) {
-            if (user.get().getUsername().equalsIgnoreCase("mmesander")) {
-                throw new BadRequestException("Can't remove user: " + user.get().getUsername());
-            } else {
-                userRepository.deleteById(username);
-
-                return "User: " + username + " is deleted";
-            }
-        } else {
-            throw new UsernameNotFoundException(username);
+        if (user.getUsername().equalsIgnoreCase("mmesander")) {
+            throw new BadRequestException("Can't remove user: " + user.getUsername());
         }
+
+        userRepository.deleteById(username);
+
+        return "User: " + username + " is deleted";
     }
 
     // Relation - Authorities Methods
     public Set<Authority> getUserAuthorities(String username) {
-        Optional<User> user = userRepository.findById(username);
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (user.isPresent()) {
-            UserDto userDto = userToDto(user.get());
+        UserDto userDto = userToDto(user);
 
-            return userDto.getAuthorities();
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        return userDto.getAuthorities();
     }
 
     public UserDto assignAuthorityToUser(String username, String authority) {
         Optional<User> user = userRepository.findById(username);
         Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCase(authority);
-
 
         if (user.isPresent() && optionalAuthority.isPresent()) {
             if (user.get().getUsername().equalsIgnoreCase("rplooij")
@@ -301,95 +282,71 @@ public class UserService {
 
     // Relation - Discount Methods
     public Set<ShortDiscountDto> getAllDiscountsFromUser(String username) {
-        Optional<User> user = userRepository.findById(username);
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (user.isPresent()) {
-            UserDto userDto = userToDto(user.get());
-
-            if (userDto.getDiscounts().isEmpty()) {
-                throw new RecordNotFoundException("No discounts found for user: " + username);
-            }
-
-            return userDto.getDiscounts();
-        } else {
-            throw new UsernameNotFoundException(username);
+        if (user.getDiscounts().isEmpty()) {
+            throw new RecordNotFoundException("No discounts found for user: " + username);
         }
+
+        return userToDto(user).getDiscounts();
     }
 
     public String removeAllDiscountsFromUser(String username) {
-        Optional<User> user = userRepository.findById(username);
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (user.isPresent()) {
-            Set<Discount> discounts = user.get().getDiscounts();
-
-            if (discounts.isEmpty()) {
-                throw new RecordNotFoundException("No discounts found for user: " + username);
-            }
-
-            for (Discount discount : discounts) {
-                discountService.removeUserFromDiscount(username, discount.getId());
-            }
-            return "All discounts from user: " + username + " are removed";
-        } else {
-            throw new UsernameNotFoundException(username);
+        if (user.getDiscounts().isEmpty()) {
+            throw new RecordNotFoundException("No discounts found for user: " + username);
         }
+
+        for (Discount discount : user.getDiscounts()) {
+            discountService.removeUserFromDiscount(username, discount.getId());
+        }
+
+        return "All discounts from user: " + username + " are removed";
     }
 
     // Relation - Authenticated User Methods
     public UserDto addAuthUserShippingDetails(String username, ShippingDetailsInputDto inputDto) {
-        Optional<User> user = userRepository.findById(username);
-        UserDto dto;
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (user.isPresent()) {
-            shippingDetailsService.createShippingDetails(inputDto, username);
+        shippingDetailsService.createShippingDetails(inputDto, username);
 
-            String houseNumber = buildHouseNumber(inputDto);
-            ShippingDetails presentShippingDetails = null;
+        String houseNumber = buildHouseNumber(inputDto);
+        ShippingDetails presentShippingDetails = null;
+        Optional<List<ShippingDetails>> optionalListOfShippingDetails =
+                shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(
+                        inputDto.getStreet(), houseNumber);
 
-            Optional<List<ShippingDetails>> optionalListOfShippingDetails =
-                    shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(
-                            inputDto.getStreet(), houseNumber);
-
-            if (optionalListOfShippingDetails.isPresent()) {
-                for (ShippingDetails shippingDetails : optionalListOfShippingDetails.get()) {
-                    if (shippingDetails.getUser() == null) {
-                        presentShippingDetails = shippingDetails;
-                    }
+        if (optionalListOfShippingDetails.isPresent()) {
+            for (ShippingDetails shippingDetails : optionalListOfShippingDetails.get()) {
+                if (shippingDetails.getUser() == null) {
+                    presentShippingDetails = shippingDetails;
                 }
             }
-
-            if (presentShippingDetails != null) {
-                shippingDetailsService.assignUserToShippingDetails(username, presentShippingDetails.getId());
-            } else {
-                throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
-                        + " is not found");
-            }
-
-            dto = userToDto(user.get());
-
-        } else {
-            throw new UsernameNotFoundException(username);
         }
 
-        return dto;
+        if (presentShippingDetails != null) {
+            shippingDetailsService.assignUserToShippingDetails(username, presentShippingDetails.getId());
+        } else {
+            throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
+                    + " is not found");
+        }
+
+        return userToDto(user);
     }
 
     public Object addAuthUserProductReview(String username, ReviewInputDto inputDto, Long productId) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
-        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
-        ReviewDto createdReview;
-        Object dto;
-
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException(username);
-        }
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
         boolean exists = false;
         Long existingId = null;
 
-        if (optionalSupplement.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
+        if (supplementRepository.existsById(productId)) {
+            Supplement supplement = supplementRepository.findById(productId).orElseThrow();
             for (Review review : supplement.getReviews()) {
                 if (review.getUser().getUsername().equalsIgnoreCase(username)) {
                     exists = true;
@@ -397,8 +354,8 @@ public class UserService {
                     break;
                 }
             }
-        } else if (optionalGarment.isPresent()) {
-            Garment garment = optionalGarment.get();
+        } else if (garmentRepository.existsById(productId)) {
+            Garment garment = garmentRepository.findById(productId).orElseThrow();
             for (Review review : garment.getReviews()) {
                 if (review.getUser().getUsername().equalsIgnoreCase(username)) {
                     exists = true;
@@ -407,16 +364,17 @@ public class UserService {
                 }
             }
         } else {
-            throw new RecordNotFoundException("No product found with id: " + productId);
+            throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
 
         if (exists) {
             throw new BadRequestException("Product: " + productId + " already has a review with id: " + existingId
                     + " written by user: " + username);
-        } else {
-            createdReview = reviewService.createAuthUserReview(inputDto, username);
-            dto = reviewService.assignReviewToProduct(productId, createdReview.getId());
-            return dto;
         }
+
+        ReviewDto createdReview = reviewService.createAuthUserReview(inputDto, user.getUsername());
+        Object objectDto = reviewService.assignReviewToProduct(productId, createdReview.getId());
+
+        return objectDto;
     }
 }
