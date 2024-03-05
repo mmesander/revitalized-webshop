@@ -1,9 +1,12 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
+
 import jakarta.validation.Valid;
+import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
@@ -12,6 +15,7 @@ import nu.revitalized.revitalizedwebshop.services.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
 import java.util.List;
 
@@ -112,23 +116,44 @@ public class ReviewController {
     }
 
     // Relation - Product Requests
-    @PutMapping("/products/{productId}/reviews/{reviewId}")
-    public ResponseEntity<Object> assignReviewToProduct(
-            @PathVariable("productId") Long productId,
-            @PathVariable("reviewId") Long reviewId
+    @GetMapping("/products/{productId}/reviews")
+    public ResponseEntity<List<ReviewDto>> getAllReviewsFromProduct(
+            @PathVariable("productId") Long productId
     ) {
-        Object dto = reviewService.assignReviewToProduct(productId, reviewId);
+        List<ReviewDto> dtos = reviewService.getAllReviewsFromProduct(productId);
 
-        return ResponseEntity.ok().body(dto);
+        return ResponseEntity.ok().body(dtos);
     }
 
-    @DeleteMapping("/products/{productId}/reviews/{reviewId}")
+    @PutMapping("/products/{productId}/reviews")
+    public ResponseEntity<Object> assignReviewToProduct(
+            @PathVariable("productId") Long productId,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            Object dto = reviewService.assignReviewToProduct(productId, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/products/{productId}/reviews")
     public ResponseEntity<Object> removeReviewFromProduct(
             @PathVariable("productId") Long productId,
-            @PathVariable("reviewId") Long reviewId
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
     ) {
-        Object dto = reviewService.removeReviewFromProduct(productId, reviewId);
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            Object dto = reviewService.removeReviewFromProduct(productId, inputDto.getId());
 
-        return ResponseEntity.ok().body(dto);
+            return ResponseEntity.ok().body(dto);
+        }
     }
 }

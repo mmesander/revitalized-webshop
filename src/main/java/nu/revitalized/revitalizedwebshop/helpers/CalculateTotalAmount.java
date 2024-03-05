@@ -5,19 +5,23 @@ import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Order;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class CalculateTotalAmount {
     public static Double calculateTotalAmount(Order order) {
-        Double totalAmount = 0.00;
+        double totalAmount = 0.00;
 
         for (Supplement supplement : order.getSupplements()) {
-            totalAmount = totalAmount + supplement.getPrice();
+            totalAmount += supplement.getPrice();
         }
 
         for (Garment garment : order.getGarments()) {
-            totalAmount = totalAmount + garment.getPrice();
+            totalAmount += garment.getPrice();
         }
 
-        return totalAmount;
+        BigDecimal totalAmountRounded = BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP);
+
+        return totalAmountRounded.doubleValue();
     }
 }

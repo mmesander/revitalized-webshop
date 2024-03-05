@@ -121,7 +121,7 @@ public class OrderController {
     public ResponseEntity<OrderDto> updateOrderPayment(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
-            @RequestBody OrderIsPayedInputDto inputDto,
+            @RequestBody OrderIsPaidInputDto inputDto,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {

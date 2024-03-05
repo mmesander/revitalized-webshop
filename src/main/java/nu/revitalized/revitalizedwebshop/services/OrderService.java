@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
@@ -10,7 +9,6 @@ import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
@@ -22,7 +20,6 @@ import nu.revitalized.revitalizedwebshop.models.*;
 import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -72,7 +69,7 @@ public class OrderService {
 
                 boolean exists = false;
                 for (OrderItemDto item : orderItems)
-                    if (item.getId() == orderItemDto.getId()) {
+                    if (Objects.equals(item.getId(), orderItemDto.getId())) {
                         item.setQuantity(item.getQuantity() + 1);
                         exists = true;
                         break;
@@ -93,7 +90,7 @@ public class OrderService {
 
                 boolean exists = false;
                 for (OrderItemDto item : orderItems)
-                    if (item.getId() == orderItemDto.getId()) {
+                    if (Objects.equals(item.getId(), orderItemDto.getId())) {
                         item.setQuantity(item.getQuantity() + 1);
                         exists = true;
                         break;
@@ -149,13 +146,10 @@ public class OrderService {
     }
 
     public OrderDto getOrderByOrderNumber(Long orderNumber) {
-        Optional<Order> order = orderRepository.findById(orderNumber);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (order.isPresent()) {
-            return orderToDto(order.get());
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
-        }
+        return orderToDto(order);
     }
 
     public List<OrderDto> getALlOrdersByParam(
@@ -190,7 +184,7 @@ public class OrderService {
         List<OrderDto> orderDtos = new ArrayList<>();
 
         for (Order order : orders) {
-            if (order.getIsPayed()) {
+            if (order.getIsPaid()) {
                 OrderDto orderDto = orderToDto(order);
                 orderDtos.add(orderDto);
             }
@@ -210,7 +204,7 @@ public class OrderService {
         List<OrderDto> orderDtos = new ArrayList<>();
 
         for (Order order : orders) {
-            if (!order.getIsPayed()) {
+            if (!order.getIsPaid()) {
                 OrderDto orderDto = orderToDto(order);
                 orderDtos.add(orderDto);
             }
@@ -235,123 +229,90 @@ public class OrderService {
     }
 
     public OrderDto updateOrder(OrderInputDto inputDto, Long orderNumber) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
+        copyProperties(inputDto, order);
+        order.setOrderDate(createDate());
+        Order updatedOrder = orderRepository.save(order);
 
-            copyProperties(inputDto, order);
-            order.setOrderDate(createDate());
-            Order updatedOrder = orderRepository.save(order);
-
-            return orderToDto(updatedOrder);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
-        }
+        return orderToDto(updatedOrder);
     }
 
     public OrderDto updateOrderStatus(OrderStatusInputDto inputDto, Long orderNumber) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            order.setStatus(inputDto.getStatus());
-            order.setOrderDate(createDate());
-            Order updatedOrder = orderRepository.save(order);
+        order.setStatus(inputDto.getStatus());
+        order.setOrderDate(createDate());
+        Order updatedOrder = orderRepository.save(order);
 
-            return orderToDto(updatedOrder);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
-        }
+        return orderToDto(updatedOrder);
     }
 
-    public OrderDto updateOrderPayment(OrderIsPayedInputDto inputDto, Long orderNumber) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+    public OrderDto updateOrderPayment(OrderIsPaidInputDto inputDto, Long orderNumber) {
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            order.setIsPayed(inputDto.getIsPayed());
-            order.setOrderDate(createDate());
-            Order updatedOrder = orderRepository.save(order);
+        order.setIsPaid(inputDto.getIsPaid());
+        order.setOrderDate(createDate());
+        Order updatedOrder = orderRepository.save(order);
 
-            return orderToDto(updatedOrder);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
-        }
+        return orderToDto(updatedOrder);
     }
 
     public OrderDto updateOrderDiscount(OrderDiscountInputDto inputDto, Long orderNumber) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            order.setDiscountCode(inputDto.getDiscountCode());
-            order.setOrderDate(createDate());
-            Order updatedOrder = orderRepository.save(order);
+        order.setDiscountCode(inputDto.getDiscountCode());
+        order.setOrderDate(createDate());
+        Order updatedOrder = orderRepository.save(order);
 
-            return orderToDto(updatedOrder);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
-        }
+        return orderToDto(updatedOrder);
     }
 
     public String deleteOrder(Long orderNumber) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isPresent()) {
-            orderRepository.deleteById(orderNumber);
-            return "Order with order number: " + orderNumber + " is removed";
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
+        if (order.getUser() != null) {
+            throw new BadRequestException("Order with order number: " + orderNumber + " is assigned to user: "
+                    + order.getUser().getUsername() + " unassign user first before delete this order");
         }
+
+        orderRepository.deleteById(orderNumber);
+
+        return "Order with order number: " + order.getOrderNumber() + " is deleted";
     }
 
     // Relation - Product Methods
     public OrderDto assignProductToOrder(Long orderNumber, Long productId) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
-        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isEmpty()) {
-            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
-        }
-
-        Order order = optionalOrder.get();
-
-        if (optionalSupplement.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
-            List<Supplement> supplements = order.getSupplements();
-
-            supplements.add(supplement);
-            order.setSupplements(supplements);
-            order.setTotalAmount(calculateTotalAmount(order));
-            orderRepository.save(order);
-
-            return orderToDto(order);
-        } else if (optionalGarment.isPresent()) {
-            Garment garment = optionalGarment.get();
-            List<Garment> garments = order.getGarments();
-
-            garments.add(garment);
-            order.setGarments(garments);
-            order.setTotalAmount(calculateTotalAmount(order));
-            orderRepository.save(order);
-
-            return orderToDto(order);
+        if (supplementRepository.existsById(productId)) {
+            Supplement supplement = supplementRepository.findById(productId).orElseThrow();
+            order.getSupplements().add(supplement);
+        } else if (garmentRepository.existsById(productId)) {
+            Garment garment = garmentRepository.findById(productId).orElseThrow();
+            order.getGarments().add(garment);
         } else {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
+
+        order.setTotalAmount(calculateTotalAmount(order));
+        orderRepository.save(order);
+
+        return orderToDto(order);
     }
 
     public OrderDto assignMultipleProductsToOrder(Long orderNumber, List<Long> productIds) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
         List<Supplement> newSupplements = new ArrayList<>();
         List<Garment> newGarments = new ArrayList<>();
-
-        if (optionalOrder.isEmpty()) {
-            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
-        }
 
         for (Long productId : productIds) {
             Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
@@ -365,8 +326,6 @@ public class OrderService {
                 throw new BadRequestException(buildIdNotFound("Product", productId));
             }
         }
-
-        Order order = optionalOrder.get();
 
         order.getSupplements().addAll(newSupplements);
         order.getGarments().addAll(newGarments);
@@ -432,131 +391,98 @@ public class OrderService {
 
     // Relation - User Methods
     public OrderDto assignUserToOrder(Long orderNumber, String username) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
-        Optional<User> optionalUser = userRepository.findById(username);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isEmpty()) {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
-        }
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isPresent()) {
-            Order order = optionalOrder.get();
-            User user = optionalUser.get();
-
-            List<Order> orders = user.getOrders();
-
+        if (order.getUser() != null) {
             if (user.getOrders().contains(order)) {
                 throw new BadRequestException("Order with order-number: " + orderNumber
                         + " is already assigned to user: " + username);
             } else {
-                orders.add(order);
-                user.setOrders(orders);
-                order.setUser(user);
-                orderRepository.save(order);
-
-                return orderToDto(order);
+                throw new BadRequestException("Order with order-number: " + orderNumber
+                        + " is already assigned to user: " + order.getUser().getUsername());
             }
-        } else {
-            throw new UsernameNotFoundException(username);
         }
+
+        order.setUser(user);
+        orderRepository.save(order);
+
+        return orderToDto(order);
     }
 
     public OrderDto removeUserFromOrder(Long orderNumber, String username) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
-        Optional<User> optionalUser = userRepository.findById(username);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isEmpty()) {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
-        }
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isPresent()) {
-            Order order = optionalOrder.get();
-            User presentUser = order.getUser();
-
-            if (presentUser == null || !presentUser.getUsername().equalsIgnoreCase(username)) {
-                throw new BadRequestException("Order with order-number: " + orderNumber
+        if (order.getUser() == null || !order.getUser().equals(user)) {
+            throw new BadRequestException("Order with order-number: " + orderNumber
                         + " is not assigned to user: " + username);
-            } else {
-                order.setUser(null);
-                orderRepository.save(order);
-
-                return orderToDto(order);
-            }
-        } else {
-            throw new UsernameNotFoundException(username);
         }
+
+        order.setUser(null);
+        orderRepository.save(order);
+
+        return orderToDto(order);
     }
 
     public OrderDto assignShippingDetailsToOrder(Long orderNumber, Long shippingDetailsId) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(shippingDetailsId);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isEmpty()) {
-            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(shippingDetailsId)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details",
+                        shippingDetailsId)));
+
+        if (shippingDetails.getUser() == null) {
+            throw new BadRequestException("Shipping details with id: " + shippingDetailsId
+                    + " is not assigned to any user, assign shipping details to user first");
+        } else if (shippingDetails.getUser() != order.getUser()) {
+            throw new BadRequestException("Assign user: " + shippingDetails.getUser().getUsername() +
+                    " to current order first if you want to assign shipping details with id: " + shippingDetailsId
+                    + " from " + shippingDetails.getUser().getUsername() + " to current order");
         }
 
-        Order order = optionalOrder.get();
+        order.setShippingDetails(shippingDetails);
+        orderRepository.save(order);
 
-        if (optionalShippingDetails.isPresent()) {
-            ShippingDetails shippingDetails = optionalShippingDetails.get();
-
-            if (shippingDetails.getUser() == null) {
-                throw new BadRequestException("Shipping details with id: " + shippingDetailsId
-                        + " is not assigned to any user, assign shipping details to user first");
-            } else if (shippingDetails.getUser() != order.getUser()) {
-                throw new BadRequestException("Assign user: " + shippingDetails.getUser().getUsername() +
-                        " to current order first if you want to assign shipping details with id: " + shippingDetailsId
-                        + " from user: " + shippingDetails.getUser().getUsername() + " to current order");
-            } else {
-                order.setShippingDetails(shippingDetails);
-                orderRepository.save(order);
-
-                return orderToDto(order);
-            }
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
-        }
+        return orderToDto(order);
     }
 
     public OrderDto removeShippingDetailsFromOrder(Long orderNumber, Long shippingDetailsId) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
-        Optional<ShippingDetails> optionalShippingDetails = shippingDetailsRepository.findById(shippingDetailsId);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isEmpty()) {
-            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(shippingDetailsId)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details",
+                        shippingDetailsId)));
+
+        if (order.getShippingDetails() == null) {
+            throw new BadRequestException("Order with order-number: " + orderNumber
+                    + " does not contain any shipping details");
+        } else if (!order.getShippingDetails().equals(shippingDetails)) {
+            throw new BadRequestException("Shipping Details with id: " + shippingDetailsId
+                    + " is not assigned to order: " + orderNumber);
         }
 
-        Order order = optionalOrder.get();
+        order.setShippingDetails(null);
+        orderRepository.save(order);
 
-        if (optionalShippingDetails.isPresent()) {
-            if (order.getShippingDetails() == null) {
-                throw new BadRequestException("Order with order-number: " + orderNumber
-                        + " does not contain any shipping details");
-            } else if (!order.getShippingDetails().equals(optionalShippingDetails.get())) {
-                throw new BadRequestException("Shipping Details with id: " + shippingDetailsId
-                        + " is not assigned to order: " + orderNumber);
-            } else {
-                order.setShippingDetails(null);
-                orderRepository.save(order);
-
-                return orderToDto(order);
-            }
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
-        }
+        return orderToDto(order);
     }
 
     // Relation - Authenticated User Methods
     public List<OrderDto> getAllAuthUserOrders(String username) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        List<Order> orders;
-        List<OrderDto> orderDtos = new ArrayList<>();
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isPresent()) {
-            orders = optionalUser.get().getOrders();
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        List<Order> orders = user.getOrders();
+        List<OrderDto> orderDtos = new ArrayList<>();
 
         for (Order order : orders) {
             OrderDto orderDto = orderToDto(order);
@@ -572,29 +498,23 @@ public class OrderService {
     }
 
     public OrderDto getAuthUserOrderById(String username, Long orderNumber) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
-        List<Order> orders;
-        OrderDto dto = null;
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isPresent()) {
-            orders = optionalUser.get().getOrders();
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (optionalOrder.isPresent()) {
-            for (Order order : orders) {
-                if (order.getOrderNumber().equals(orderNumber)) {
-                    dto = orderToDto(order);
-                }
+        List<Order> orders = user.getOrders();
+        OrderDto orderDto = null;
+
+        for (Order foundOrder : orders) {
+            if (foundOrder.equals(order)) {
+                orderDto = orderToDto(order);
             }
-        } else {
-            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
         }
 
-        if (dto != null) {
-            return dto;
+        if (orderDto != null) {
+            return orderDto;
         } else {
             throw new BadRequestException("User: " + username + " does not have order with order-number: "
                     + orderNumber);

@@ -20,7 +20,7 @@ public class Order {
     private Long orderNumber;
     private Date orderDate;
     private String status;
-    private Boolean isPayed;
+    private Boolean isPaid;
     private String discountCode;
     private Double totalAmount;
 

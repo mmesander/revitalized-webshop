@@ -104,13 +104,10 @@ public class SupplementService {
     }
 
     public SupplementDto getSupplementById(Long id) {
-        Optional<Supplement> supplement = supplementRepository.findById(id);
+        Supplement supplement = supplementRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Supplement", id)));
 
-        if (supplement.isPresent()) {
-            return supplementToDto(supplement.get());
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Supplement", id));
-        }
+        return supplementToDto(supplement);
     }
 
     public List<SupplementDto> getSupplementsByParam(
@@ -173,6 +170,7 @@ public class SupplementService {
             return supplementDtos;
         }
     }
+
     public List<SupplementDto> getInStockSupplements() {
         List<Supplement> supplements = supplementRepository.findAll();
         List<SupplementDto> supplementDtos = new ArrayList<>();
@@ -205,132 +203,83 @@ public class SupplementService {
     }
 
     public SupplementDto updateSupplement(Long id, SupplementInputDto inputDto) {
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(id);
+        Supplement supplement = supplementRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Supplement", id)));
 
-        if (optionalSupplement.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
+        copyProperties(inputDto, supplement);
+        Supplement updatedSupplement = supplementRepository.save(supplement);
 
-            copyProperties(inputDto, supplement);
-
-            Supplement updatedSupplement = supplementRepository.save(supplement);
-
-            return supplementToDto(updatedSupplement);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Supplement", id));
-        }
+        return supplementToDto(updatedSupplement);
     }
 
     public SupplementDto patchSupplement(Long id, SupplementPatchInputDto inputDto) {
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(id);
+        Supplement supplement = supplementRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Supplement", id)));
 
-        if (optionalSupplement.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
-
-            if (inputDto.getName() != null) {
-                supplement.setName(inputDto.getName());
-            }
-            if (inputDto.getBrand() != null) {
-                supplement.setBrand(inputDto.getBrand());
-            }
-            if (inputDto.getDescription() != null) {
-                supplement.setDescription(inputDto.getDescription());
-            }
-            if (inputDto.getPrice() != null) {
-                supplement.setPrice(inputDto.getPrice());
-            }
-            if (inputDto.getStock() != null) {
-                supplement.setStock(inputDto.getStock());
-            }
-            if (inputDto.getContains() != null) {
-                supplement.setContains(inputDto.getContains());
-            }
-
-            Supplement patchedSupplement = supplementRepository.save(supplement);
-
-            return supplementToDto(patchedSupplement);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Supplement", id));
+        if (inputDto.getName() != null) {
+            supplement.setName(inputDto.getName());
         }
+        if (inputDto.getBrand() != null) {
+            supplement.setBrand(inputDto.getBrand());
+        }
+        if (inputDto.getDescription() != null) {
+            supplement.setDescription(inputDto.getDescription());
+        }
+        if (inputDto.getPrice() != null) {
+            supplement.setPrice(inputDto.getPrice());
+        }
+        if (inputDto.getStock() != null) {
+            supplement.setStock(inputDto.getStock());
+        }
+        if (inputDto.getContains() != null) {
+            supplement.setContains(inputDto.getContains());
+        }
+
+        Supplement patchedSupplement = supplementRepository.save(supplement);
+
+        return supplementToDto(patchedSupplement);
     }
 
     public String deleteSupplement(Long id) {
-        Optional<Supplement> supplement = supplementRepository.findById(id);
+        Supplement supplement = supplementRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Supplement", id)));
 
-        if (supplement.isPresent()) {
-            supplementRepository.deleteById(id);
+        supplementRepository.deleteById(id);
 
-            return buildSpecificConfirmation("Supplement", supplement.get().getName(), id);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Supplement", id));
-        }
+        return buildSpecificConfirmation("Supplement", supplement.getName(), id);
     }
 
     // Relation - Allergen Methods
     public SupplementDto assignAllergenToSupplement(Long supplementId, Long allergenId) {
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(supplementId);
-        Optional<Allergen> optionalAllergen = allergenRepository.findById(allergenId);
-        Set<Allergen> allergens;
-        SupplementDto dto;
+        Supplement supplement = supplementRepository.findById(supplementId)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Supplement", supplementId)));
 
-        if (optionalSupplement.isPresent() && optionalAllergen.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
-            Allergen allergen = optionalAllergen.get();
+        Allergen allergen = allergenRepository.findById(allergenId)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Allergen", allergenId)));
 
-            allergens = supplement.getAllergens();
-
-            if (allergens.contains(allergen)) {
-                throw new InvalidInputException("Supplement already contains allergen: " + allergen.getName() + " with id: " + allergenId);
-            } else {
-                allergens.add(allergen);
-                supplement.setAllergens(allergens);
-                supplementRepository.save(supplement);
-                dto = supplementToDto(supplement);
-            }
-            return dto;
-        } else {
-            if (optionalSupplement.isEmpty() && optionalAllergen.isEmpty()) {
-                throw new RecordNotFoundException("Supplement with id: "
-                        + supplementId + " and allergen with id: "
-                        + allergenId + " are not found");
-            } else if (optionalSupplement.isEmpty()) {
-                throw new RecordNotFoundException(buildIdNotFound("Supplement", supplementId));
-            } else {
-                throw new RecordNotFoundException(buildIdNotFound("Allergen", allergenId));
-            }
+        if (supplement.getAllergens().contains(allergen)) {
+            throw new InvalidInputException("Supplement already contains allergen: " + allergen.getName() + " with id: " + allergenId);
         }
+
+        supplement.getAllergens().add(allergen);
+        supplementRepository.save(supplement);
+
+        return supplementToDto(supplement);
     }
 
     public SupplementDto removeAllergenFromSupplement(Long supplementId, Long allergenId) {
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(supplementId);
-        Optional<Allergen> optionalAllergen = allergenRepository.findById(allergenId);
-        Set<Allergen> allergens;
-        SupplementDto dto;
+        Supplement supplement = supplementRepository.findById(supplementId)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Supplement", supplementId)));
 
-        if (optionalSupplement.isPresent() && optionalAllergen.isPresent()) {
-            Supplement supplement = optionalSupplement.get();
-            Allergen allergen = optionalAllergen.get();
+        Allergen allergen = allergenRepository.findById(allergenId)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Allergen", allergenId)));
 
-            allergens = supplement.getAllergens();
-
-            if (!allergens.contains(allergen)) {
-                throw new InvalidInputException("Supplement doesn't contain allergen: " + allergen.getName() + " with id: " + allergenId);
-            } else {
-                allergens.remove(allergen);
-                supplement.setAllergens(allergens);
-                supplementRepository.save(supplement);
-                dto = supplementToDto(supplement);
-            }
-            return dto;
-        } else {
-            if (optionalSupplement.isEmpty() && optionalAllergen.isEmpty()) {
-                throw new RecordNotFoundException("Supplement with id: "
-                        + supplementId + " and allergen with id: "
-                        + allergenId + " are not found");
-            } else if (optionalSupplement.isEmpty()) {
-                throw new RecordNotFoundException(buildIdNotFound("Supplement", supplementId));
-            } else {
-                throw new RecordNotFoundException(buildIdNotFound("Allergen", allergenId));
-            }
+        if (!supplement.getAllergens().remove(allergen)) {
+            throw new InvalidInputException("Supplement doesn't contain allergen: " + allergen.getName() + " with id: " + allergenId);
         }
+
+        supplementRepository.save(supplement);
+
+        return supplementToDto(supplement);
     }
 }

@@ -90,13 +90,10 @@ public class DiscountService {
     }
 
     public DiscountDto getDiscountById(Long id) {
-        Optional<Discount> discount = discountRepository.findById(id);
+        Discount discount = discountRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Discount", id)));
 
-        if (discount.isPresent()) {
-            return discountToDto(discount.get());
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
-        }
+        return discountToDto(discount);
     }
 
     public List<DiscountDto> getAllDiscountsByParam(
@@ -177,137 +174,92 @@ public class DiscountService {
     }
 
     public DiscountDto updateDiscount(Long id, DiscountInputDto inputDto) {
-        Optional<Discount> optionalDiscount = discountRepository.findById(id);
+        Discount discount = discountRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Discount", id)));
 
-        if (optionalDiscount.isPresent()) {
-            Discount discount = optionalDiscount.get();
+        copyProperties(inputDto, discount);
+        Discount updatedDiscount = discountRepository.save(discount);
 
-            copyProperties(inputDto, discount);
-
-            Discount updatedDiscount = discountRepository.save(discount);
-
-            return discountToDto(updatedDiscount);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
-        }
+        return discountToDto(updatedDiscount);
     }
 
     public DiscountDto patchDiscount(Long id, DiscountPatchInputDto inputDto) {
-        Optional<Discount> optionalDiscount = discountRepository.findById(id);
+        Discount discount = discountRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Discount", id)));
 
-        if (optionalDiscount.isPresent()) {
-            Discount discount = optionalDiscount.get();
-
-            if (inputDto.getName() != null) {
-                discount.setName(inputDto.getName());
-            }
-            if (inputDto.getValue() != null) {
-                discount.setValue(inputDto.getValue());
-            }
-            Discount patchedDiscount = discountRepository.save(discount);
-
-            return discountToDto(patchedDiscount);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
+        if (inputDto.getName() != null) {
+            discount.setName(inputDto.getName());
         }
+        if (inputDto.getValue() != null) {
+            discount.setValue(inputDto.getValue());
+        }
+        Discount patchedDiscount = discountRepository.save(discount);
+
+        return discountToDto(patchedDiscount);
     }
 
     public String deleteDiscount(Long id) {
-        Optional<Discount> optionalDiscount = discountRepository.findById(id);
+        Discount discount = discountRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Discount", id)));
 
-        if (optionalDiscount.isPresent()) {
-            Discount discount = optionalDiscount.get();
-
-            if (!discount.getUsers().isEmpty()) {
-                throw new BadRequestException("Can't remove an active discount, remove all users from discount first");
-            } else {
-                discountRepository.deleteById(id);
-                return buildSpecificConfirmation("Discount", discount.getName(), id);
-            }
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
+        if (!discount.getUsers().isEmpty()) {
+            throw new BadRequestException("Can't remove an active discount, remove all users from discount first");
         }
 
+        discountRepository.deleteById(id);
+        return buildSpecificConfirmation("Discount", discount.getName(), id);
     }
 
     // Relation - User Methods
     public DiscountDto assignUserToDiscount(String username, Long id) {
-        Optional<Discount> optionalDiscount = discountRepository.findById(id);
-        Optional<User> optionalUser = userRepository.findById(username);
+        Discount discount = discountRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Discount", id)));
 
-        if (optionalDiscount.isEmpty()) {
-            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        for (Discount presentDiscount : user.getDiscounts()) {
+            if (presentDiscount.getName().equalsIgnoreCase(discount.getName())) {
+                throw new InvalidInputException("User: " + username + " already has discount: " + discount.getName());
+            }
         }
 
-        Set<User> users;
+        Set<User> users = discount.getUsers();
+        users.add(user);
+        discount.setUsers(users);
+        Discount assignedDiscount = discountRepository.save(discount);
 
-        if (optionalUser.isPresent()) {
-            Discount discount = optionalDiscount.get();
-            User user = optionalUser.get();
-
-            users = discount.getUsers();
-
-            for (Discount presentDiscount : user.getDiscounts()) {
-                if (presentDiscount.getName().equalsIgnoreCase(discount.getName())) {
-                    throw new InvalidInputException("User: " + username + " already has discount: " + discount.getName());
-                }
-            }
-
-            if (!users.isEmpty()) {
-                users.addAll(discount.getUsers());
-            }
-
-            users.add(user);
-            discount.setUsers(users);
-            Discount savedDiscount = discountRepository.save(discount);
-
-            return discountToDto(savedDiscount);
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        return discountToDto(assignedDiscount);
     }
 
     public String removeUserFromDiscount(String username, Long id) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Optional<Discount> optionalDiscount = discountRepository.findById(id);
+        Discount discount = discountRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Discount", id)));
 
-        if (optionalDiscount.isEmpty()) {
-            throw new RecordNotFoundException(buildIdNotFound("Discount", id));
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Set<User> users = discount.getUsers();
+
+        if (!users.contains(user)) {
+            throw new InvalidInputException("User: " + username + " does not have discount: " + discount.getName());
         }
 
-        Set<User> users;
+        users.remove(user);
+        discount.setUsers(users);
+        discountRepository.save(discount);
 
-        if (optionalUser.isPresent()) {
-            Discount discount = optionalDiscount.get();
-            User user = optionalUser.get();
-
-            users = discount.getUsers();
-
-            if (!users.contains(user)) {
-                throw new InvalidInputException("User: " + username + " does not have discount: " + discount.getName());
-            } else {
-                users.remove(user);
-                discount.setUsers(users);
-                discountRepository.save(discount);
-                return "Discount: " + discount.getName() + " with id: " + discount.getId() + " is removed from user: "
-                        + username;
-            }
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
+        return "Discount: " + discount.getName() + " with id: " + discount.getId() + " is removed from user: "
+                + username;
     }
 
     // Relation - Authenticated User Methods
     public List<String> getAllAuthUserDiscounts(String username) {
-        Optional<User> optionalUser = userRepository.findById(username);
-        Set<Discount> discounts;
-        List<ShortDiscountDto> shortDtos = new ArrayList<>();
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException(username);
-        } else {
-            discounts = optionalUser.get().getDiscounts();
-        }
+        Set<Discount> discounts = user.getDiscounts();
+        List<ShortDiscountDto> shortDtos = new ArrayList<>();
 
         for (Discount discount : discounts) {
             ShortDiscountDto shortDto = discountToShortDto(discount);
