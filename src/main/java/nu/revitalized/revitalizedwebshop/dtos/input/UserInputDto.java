@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.ValidPassword;
-import nu.revitalized.revitalizedwebshop.interfaces.ValidText;
 import nu.revitalized.revitalizedwebshop.models.Authority;
 import java.util.Set;
 
