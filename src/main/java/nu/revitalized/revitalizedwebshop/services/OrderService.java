@@ -149,13 +149,10 @@ public class OrderService {
     }
 
     public OrderDto getOrderByOrderNumber(Long orderNumber) {
-        Optional<Order> order = orderRepository.findById(orderNumber);
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
-        if (order.isPresent()) {
-            return orderToDto(order.get());
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Order", orderNumber));
-        }
+        return orderToDto(order);
     }
 
     public List<OrderDto> getALlOrdersByParam(

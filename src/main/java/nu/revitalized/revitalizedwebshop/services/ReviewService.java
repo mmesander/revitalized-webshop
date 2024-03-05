@@ -95,13 +95,10 @@ public class ReviewService {
     }
 
     public ReviewDto getReview(Long id) {
-        Optional<Review> review = reviewRepository.findById(id);
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        if (review.isPresent()) {
-            return reviewToDto(review.get());
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Review", id));
-        }
+        return reviewToDto(review);
     }
 
     public List<ReviewDto> getReviewsByParam(
