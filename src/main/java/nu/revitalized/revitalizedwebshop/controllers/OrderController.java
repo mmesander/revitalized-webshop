@@ -159,7 +159,7 @@ public class OrderController {
     }
 
     // Relation - Product Requests
-    @PutMapping(value = "/users/orders/{orderNumber}/add/product")
+    @PutMapping(value = "/users/orders/{orderNumber}/product")
     public ResponseEntity<Object> assignProductToOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -175,7 +175,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping(value = "/users/orders/{orderNumber}/remove/product")
+    @DeleteMapping(value = "/users/orders/{orderNumber}/product")
     public ResponseEntity<Object> removeProductFromOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -192,7 +192,7 @@ public class OrderController {
     }
 
     // Relation - User Requests
-    @PutMapping(value = "/users/orders/add/{username}")
+    @PutMapping(value = "/users/orders/{username}")
     public ResponseEntity<OrderDto> assignUserToOrder(
             @PathVariable("username") String username,
             @Valid
@@ -208,7 +208,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping(value = "/users/orders/remove/{username}")
+    @DeleteMapping(value = "/users/orders/{username}")
     public ResponseEntity<OrderDto> removeUserFromOrder(
             @PathVariable("username") String username,
             @Valid
@@ -225,7 +225,7 @@ public class OrderController {
     }
 
     // Relation - ShippingDetails Requests
-    @PutMapping(value = "/users/orders/{orderNumber}/add/shipping-details")
+    @PutMapping(value = "/users/orders/{orderNumber}/shipping-details")
     public ResponseEntity<Object> assignShippingDetailsToOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
@@ -241,7 +241,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping(value = "/users/orders/{orderNumber}/remove/shipping-details")
+    @DeleteMapping(value = "/users/orders/{orderNumber}/shipping-details")
     public ResponseEntity<Object> removeShippingDetailsFromOrder(
             @PathVariable("orderNumber") Long orderNumber,
             @Valid
