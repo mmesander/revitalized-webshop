@@ -184,7 +184,7 @@ public class OrderService {
         }
     }
 
-    public List<OrderDto> getAllPayedOrders() {
+    public List<OrderDto> getAllPaidOrders() {
         List<Order> orders = orderRepository.findAll();
         List<OrderDto> orderDtos = new ArrayList<>();
 
@@ -204,7 +204,7 @@ public class OrderService {
         }
     }
 
-    public List<OrderDto> getAllUnpayedOrders() {
+    public List<OrderDto> getAllUnpaidOrders() {
         List<Order> orders = orderRepository.findAll();
         List<OrderDto> orderDtos = new ArrayList<>();
 

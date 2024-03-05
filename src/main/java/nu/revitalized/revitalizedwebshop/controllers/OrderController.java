@@ -54,16 +54,16 @@ public class OrderController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/users/orders-payed")
-    public ResponseEntity<List<OrderDto>> getAllPayedOrders() {
-        List<OrderDto> dtos = orderService.getAllPayedOrders();
+    @GetMapping("/users/orders-paid")
+    public ResponseEntity<List<OrderDto>> getAllPaidOrders() {
+        List<OrderDto> dtos = orderService.getAllPaidOrders();
 
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/users/orders-unpayed")
-    public ResponseEntity<List<OrderDto>> getAllUnpayedOrders() {
-        List<OrderDto> dtos = orderService.getAllUnpayedOrders();
+    @GetMapping("/users/orders-unpaid")
+    public ResponseEntity<List<OrderDto>> getAllUnpaidOrders() {
+        List<OrderDto> dtos = orderService.getAllUnpaidOrders();
 
         return ResponseEntity.ok().body(dtos);
     }

@@ -19,7 +19,6 @@ public class Checklist {
     // En ook niet als de discount niet geldig is
 
     // Overig
-    // TODO: Alle URLs nalopen en checken of het beter kan
     // TODO: Geen add/remove in de url zetten
     // TODO: InputDto maken die een ID een een user name verwacht en dan de username uit de path halen (ID_and_username_input_dto)
     // TODO: Order Relation - ShippingDetails
