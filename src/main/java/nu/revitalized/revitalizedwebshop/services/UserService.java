@@ -359,7 +359,7 @@ public class UserService {
             }
 
             if (presentShippingDetails != null) {
-                shippingDetailsService.assignShippingDetailsToUser(username, presentShippingDetails.getId());
+                shippingDetailsService.assignUserToShippingDetails(username, presentShippingDetails.getId());
             } else {
                 throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
                         + " is not found");
