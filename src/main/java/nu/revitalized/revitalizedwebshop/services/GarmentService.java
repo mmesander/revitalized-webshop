@@ -104,7 +104,7 @@ public class GarmentService {
             String color
     ) {
         Specification<Garment> params = Specification.where
-                (StringUtils.isBlank(name) ? null : getGarmentNameLikeFilter(name))
+                        (StringUtils.isBlank(name) ? null : getGarmentNameLikeFilter(name))
                 .and(StringUtils.isBlank(brand) ? null : getGarmentBrandLikeFilter(brand))
                 .and(price == null ? null : getGarmentPriceLikeFilter(price))
                 .and(minPrice == null ? null : getGarmentPriceMoreThanFilter(minPrice))
@@ -114,7 +114,7 @@ public class GarmentService {
                 .and(maxStock == null ? null : getGarmentStockLessThanFilter(maxStock))
                 .and(averageRating == null ? null : getGarmentAverageRatingLikeFilter(averageRating))
                 .and(minRating == null ? null : getGarmentAverageRatingMoreThanFilter(maxRating))
-                .and(maxRating == null ? null :getGarmentAverageRatingLessThanFilter(maxRating))
+                .and(maxRating == null ? null : getGarmentAverageRatingLessThanFilter(maxRating))
                 .and(StringUtils.isBlank(size) ? null : getGarmentSizeLikeFilter(size))
                 .and(StringUtils.isBlank(color) ? null : getGarmentColorLike(color));
 
@@ -193,56 +193,28 @@ public class GarmentService {
     }
 
     public GarmentDto patchGarment(Long id, GarmentPatchInputDto inputDto) {
-        Optional<Garment> optionalGarment = garmentRepository.findById(id);
+        Garment garment = garmentRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Garment", id)));
 
-        if (optionalGarment.isPresent()) {
-            Garment garment = optionalGarment.get();
+        garment.setName(inputDto.getName() != null ? inputDto.getName() : garment.getName());
+        garment.setBrand(inputDto.getBrand() != null ? inputDto.getBrand() : garment.getBrand());
+        garment.setDescription(inputDto.getDescription() != null ? inputDto.getDescription() : garment.getDescription());
+        garment.setPrice(inputDto.getPrice() != null ? inputDto.getPrice() : garment.getPrice());
+        garment.setStock(inputDto.getStock() != null ? inputDto.getStock() : garment.getStock());
+        garment.setSize(inputDto.getSize() != null ? inputDto.getSize() : garment.getSize());
+        garment.setColor(inputDto.getColor() != null ? inputDto.getColor() : garment.getColor());
 
-            if (inputDto.getName() != null) {
-                garment.setName(inputDto.getName());
-            }
+        Garment patchedGarment = garmentRepository.save(garment);
 
-            if (inputDto.getBrand() != null) {
-                garment.setBrand(inputDto.getBrand());
-            }
-
-            if (inputDto.getDescription() != null) {
-                garment.setDescription(inputDto.getDescription());
-            }
-
-            if (inputDto.getPrice() != null) {
-                garment.setPrice(inputDto.getPrice());
-            }
-
-            if (inputDto.getStock() != null) {
-                garment.setStock(inputDto.getStock());
-            }
-
-            if (inputDto.getSize() != null) {
-                garment.setSize(inputDto.getSize());
-            }
-
-            if (inputDto.getColor() != null) {
-                garment.setColor(inputDto.getColor());
-            }
-
-            Garment patchedGarment = garmentRepository.save(garment);
-
-            return garmentToDto(patchedGarment);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Garment", id));
-        }
+        return garmentToDto(patchedGarment);
     }
 
     public String deleteGarment(Long id) {
-        Optional<Garment> garment = garmentRepository.findById(id);
+        Garment garment = garmentRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Garment", id)));
 
-        if (garment.isPresent()) {
-            garmentRepository.deleteById(id);
+        garmentRepository.deleteById(id);
 
-            return buildSpecificConfirmation("Garment", garment.get().getName(), id);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Garment", id));
-        }
+        return buildSpecificConfirmation("Garment", garment.getName(), id);
     }
 }
