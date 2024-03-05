@@ -265,7 +265,7 @@ public class UserService {
         }
     }
 
-    public String removeAuthority(String username, String authority) {
+    public String removeAuthorityFromUser(String username, String authority) {
         Optional<User> optionalUser = userRepository.findById(username);
 
         if (optionalUser.isPresent()) {
