@@ -503,4 +503,29 @@ public class OrderService {
             throw new RecordNotFoundException(buildIdNotFound("Shipping Details", shippingDetailsId));
         }
     }
+
+    // Relation - Authenticated User Methods
+    public List<OrderDto> getAllAuthUserOrders(String username) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        List<Order> orders;
+        List<OrderDto> orderDtos = new ArrayList<>();
+
+        if (optionalUser.isPresent()) {
+            orders = optionalUser.get().getOrders();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        for (Order order : orders) {
+            OrderDto orderDto = orderToDto(order);
+            orderDtos.add(orderDto);
+        }
+
+        if (orderDtos.isEmpty()) {
+            throw new RecordNotFoundException("No orders found from user: " + username);
+        } else {
+            orderDtos.sort(Comparator.comparing(OrderDto::getOrderDate).reversed());
+            return orderDtos;
+        }
+    }
 }
