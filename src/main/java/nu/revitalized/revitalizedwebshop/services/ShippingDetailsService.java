@@ -325,7 +325,7 @@ public class ShippingDetailsService {
                 }
             }
         } else {
-            throw new BadRequestException("No shipping details found with id: " + id);
+            throw new BadRequestException(buildIdNotFound("Shipping details", id));
         }
 
         if (dto != null) {

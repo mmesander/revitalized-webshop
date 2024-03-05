@@ -528,4 +528,34 @@ public class OrderService {
             return orderDtos;
         }
     }
+
+    public OrderDto getAuthUserOrderById(String username, Long orderNumber) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        Optional<Order> optionalOrder = orderRepository.findById(orderNumber);
+        List<Order> orders;
+        OrderDto dto = null;
+
+        if (optionalUser.isPresent()) {
+            orders = optionalUser.get().getOrders();
+        } else {
+            throw new UsernameNotFoundException(username);
+        }
+
+        if (optionalOrder.isPresent()) {
+            for (Order order : orders) {
+                if (order.getOrderNumber().equals(orderNumber)) {
+                    dto = orderToDto(order);
+                }
+            }
+        } else {
+            throw new BadRequestException(buildIdNotFound("Order", orderNumber));
+        }
+
+        if (dto != null) {
+            return dto;
+        } else {
+            throw new BadRequestException("User: " + username + " does not have order with order-number: "
+                    + orderNumber);
+        }
+    }
 }
