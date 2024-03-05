@@ -335,13 +335,13 @@ public class UserController {
     }
 
     @GetMapping("/auth/{username}/reviews/{reviewId}")
-    public ResponseEntity<Object> getAuthUserReview(
+    public ResponseEntity<Object> getAuthUserReviewById(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @PathVariable("reviewId") Long reviewId
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            ReviewDto dto = reviewService.getReview(reviewId);
+            ReviewDto dto = reviewService.getAuthUserReviewById(username, reviewId);
 
             return ResponseEntity.ok().body(dto);
         } else {

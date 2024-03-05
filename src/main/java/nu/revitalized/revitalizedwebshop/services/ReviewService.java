@@ -331,6 +331,29 @@ public class ReviewService {
         }
     }
 
+    public ReviewDto getAuthUserReviewById(String username, Long id) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
+
+        Set<Review> reviews = user.getReviews();
+        ReviewDto dto = null;
+
+        for (Review foundReview : reviews) {
+            if (foundReview.equals(review)) {
+                dto = reviewToDto(review);
+            }
+        }
+
+        if (dto == null) {
+            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
+        }
+
+        return dto;
+    }
+
     public ReviewDto createAuthUserReview(ReviewInputDto inputDto, String username) {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
