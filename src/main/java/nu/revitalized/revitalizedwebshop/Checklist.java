@@ -19,13 +19,11 @@ public class Checklist {
     // En ook niet als de discount niet geldig is
 
     // Overig
-    // TODO: Geen add/remove in de url zetten
-    // TODO: InputDto maken die een ID een een user name verwacht en dan de username uit de path halen (ID_and_username_input_dto)
     // TODO: Order Relation - ShippingDetails
     // TODO: Foto's toevoegen
     // TODO: Alles nalopen op fouten
     // TODO: Kijken of de code korter kan
-    // TODO: Alles nalopen op imports etc.
+    // TODO: Alles nalopen op imports en code netjes maken
 
     // Rowan
     // TODO: Vragen hoe de foto's geimporteerd worden
