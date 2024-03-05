@@ -138,112 +138,117 @@ public class ReviewService {
     }
 
     public ReviewDto updateReview(Long id, ReviewInputDto inputDto) {
-        Optional<Review> optionalReview = reviewRepository.findById(id);
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        if (optionalReview.isPresent()) {
-            Review review = optionalReview.get();
+        copyProperties(inputDto, review);
+        review.setDate(createDate());
+        Review updatedReview = reviewRepository.save(review);
 
-            copyProperties(inputDto, review);
-            review.setDate(createDate());
-            Review updatedReview = reviewRepository.save(review);
-
-            if (updatedReview.getSupplement() != null) {
-                supplementRepository.save(updateSupplementRating(
-                        updatedReview, updatedReview.getSupplement(), false, true
-                ));
-            }
-
-            if (updatedReview.getGarment() != null) {
-                garmentRepository.save(updateGarmentRating(
-                        updatedReview, updatedReview.getGarment(), false, true
-                ));
-            }
-
-            return reviewToDto(updatedReview);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Review", id));
+        if (updatedReview.getSupplement() != null) {
+            supplementRepository.save(updateSupplementRating(
+                    updatedReview, updatedReview.getSupplement(), false, true
+            ));
         }
+
+        if (updatedReview.getGarment() != null) {
+            garmentRepository.save(updateGarmentRating(
+                    updatedReview, updatedReview.getGarment(), false, true
+            ));
+        }
+
+        return reviewToDto(updatedReview);
     }
 
     public ReviewDto patchReview(Long id, ReviewPatchInputDto inputDto) {
-        Optional<Review> optionalReview = reviewRepository.findById(id);
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        if (optionalReview.isPresent()) {
-            Review review = optionalReview.get();
-
-            if (inputDto.getReview() != null) {
-                review.setReview(inputDto.getReview());
-            }
-
-            if (inputDto.getRating() != null) {
-                review.setRating(inputDto.getRating());
-
-                if (review.getSupplement() != null) {
-                    supplementRepository.save(updateSupplementRating(
-                            review, review.getSupplement(), false, true
-                    ));
-                }
-
-                if (review.getGarment() != null) {
-                    garmentRepository.save(updateGarmentRating(
-                            review, review.getGarment(), false, true
-                    ));
-                }
-            }
-
-            if (inputDto.getReview() != null || inputDto.getRating() != null) {
-                review.setDate(createDate());
-            }
-
-            Review patchedReview = reviewRepository.save(review);
-
-            return reviewToDto(patchedReview);
-        } else {
-            throw new RecordNotFoundException(buildIdNotFound("Review", id));
+        if (inputDto.getReview() != null) {
+            review.setReview(inputDto.getReview());
         }
+
+        if (inputDto.getRating() != null) {
+            review.setRating(inputDto.getRating());
+
+            if (review.getSupplement() != null) {
+                supplementRepository.save(updateSupplementRating(
+                        review, review.getSupplement(), false, true
+                ));
+            }
+
+            if (review.getGarment() != null) {
+                garmentRepository.save(updateGarmentRating(
+                        review, review.getGarment(), false, true
+                ));
+            }
+        }
+
+        if (inputDto.getReview() != null || inputDto.getRating() != null) {
+            review.setDate(createDate());
+        }
+
+        Review patchedReview = reviewRepository.save(review);
+
+        return reviewToDto(patchedReview);
     }
 
     public String deleteReview(Long id) {
-        Optional<Review> optionalReview = reviewRepository.findById(id);
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        if (optionalReview.isPresent()) {
-            Review review = optionalReview.get();
+        if (review.getSupplement() != null) {
+            supplementRepository.save(updateSupplementRating(review, review.getSupplement(), true, false));
+            reviewRepository.deleteById(id);
 
-            if (review.getSupplement() != null) {
-                supplementRepository.save(updateSupplementRating(review, review.getSupplement(), true, false));
-                reviewRepository.deleteById(id);
+            return "Review with id: " + id + " from: " + formatDate(review.getDate())
+                    + " is removed from Supplement: " + review.getSupplement().getName() + " with id: "
+                    + review.getSupplement().getId();
+        } else if (review.getGarment() != null) {
+            garmentRepository.save(updateGarmentRating(review, review.getGarment(), true, false));
+            reviewRepository.deleteById(id);
 
-                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate())
-                        + " is removed from Supplement: " + review.getSupplement().getName() + " with id: "
-                        + review.getSupplement().getId();
-            } else if (review.getGarment() != null) {
-                garmentRepository.save(updateGarmentRating(review, review.getGarment(), true, false));
-                reviewRepository.deleteById(id);
-
-                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate())
-                        + " is removed from Garment: " + review.getGarment().getName() + " with id: "
-                        + review.getGarment().getId();
-            } else {
-                reviewRepository.deleteById(id);
-
-                return "Review with id: " + id + " from: " + formatDate(optionalReview.get().getDate()) + " is removed";
-            }
+            return "Review with id: " + id + " from: " + formatDate(review.getDate())
+                    + " is removed from Garment: " + review.getGarment().getName() + " with id: "
+                    + review.getGarment().getId();
         } else {
-            throw new RecordNotFoundException(buildIdNotFound("Review", id));
+            reviewRepository.deleteById(id);
+
+            return "Review with id: " + id + " from: " + formatDate(review.getDate()) + " is removed";
         }
     }
 
     // Relation - Product Methods
-    public Object assignReviewToProduct(Long productId, Long reviewId) {
-        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
-        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+    public List<ReviewDto> getAllReviewsFromProduct(Long productId) {
+        Set<Review> reviews;
 
-        if (optionalReview.isEmpty()) {
-            throw new BadRequestException(buildIdNotFound("Review", reviewId));
+        if (supplementRepository.existsById(productId)) {
+            Supplement supplement = supplementRepository.findById(productId).orElseThrow();
+            reviews = supplement.getReviews();
+        } else if (garmentRepository.existsById(productId)) {
+            Garment garment = garmentRepository.findById(productId).orElseThrow();
+            reviews = garment.getReviews();
+        } else {
+            throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
 
-        Review review = optionalReview.get();
+        if (reviews.isEmpty()) {
+            throw new RecordNotFoundException("No reviews found for product with id: " + productId);
+        }
+
+        List<ReviewDto> reviewDtos = new ArrayList<>();
+        for (Review review : reviews) {
+            ReviewDto reviewDto = reviewToDto(review);
+            reviewDtos.add(reviewDto);
+        }
+        reviewDtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
+
+        return reviewDtos;
+    }
+
+    public Object assignReviewToProduct(Long productId, Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", productId)));
 
         if (review.getSupplement() != null || review.getGarment() != null) {
             String type = review.getSupplement() != null ? "supplement" : "garment";
@@ -256,58 +261,47 @@ public class ReviewService {
 
         Object objectDto;
 
-        if (optionalSupplement.isPresent()) {
-            Supplement updatedSupplement = supplementRepository.save(
-                    updateSupplementRating(review, optionalSupplement.get(), false, false));
-
-            objectDto = supplementToDto(updatedSupplement);
-        } else if (optionalGarment.isPresent()) {
-            Garment updatedGarment = garmentRepository.save(
-                    updateGarmentRating(review, optionalGarment.get(), false, false));
-
-            objectDto = garmentToDto(updatedGarment);
+        if (supplementRepository.existsById(productId)) {
+            Supplement supplement = supplementRepository.findById(productId).orElseThrow();
+            supplementRepository.save(updateSupplementRating(review, supplement, false, false));
+            objectDto = supplementToDto(supplement);
+        } else if (garmentRepository.existsById(productId)) {
+            Garment garment = garmentRepository.findById(productId).orElseThrow();
+            garmentRepository.save(updateGarmentRating(review, garment, false, false));
+            objectDto = garmentToDto(garment);
         } else {
             throw new BadRequestException(buildIdNotFound("Product", productId));
         }
 
         reviewRepository.save(review);
+
         return objectDto;
     }
 
     public Object removeReviewFromProduct(Long productId, Long reviewId) {
-        Optional<Review> optionalReview = reviewRepository.findById(reviewId);
-        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
-        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", productId)));
 
-        if (optionalReview.isEmpty()) {
-            throw new BadRequestException(buildIdNotFound("Review", reviewId));
-        }
-
-        Review review = optionalReview.get();
         Object objectDto;
 
-        if (optionalSupplement.isPresent()) {
-            if (review.getSupplement() == null || !review.getSupplement().getId().equals(productId)) {
+        if (supplementRepository.existsById(productId)) {
+            Supplement supplement = supplementRepository.findById(productId).orElseThrow();
+            if (review.getSupplement() == null || !review.getSupplement().equals(supplement)) {
                 throw new BadRequestException("Review with id: " + reviewId
                         + " is not assigned to product: " + productId);
             }
-            Supplement updatedSupplement = supplementRepository.save(
-                    updateSupplementRating(review, review.getSupplement(), true, false));
-
+            supplementRepository.save(updateSupplementRating(review, supplement, true, false));
             reviewRepository.deleteById(reviewId);
-
-            objectDto = supplementToDto(updatedSupplement);
-        } else if (optionalGarment.isPresent()) {
-            if (review.getGarment() == null || !review.getGarment().getId().equals(productId)) {
+            objectDto = supplementToDto(supplement);
+        } else if (garmentRepository.existsById(productId)) {
+            Garment garment = garmentRepository.findById(productId).orElseThrow();
+            if (review.getGarment() == null || !review.getGarment().equals(garment)) {
                 throw new BadRequestException("Review with id: " + reviewId
                         + " is not assigned to product: " + productId);
             }
-            Garment updatedGarment = garmentRepository.save(
-                    updateGarmentRating(review, review.getGarment(), true, false));
-
+            garmentRepository.save(updateGarmentRating(review, review.getGarment(), true, false));
             reviewRepository.deleteById(reviewId);
-
-            objectDto = garmentToDto(updatedGarment);
+            objectDto = garmentToDto(garment);
         } else {
             throw new BadRequestException(buildIdNotFound("Product", productId));
         }
