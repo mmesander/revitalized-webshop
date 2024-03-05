@@ -170,6 +170,7 @@ public class SupplementService {
             return supplementDtos;
         }
     }
+
     public List<SupplementDto> getInStockSupplements() {
         List<Supplement> supplements = supplementRepository.findAll();
         List<SupplementDto> supplementDtos = new ArrayList<>();
