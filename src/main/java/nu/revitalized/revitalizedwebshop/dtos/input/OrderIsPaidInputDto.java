@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrderIsPayedInputDto {
+public class OrderIsPaidInputDto {
     @NotNull(message = "Is payed is required: set true or false")
-    private Boolean isPayed;
+    private Boolean isPaid;
 }
