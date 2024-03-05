@@ -132,7 +132,7 @@ public class DiscountController {
     }
 
     // Relation - User Requests
-    @PostMapping(value = "/users/{username}/discounts")
+    @PutMapping(value = "/users/{username}/discounts")
     public ResponseEntity<Object> assignDiscountToUser(
             @PathVariable("username") String username,
             @Valid
