@@ -10,10 +10,8 @@ import static nu.revitalized.revitalizedwebshop.services.DiscountService.*;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
-import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
+
+import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -378,7 +376,26 @@ public class UserService {
         return objectDto;
     }
 
-    public OrderDto addAuthUserOrder(String username, ) {
+    public OrderDto addAuthUserOrder(String username, AuthUserOrderInputDto inputDto) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        if (!inputDto.getDiscountCode().isEmpty()) {
+            boolean hasDiscount = false;
+            for (Discount discount : user.getDiscounts()) {
+                if (inputDto.getDiscountCode().equalsIgnoreCase(discount.getName())
+                        && discount.getUsers().contains(user)) {
+                    hasDiscount = true;
+                    break;
+                }
+            }
+            if (!hasDiscount) {
+                throw new BadRequestException("Discount: " + inputDto.getDiscountCode() + " is not valid");
+            }
+        }
+
+
+
 
     }
 
