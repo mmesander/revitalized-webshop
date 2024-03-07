@@ -78,6 +78,11 @@ public class FileService {
         if (optionalSupplement.isEmpty() && optionalGarment.isEmpty()) {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
+
+        if (optionalSupplement.get().getFile() == null && optionalGarment.get().getFile() == null) {
+            throw new BadRequestException("Product with id: " + productId + " does not have an image");
+        }
+
         File file;
 
         if (optionalSupplement.isPresent()) {
