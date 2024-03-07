@@ -44,23 +44,31 @@ public class FileService {
         file.setType(multipartFile.getContentType());
         file.setFile(compressFile(multipartFile.getBytes()));
 
-        String returnValue;
+        String confirmation;
 
         if (optionalSupplement.isPresent()) {
             Supplement supplement = optionalSupplement.get();
+            if (supplement.getFile() != null) {
+                throw new BadRequestException("Product: " + supplement.getName() + " with id: " + productId
+                        + " is already assigned to an image");
+            }
             file.setSupplement(supplement);
             File savedImage = fileRepository.save(file);
             supplement.setFile(savedImage);
-            returnValue = savedImage.getName();
+            confirmation = savedImage.getName();
         } else {
             Garment garment = optionalGarment.get();
+            if (garment.getFile() != null) {
+                throw new BadRequestException("Product: " + garment.getName() + " with id: " + productId
+                        + " is already assigned to an image");
+            }
             file.setGarment(garment);
             File savedImage = fileRepository.save(file);
             garment.setFile(savedImage);
-            returnValue = savedImage.getName();
+            confirmation = savedImage.getName();
         }
 
-        return returnValue;
+        return confirmation;
     }
 
     public byte[] downloadImage(Long productId) {
