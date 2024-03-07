@@ -8,40 +8,20 @@ import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName
 
 public class BuildFullName {
     public static String buildFullName(ShippingDetailsInputDto inputDto) {
-        StringBuilder fullName = new StringBuilder();
-
-        if (StringUtils.isNotBlank(inputDto.getMiddleName())) {
-            fullName.append(formatName(inputDto.getFirstName()));
-            fullName.append(" ");
-            fullName.append(inputDto.getMiddleName().toLowerCase());
-            fullName.append(" ");
-            fullName.append(formatName(inputDto.getLastName()));
-            return fullName.toString();
-        } else {
-            fullName.append(formatName(inputDto.getFirstName()));
-            fullName.append(" ");
-            fullName.append(formatName(inputDto.getLastName()));
-
-            return fullName.toString();
-        }
+        return buildFullNameHelper(inputDto.getFirstName(), inputDto.getMiddleName(), inputDto.getLastName());
     }
 
     public static String buildFullNamePatch(ShippingDetailsPatchInputDto inputDto) {
+        return buildFullNameHelper(inputDto.getFirstName(), inputDto.getMiddleName(), inputDto.getLastName());
+    }
+
+    private static String buildFullNameHelper(String firstName, String middleName, String lastName) {
         StringBuilder fullName = new StringBuilder();
-
-        if (StringUtils.isNotBlank(inputDto.getMiddleName())) {
-            fullName.append(formatName(inputDto.getFirstName()));
-            fullName.append(" ");
-            fullName.append(inputDto.getMiddleName().toLowerCase());
-            fullName.append(" ");
-            fullName.append(formatName(inputDto.getLastName()));
-            return fullName.toString();
-        } else {
-            fullName.append(formatName(inputDto.getFirstName()));
-            fullName.append(" ");
-            fullName.append(formatName(inputDto.getLastName()));
-
-            return fullName.toString();
+        fullName.append(formatName(firstName));
+        if (StringUtils.isNotBlank(middleName)) {
+            fullName.append(" ").append(middleName.toLowerCase());
         }
+        fullName.append(" ").append(formatName(lastName));
+        return fullName.toString();
     }
 }
