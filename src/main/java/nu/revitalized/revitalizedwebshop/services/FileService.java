@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Optional;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
-
 import static nu.revitalized.revitalizedwebshop.utils.FileUtil.compressFile;
 import static nu.revitalized.revitalizedwebshop.utils.FileUtil.decompressFile;
 
@@ -44,22 +43,22 @@ public class FileService {
         file.setType(multipartFile.getContentType());
         file.setFile(compressFile(multipartFile.getBytes()));
 
-        String returnValue = "";
+        String returnValue;
 
-        if (optionalGarment.isPresent()) {
-            Garment garment = optionalGarment.get();
-            file.setGarment(garment);
-            File savedImage = fileRepository.save(file);
-            garment.setFile(savedImage);
-            returnValue = savedImage.getName();
-
-        } else if (optionalSupplement.isPresent()) {
+        if (optionalSupplement.isPresent()) {
             Supplement supplement = optionalSupplement.get();
             file.setSupplement(supplement);
             File savedImage = fileRepository.save(file);
             supplement.setFile(savedImage);
             returnValue = savedImage.getName();
+        } else {
+            Garment garment = optionalGarment.get();
+            file.setGarment(garment);
+            File savedImage = fileRepository.save(file);
+            garment.setFile(savedImage);
+            returnValue = savedImage.getName();
         }
+
         return returnValue;
     }
 
