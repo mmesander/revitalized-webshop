@@ -52,8 +52,8 @@ public class SpringSecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users", "/image/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/users", "/image/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/users/{username}/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/users/{username}/authorities").hasRole("ADMIN")
