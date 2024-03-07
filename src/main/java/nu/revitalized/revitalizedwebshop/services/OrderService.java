@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
@@ -9,6 +10,7 @@ import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.
 import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
@@ -20,6 +22,7 @@ import nu.revitalized.revitalizedwebshop.models.*;
 import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
@@ -265,6 +268,10 @@ public class OrderService {
         Order order = orderRepository.findById(orderNumber)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
+        if (order.getUser() == null) {
+            throw new BadRequestException("Can't assign discount without user, assign user first");
+        }
+
         order.setDiscountCode(inputDto.getDiscountCode());
         order.setOrderDate(createDate());
         Order updatedOrder = orderRepository.save(order);
@@ -422,7 +429,7 @@ public class OrderService {
 
         if (order.getUser() == null || !order.getUser().equals(user)) {
             throw new BadRequestException("Order with order-number: " + orderNumber
-                        + " is not assigned to user: " + username);
+                    + " is not assigned to user: " + username);
         }
 
         order.setUser(null);
