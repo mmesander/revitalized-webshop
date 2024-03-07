@@ -35,7 +35,7 @@ public class FileController {
     }
 
     // CRUD Requests
-    @GetMapping("/image/{productId}")
+    @GetMapping("/products/{productId}/image")
     public ResponseEntity<Object> downloadImage(
             @PathVariable("productId") Long productId
     ) throws IOException {
@@ -58,17 +58,17 @@ public class FileController {
         return ResponseEntity.ok().contentType(mediaType).body(image);
     }
 
-    @PostMapping("/image")
+    @PostMapping("/products/{productId}/image")
     public ResponseEntity<String> uploadImage(
             @RequestParam("image") MultipartFile multipartFile,
-            @RequestParam Long productId
+            @PathVariable Long productId
     ) throws IOException {
         String image = fileService.uploadImage(multipartFile, productId);
 
         return ResponseEntity.ok().body("File: " + image + " has been uploaded to product: " + productId);
     }
 
-    @DeleteMapping("/image/{productId}")
+    @DeleteMapping("/products/{productId}/image")
     public ResponseEntity<String> deleteImage(
             @PathVariable("productId") Long productId
     ) {
