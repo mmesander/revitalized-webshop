@@ -106,19 +106,21 @@ public class FileService {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
 
-        if (optionalSupplement.get().getFile() == null && optionalGarment.get().getFile() == null) {
-            throw new BadRequestException("Product with id: " + productId + " does not have an image");
-        }
-
         String confirmation;
 
         if (optionalSupplement.isPresent()) {
             Supplement supplement = optionalSupplement.get();
+            if (supplement.getFile() == null) {
+                throw new BadRequestException("Product with id: " + productId + " does not have an image");
+            }
             confirmation = "Image with id: " + supplement.getFile().getId() + " is removed from product: " + productId;
             fileRepository.deleteById(supplement.getFile().getId());
             supplementRepository.save(supplement);
         } else {
             Garment garment = optionalGarment.get();
+            if (garment.getFile() == null) {
+                throw new BadRequestException("Product with id: " + productId + " does not have an image");
+            }
             confirmation = "Image with id: " + garment.getFile().getId() + " is removed from product: " + productId;
             fileRepository.deleteById(garment.getFile().getId());
             garmentRepository.save(garment);
