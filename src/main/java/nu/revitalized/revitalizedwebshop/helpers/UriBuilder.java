@@ -9,32 +9,26 @@ import java.net.URI;
 
 public class UriBuilder {
     public static URI buildUriId(IdentifiableId uriObject) {
-        URI uri = URI.create((
+        return URI.create((
                 ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("/" + uriObject.getId()).toUriString())
         );
-
-        return uri;
     }
 
     public static URI buildUriUsername(IdentifiableUsername uriObject) {
-        URI uri = URI.create((
+        return URI.create((
                 ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("/" + uriObject.getUsername()).toUriString())
         );
-
-        return uri;
     }
 
     public static URI buildUriOrderNumber(IdentifiableOrderNumber uriObject) {
-        URI uri = URI.create((
+        return URI.create((
                 ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("/" + uriObject.getOrderNumber()).toUriString())
         );
-
-        return uri;
     }
 }
