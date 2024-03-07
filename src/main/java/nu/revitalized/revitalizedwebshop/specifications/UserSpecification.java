@@ -5,7 +5,8 @@ import nu.revitalized.revitalizedwebshop.models.User;
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecification {
-    private UserSpecification() {}
+    private UserSpecification() {
+    }
 
     // Request Filter: User username
     public static Specification<User> getUserUsernameLikeFilter(String usernameLike) {

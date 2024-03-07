@@ -14,7 +14,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidSize {
     String message() default "Invalid status, choose from: XS|S|M|L|XL|";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
     String fieldName() default "Field";
 }

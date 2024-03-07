@@ -12,7 +12,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidText {
     String message() default "This field should contain only letters";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
     String fieldName() default "Field";
 }

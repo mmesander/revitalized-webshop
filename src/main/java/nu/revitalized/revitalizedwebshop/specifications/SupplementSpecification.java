@@ -5,7 +5,8 @@ import nu.revitalized.revitalizedwebshop.models.Supplement;
 import org.springframework.data.jpa.domain.Specification;
 
 public class SupplementSpecification {
-    private SupplementSpecification() {}
+    private SupplementSpecification() {
+    }
 
     // Request Filter: Supplement name
     public static Specification<Supplement> getSupplementNameLikeFilter(String nameLike) {

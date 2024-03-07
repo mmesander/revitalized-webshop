@@ -5,7 +5,8 @@ import nu.revitalized.revitalizedwebshop.models.Order;
 import org.springframework.data.jpa.domain.Specification;
 
 public class OrderSpecification {
-    private OrderSpecification() {}
+    private OrderSpecification() {
+    }
 
     // Request Filter: Order totalPrice
     public static Specification<Order> getOrderPriceLikeFilter(Double totalPriceLike) {

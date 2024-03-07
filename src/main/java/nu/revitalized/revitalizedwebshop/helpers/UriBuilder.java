@@ -38,4 +38,3 @@ public class UriBuilder {
         return uri;
     }
 }
-

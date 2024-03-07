@@ -16,7 +16,7 @@ public class CalculateAverageRating {
                 totalSum = review.getRating() + totalSum;
             }
 
-            Double averageRating = (totalSum / length);
+            double averageRating = (totalSum / length);
 
 
             averageRating = Math.round(averageRating * 10.0) / 10.0;

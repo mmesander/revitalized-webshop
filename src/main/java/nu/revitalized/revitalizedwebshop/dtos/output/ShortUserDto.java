@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableUsername;
 import nu.revitalized.revitalizedwebshop.models.Authority;
-import nu.revitalized.revitalizedwebshop.models.Review;
 import java.util.Set;
 
 @Getter

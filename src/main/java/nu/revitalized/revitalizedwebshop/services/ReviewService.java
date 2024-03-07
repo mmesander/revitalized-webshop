@@ -1,14 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
-import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
-import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.*;
-import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
-import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
-import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ReviewPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
@@ -25,7 +17,19 @@ import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
+import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
+import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.updateGarmentRating;
+import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.updateSupplementRating;
+import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
+import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
+import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
 
 @Service
 public class ReviewService {

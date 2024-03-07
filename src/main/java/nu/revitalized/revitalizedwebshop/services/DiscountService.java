@@ -1,10 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.*;
-import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
@@ -21,6 +17,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification.*;
 
 @Service
 public class DiscountService {

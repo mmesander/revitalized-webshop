@@ -1,8 +1,8 @@
 package nu.revitalized.revitalizedwebshop.security.config;
 
 // Imports
-import nu.revitalized.revitalizedwebshop.services.CustomUserDetailService;
 import nu.revitalized.revitalizedwebshop.security.filter.JwtRequestFilter;
+import nu.revitalized.revitalizedwebshop.services.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -46,7 +46,7 @@ public class SpringSecurityConfig {
     }
 
     @Bean
-    protected SecurityFilterChain filter (HttpSecurity http) throws Exception {
+    protected SecurityFilterChain filter(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(basic -> basic.disable())

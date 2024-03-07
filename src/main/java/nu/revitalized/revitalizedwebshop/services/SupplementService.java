@@ -1,12 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
-import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
-import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
@@ -17,10 +11,16 @@ import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.StringUtils;
 import java.util.*;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
+import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
+import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 
 @Service
 public class SupplementService {

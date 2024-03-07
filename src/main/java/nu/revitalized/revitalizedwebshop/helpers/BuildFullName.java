@@ -1,10 +1,10 @@
 package nu.revitalized.revitalizedwebshop.helpers;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import org.apache.commons.lang3.StringUtils;
+import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 
 public class BuildFullName {
     public static String buildFullName(ShippingDetailsInputDto inputDto) {

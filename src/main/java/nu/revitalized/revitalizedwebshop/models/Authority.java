@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.models;
 
 // Imports
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,8 @@ public class Authority implements Serializable {
     private String authority;
 
     // Methods
-    public Authority() {}
+    public Authority() {
+    }
 
     public Authority(String username, String authority) {
         this.username = username;

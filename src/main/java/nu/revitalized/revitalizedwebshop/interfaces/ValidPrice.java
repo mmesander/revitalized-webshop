@@ -15,7 +15,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidPrice {
     String message() default "Price should contain only digits followed by two decimals";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
     String fieldName() default "Field";
 }

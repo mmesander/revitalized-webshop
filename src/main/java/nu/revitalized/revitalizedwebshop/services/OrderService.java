@@ -1,14 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
-import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
-import static nu.revitalized.revitalizedwebshop.helpers.CalculateTotalAmount.calculateTotalAmount;
-import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
-import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
-import static nu.revitalized.revitalizedwebshop.services.GarmentService.*;
-import static nu.revitalized.revitalizedwebshop.services.SupplementService.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
@@ -21,6 +13,14 @@ import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateTotalAmount.calculateTotalAmount;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
+import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToOrderItemDto;
+import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.shippingDetailsToShortDto;
+import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToOrderItemDto;
+import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 
 @Service
 public class OrderService {
