@@ -133,9 +133,9 @@ public class UserController {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
             try {
-                userService.assignAuthorityToUser(username, authority.getAuthority().toUpperCase());
+                UserDto dto = userService.assignAuthorityToUser(username, authority.getAuthority().toUpperCase());
 
-                return ResponseEntity.ok().body(userService.getUser(username));
+                return ResponseEntity.ok().body(dto);
             } catch (Exception exception) {
                 throw new BadRequestException(exception.getMessage());
             }
