@@ -19,7 +19,7 @@ public class File {
     private String type;
 
     @Lob
-    private byte[] imageData;
+    private byte[] file;
 
     // Relations
     @OneToOne
@@ -30,10 +30,10 @@ public class File {
     public File() {
     }
 
-    public File(String name, String type, byte[] imageData, User user) {
+    public File(String name, String type, byte[] file, User user) {
         this.name = name;
         this.type = type;
-        this.imageData = imageData;
+        this.file = file;
         this.user = user;
     }
 }
