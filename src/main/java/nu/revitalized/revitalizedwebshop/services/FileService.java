@@ -9,7 +9,6 @@ import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 public class FileService {
@@ -31,11 +30,13 @@ public class FileService {
         File file = new File();
         file.setName(multipartFile.getName());
         file.setType(multipartFile.getContentType());
-        file.setImageData(multipartFile.getBytes());
+//        file.setImageData(multipartFile.getBytes());
         file.setUser(user);
 
         File savedImage = fileRepository.save(file);
-        user.setFile(file);
+        user.setFile(savedImage);
         userRepository.save(user);
+
+        return savedImage.getName();
     }
 }

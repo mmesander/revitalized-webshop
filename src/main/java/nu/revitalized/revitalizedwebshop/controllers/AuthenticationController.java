@@ -3,7 +3,7 @@ package nu.revitalized.revitalizedwebshop.controllers;
 // Imports
 import nu.revitalized.revitalizedwebshop.security.payload.AuthenticationRequest;
 import nu.revitalized.revitalizedwebshop.security.payload.AuthenticationResponse;
-import nu.revitalized.revitalizedwebshop.security.utils.JwtUtil;
+import nu.revitalized.revitalizedwebshop.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
