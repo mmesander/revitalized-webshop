@@ -16,7 +16,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidStatus {
     String message() default "Invalid status, choose from: in process|verifying|queued|packing|shipping|delivered|failed";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
     String fieldName() default "Field";
 }

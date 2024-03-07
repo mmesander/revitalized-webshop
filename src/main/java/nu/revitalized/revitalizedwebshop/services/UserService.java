@@ -1,17 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
-import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
-import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
-import static nu.revitalized.revitalizedwebshop.services.OrderService.*;
-import static nu.revitalized.revitalizedwebshop.services.DiscountService.*;
-import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
-import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
-import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
-
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
@@ -23,8 +12,17 @@ import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
+import static nu.revitalized.revitalizedwebshop.services.DiscountService.discountToShortDto;
+import static nu.revitalized.revitalizedwebshop.services.OrderService.orderToShortDto;
+import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
+import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.shippingDetailsToShortDto;
+import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.getUserEmailLike;
+import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.getUserUsernameLikeFilter;
 
 @Service
 public class UserService {
@@ -376,9 +374,8 @@ public class UserService {
         }
 
         ReviewDto createdReview = reviewService.createAuthUserReview(inputDto, user.getUsername());
-        Object objectDto = reviewService.assignReviewToProduct(productId, createdReview.getId());
 
-        return objectDto;
+        return reviewService.assignReviewToProduct(productId, createdReview.getId());
     }
 
     public OrderDto addAuthUserOrder(String username, AuthUserOrderInputDto inputDto) {

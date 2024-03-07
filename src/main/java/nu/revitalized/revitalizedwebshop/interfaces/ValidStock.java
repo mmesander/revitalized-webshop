@@ -15,7 +15,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidStock {
     String message() default "Stock should contain only digits";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
     String fieldName() default "Field";
 }

@@ -1,10 +1,7 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-
-import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
-
+import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.IdInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
@@ -14,10 +11,10 @@ import nu.revitalized.revitalizedwebshop.services.SupplementService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-
 import java.net.URI;
 import java.util.List;
+import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriId;
 
 @RestController
 public class SupplementController {

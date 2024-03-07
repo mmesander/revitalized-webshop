@@ -5,7 +5,8 @@ import nu.revitalized.revitalizedwebshop.models.Garment;
 import org.springframework.data.jpa.domain.Specification;
 
 public class GarmentSpecification {
-    private GarmentSpecification() {}
+    private GarmentSpecification() {
+    }
 
     // Request Filter: Garment name
     public static Specification<Garment> getGarmentNameLikeFilter(String nameLike) {

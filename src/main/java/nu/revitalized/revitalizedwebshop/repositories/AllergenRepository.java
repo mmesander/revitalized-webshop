@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface AllergenRepository extends JpaRepository<Allergen, Long> {
     List<Allergen> findAllergenByNameContainsIgnoreCase(String name);
+
     boolean existsByNameIgnoreCase(String name);
 }

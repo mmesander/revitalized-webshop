@@ -5,7 +5,8 @@ import nu.revitalized.revitalizedwebshop.models.Review;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ReviewSpecification {
-    private ReviewSpecification() {}
+    private ReviewSpecification() {
+    }
 
     // Request Filter: Review rating
     public static Specification<Review> getReviewRatingLikeFilter(Integer ratingLike) {

@@ -1,15 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
-import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.*;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.*;
-import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
-import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
-import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
@@ -26,7 +17,21 @@ import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullNamePatch;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumberPatch;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
+import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
+import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
+import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
+import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 
 @Service
 public class ShippingDetailsService {

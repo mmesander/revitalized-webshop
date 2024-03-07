@@ -1,11 +1,11 @@
 package nu.revitalized.revitalizedwebshop.helpers;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import java.util.Set;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 
 public class UpdateRating {
     public static Supplement updateSupplementRating(Review review, Supplement supplement, boolean deleteRating, boolean update) {

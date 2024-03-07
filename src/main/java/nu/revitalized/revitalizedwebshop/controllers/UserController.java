@@ -1,10 +1,7 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildPersonalConfirmation;
-import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.*;
-
+import jakarta.validation.Valid;
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
@@ -14,12 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
+import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildPersonalConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriOrderNumber;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 
 @CrossOrigin
 @RestController
@@ -133,9 +133,9 @@ public class UserController {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
             try {
-                userService.assignAuthorityToUser(username, authority.getAuthority().toUpperCase());
+                UserDto dto = userService.assignAuthorityToUser(username, authority.getAuthority().toUpperCase());
 
-                return ResponseEntity.ok().body(userService.getUser(username));
+                return ResponseEntity.ok().body(dto);
             } catch (Exception exception) {
                 throw new BadRequestException(exception.getMessage());
             }
