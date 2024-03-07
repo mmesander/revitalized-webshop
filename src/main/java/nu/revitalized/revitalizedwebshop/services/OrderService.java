@@ -272,8 +272,21 @@ public class OrderService {
             throw new BadRequestException("Can't assign discount without user, assign user first");
         }
 
+        boolean hasDiscount = false;
+        for (Discount discount : order.getUser().getDiscounts()) {
+            if (inputDto.getDiscountCode().equalsIgnoreCase(discount.getName())) {
+                hasDiscount = true;
+                break;
+            }
+        }
+        if (!hasDiscount) {
+            throw new BadRequestException("User: " + order.getUser().getUsername() + " does not have discount: "
+                    + inputDto.getDiscountCode());
+        }
+
         order.setDiscountCode(inputDto.getDiscountCode());
         order.setOrderDate(createDate());
+        order.setTotalAmount(calculateTotalAmount(order));
         Order updatedOrder = orderRepository.save(order);
 
         return orderToDto(updatedOrder);

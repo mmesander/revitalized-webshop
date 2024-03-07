@@ -23,13 +23,13 @@ public class CalculateTotalAmount {
             totalAmount += garment.getPrice();
         }
 
-        if (!order.getDiscountCode().isEmpty() && order.getUser() != null) {
+        if (order.getDiscountCode() != null && order.getUser() != null) {
             for (Discount userDiscount : order.getUser().getDiscounts()) {
                 if (userDiscount.getName().equals(order.getDiscountCode())) {
                     discount = userDiscount.getValue();
                 }
             }
-            totalAmount = (discount / 100) * totalAmount;
+            totalAmount = totalAmount - ((discount / 100) * totalAmount);
         }
 
         BigDecimal totalAmountRounded = BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP);
