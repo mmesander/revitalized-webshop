@@ -1,4 +1,4 @@
-package nu.revitalized.revitalizedwebshop.security.utils;
+package nu.revitalized.revitalizedwebshop.utils;
 
 // Imports
 import io.jsonwebtoken.Claims;

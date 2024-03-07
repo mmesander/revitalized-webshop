@@ -33,4 +33,8 @@ public class Supplement extends Product implements IdentifiableProduct {
 
     @ManyToMany(mappedBy = "supplements")
     List<Order> orders;
+
+    // Relations
+    @OneToOne(mappedBy = "supplement")
+    private File file;
 }

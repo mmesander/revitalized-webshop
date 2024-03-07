@@ -58,7 +58,6 @@ public class User {
     )
     private Set<Discount> discounts;
 
-
     // Methods
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
