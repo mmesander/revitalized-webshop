@@ -3,7 +3,9 @@ package nu.revitalized.revitalizedwebshop.services;
 // Imports
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
-import nu.revitalized.revitalizedwebshop.models.*;
+import nu.revitalized.revitalizedwebshop.models.File;
+import nu.revitalized.revitalizedwebshop.models.Garment;
+import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.FileRepository;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
