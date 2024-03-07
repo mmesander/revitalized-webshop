@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "image_data")
-public class ImageData {
+@Table(name = "files")
+public class File {
     // Variables
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +27,10 @@ public class ImageData {
     private User user;
 
     // Constructors
-    public ImageData() {
+    public File() {
     }
 
-    public ImageData(String name, String type, byte[] imageData, User user) {
+    public File(String name, String type, byte[] imageData, User user) {
         this.name = name;
         this.type = type;
         this.imageData = imageData;
