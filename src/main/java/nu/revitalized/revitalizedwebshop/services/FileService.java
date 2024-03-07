@@ -9,7 +9,6 @@ import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-
 import static nu.revitalized.revitalizedwebshop.utils.FileUtil.compressFile;
 import static nu.revitalized.revitalizedwebshop.utils.FileUtil.decompressFile;
 
