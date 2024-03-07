@@ -1,9 +1,6 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    // ORDER
-    // TODO: User (Auth) Requests in userController:
-
     // Overig
     // TODO: Foto's toevoegen
     // TODO: Zorgen dat alle POSTS een uri hebben
