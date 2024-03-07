@@ -21,19 +21,11 @@ public class File {
     @Lob
     private byte[] file;
 
-    // Relations
     @OneToOne
-    @JoinColumn(name = "user_username", referencedColumnName = "username")
-    private User user;
+    @JoinColumn(name = "supplement_id", referencedColumnName = "id")
+    private Supplement supplement;
 
-    // Constructors
-    public File() {
-    }
-
-    public File(String name, String type, byte[] file, User user) {
-        this.name = name;
-        this.type = type;
-        this.file = file;
-        this.user = user;
-    }
+    @OneToOne
+    @JoinColumn(name = "garment_id", referencedColumnName = "id")
+    private Garment garment;
 }

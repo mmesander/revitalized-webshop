@@ -26,4 +26,8 @@ public class Garment extends Product implements IdentifiableProduct {
 
     @ManyToMany(mappedBy = "garments")
     List<Order> orders;
+
+    // Relations
+    @OneToOne(mappedBy = "garment")
+    private File file;
 }
