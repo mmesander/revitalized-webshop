@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.*;
 import nu.revitalized.revitalizedwebshop.repositories.FileRepository;
@@ -78,5 +79,34 @@ public class FileService {
         }
 
         return decompressFile(file.getFile());
+    }
+
+    public String deleteImage(Long productId) {
+        Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
+        Optional<Garment> optionalGarment = garmentRepository.findById(productId);
+
+        if (optionalSupplement.isEmpty() && optionalGarment.isEmpty()) {
+            throw new RecordNotFoundException(buildIdNotFound("Product", productId));
+        }
+
+        if (optionalSupplement.get().getFile() == null && optionalGarment.get().getFile() == null) {
+            throw new BadRequestException("Product with id: " + productId + " does not have an image");
+        }
+
+        String confirmation;
+
+        if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            confirmation = "Image with id: " + supplement.getFile().getId() + " is removed from product: " + productId;
+            fileRepository.deleteById(supplement.getFile().getId());
+            supplementRepository.save(supplement);
+        } else {
+            Garment garment = optionalGarment.get();
+            confirmation = "Image with id: " + garment.getFile().getId() + " is removed from product: " + productId;
+            fileRepository.deleteById(garment.getFile().getId());
+            garmentRepository.save(garment);
+        }
+
+        return confirmation;
     }
 }
