@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
@@ -10,10 +11,8 @@ import static nu.revitalized.revitalizedwebshop.services.DiscountService.*;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.*;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.*;
 import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.*;
-import nu.revitalized.revitalizedwebshop.dtos.input.ReviewInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.UserEmailInputDto;
-import nu.revitalized.revitalizedwebshop.dtos.input.UserInputDto;
+
+import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
@@ -24,6 +23,7 @@ import nu.revitalized.revitalizedwebshop.repositories.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
@@ -31,30 +31,33 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     private final ShippingDetailsRepository shippingDetailsRepository;
-    private final ShippingDetailsService shippingDetailsService;
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
+    private final ShippingDetailsService shippingDetailsService;
     private final ReviewService reviewService;
     private final DiscountService discountService;
+    private final OrderService orderService;
 
     public UserService(
             UserRepository userRepository,
             AuthorityRepository authorityRepository,
             ShippingDetailsRepository shippingDetailsRepository,
-            ShippingDetailsService shippingDetailsService,
             SupplementRepository supplementRepository,
             GarmentRepository garmentRepository,
+            ShippingDetailsService shippingDetailsService,
             ReviewService reviewService,
-            DiscountService discountService
+            DiscountService discountService,
+            OrderService orderService
     ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.shippingDetailsRepository = shippingDetailsRepository;
-        this.shippingDetailsService = shippingDetailsService;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
+        this.shippingDetailsService = shippingDetailsService;
         this.reviewService = reviewService;
         this.discountService = discountService;
+        this.orderService = orderService;
     }
 
     // Transfer Methods
@@ -376,5 +379,44 @@ public class UserService {
         Object objectDto = reviewService.assignReviewToProduct(productId, createdReview.getId());
 
         return objectDto;
+    }
+
+    public OrderDto addAuthUserOrder(String username, AuthUserOrderInputDto inputDto) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        // Check if user has valid discount
+        if (!inputDto.getDiscountCode().isEmpty()) {
+            boolean hasDiscount = false;
+            for (Discount discount : user.getDiscounts()) {
+                if (inputDto.getDiscountCode().equalsIgnoreCase(discount.getName())
+                        && discount.getUsers().contains(user)) {
+                    hasDiscount = true;
+                    break;
+                }
+            }
+            if (!hasDiscount) {
+                throw new BadRequestException("Discount: " + inputDto.getDiscountCode() + " is not valid");
+            }
+        }
+
+        // Check if user has shipping details with specified ID
+        boolean hasShippingDetails = false;
+        for (ShippingDetails shippingDetails : user.getShippingDetails()) {
+            if (inputDto.getShippingDetailsId().equals(shippingDetails.getId())) {
+                hasShippingDetails = true;
+                break;
+            }
+        }
+        if (!hasShippingDetails) {
+            throw new BadRequestException("User: " + username + " does not have shipping details with id: "
+                    + inputDto.getShippingDetailsId());
+        }
+
+        OrderDto createdOrder = orderService.createAuthUserOrder(username, inputDto);
+
+        return orderService.assignMultipleProductsToOrder(
+                createdOrder.getOrderNumber(), inputDto.getProductIds()
+        );
     }
 }

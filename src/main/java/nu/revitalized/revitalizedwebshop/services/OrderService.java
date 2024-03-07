@@ -265,8 +265,25 @@ public class OrderService {
         Order order = orderRepository.findById(orderNumber)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
+        if (order.getUser() == null) {
+            throw new BadRequestException("Assign user to order first before assigning a discount to order");
+        }
+
+        boolean hasDiscount = false;
+        for (Discount discount : order.getUser().getDiscounts()) {
+            if (inputDto.getDiscountCode().equalsIgnoreCase(discount.getName())) {
+                hasDiscount = true;
+                break;
+            }
+        }
+        if (!hasDiscount) {
+            throw new BadRequestException("User: " + order.getUser().getUsername() + " does not have discount: "
+                    + inputDto.getDiscountCode());
+        }
+
         order.setDiscountCode(inputDto.getDiscountCode());
         order.setOrderDate(createDate());
+        order.setTotalAmount(calculateTotalAmount(order));
         Order updatedOrder = orderRepository.save(order);
 
         return orderToDto(updatedOrder);
@@ -422,7 +439,7 @@ public class OrderService {
 
         if (order.getUser() == null || !order.getUser().equals(user)) {
             throw new BadRequestException("Order with order-number: " + orderNumber
-                        + " is not assigned to user: " + username);
+                    + " is not assigned to user: " + username);
         }
 
         order.setUser(null);
@@ -519,5 +536,23 @@ public class OrderService {
             throw new BadRequestException("User: " + username + " does not have order with order-number: "
                     + orderNumber);
         }
+    }
+
+    public OrderDto createAuthUserOrder(String username, AuthUserOrderInputDto inputDto) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(inputDto.getShippingDetailsId()).orElseThrow();
+
+        Order order = new Order();
+        order.setOrderDate(createDate());
+        order.setStatus("in process");
+        order.setIsPaid(false);
+        order.setDiscountCode(inputDto.getDiscountCode());
+        order.setUser(user);
+        order.setShippingDetails(shippingDetails);
+        orderRepository.save(order);
+
+        return orderToDto(order);
     }
 }

@@ -1,20 +1,15 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildPersonalConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShortDiscountDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
-import nu.revitalized.revitalizedwebshop.dtos.output.UserDto;
+import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
-import nu.revitalized.revitalizedwebshop.services.DiscountService;
-import nu.revitalized.revitalizedwebshop.services.ReviewService;
-import nu.revitalized.revitalizedwebshop.services.ShippingDetailsService;
-import nu.revitalized.revitalizedwebshop.services.UserService;
+import nu.revitalized.revitalizedwebshop.services.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,17 +29,20 @@ public class UserController {
     private final ShippingDetailsService shippingDetailsService;
     private final ReviewService reviewService;
     private final DiscountService discountService;
+    private final OrderService orderService;
 
     public UserController(
             UserService userService,
             ShippingDetailsService shippingDetailsService,
             ReviewService reviewService,
-            DiscountService discountService
+            DiscountService discountService,
+            OrderService orderService
     ) {
         this.userService = userService;
         this.shippingDetailsService = shippingDetailsService;
         this.reviewService = reviewService;
         this.discountService = discountService;
+        this.orderService = orderService;
     }
 
     // ADMIN -- CRUD Requests
@@ -446,5 +444,55 @@ public class UserController {
     }
 
     // USER (Authenticated) - Order Requests
+    @GetMapping("/auth/{username}/orders")
+    public ResponseEntity<List<OrderDto>> getAllAuthUserOrders(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            List<OrderDto> orders = orderService.getAllAuthUserOrders(username);
 
+            return ResponseEntity.ok().body(orders);
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @GetMapping("/auth/{username}/orders/{orderNumber}")
+    public ResponseEntity<OrderDto> getAuthUserOrderById(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @PathVariable("orderNumber") Long orderNumber
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            OrderDto dto = orderService.getAuthUserOrderById(username, orderNumber);
+
+            return ResponseEntity.ok().body(dto);
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PostMapping("/auth/{username}/orders")
+    public ResponseEntity<OrderDto> createAuthUserOrder(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody AuthUserOrderInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                OrderDto dto = userService.addAuthUserOrder(username, inputDto);
+
+                URI uri = buildUriOrderNumber(dto);
+
+                return ResponseEntity.created(uri).body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
 }

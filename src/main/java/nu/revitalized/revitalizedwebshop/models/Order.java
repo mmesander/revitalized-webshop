@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "garment_id")
     )
-    private List<Garment> garments;
+    private List<Garment> garments = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -39,7 +40,7 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "supplement_id")
     )
-    private List<Supplement> supplements;
+    private List<Supplement> supplements = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_orders")
