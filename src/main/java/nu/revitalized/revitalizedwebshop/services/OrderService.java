@@ -269,7 +269,7 @@ public class OrderService {
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));
 
         if (order.getUser() == null) {
-            throw new BadRequestException("Can't assign discount without user, assign user first");
+            throw new BadRequestException("Assign user to order first before assigning a discount to order");
         }
 
         boolean hasDiscount = false;
