@@ -377,4 +377,13 @@ public class UserService {
 
         return objectDto;
     }
+
+    public OrderDto addAuthUserOrder(String username, ) {
+
+    }
+
+    // Username
+    // List<Product>
+    // ShippingDetails ID
+    // Discount String
 }

@@ -7,8 +7,6 @@ public class Checklist {
     // TODO: getAuthUserOrderById()
     // TODO: createAuthUserOrder()
     // TODO: addProductsToAuthUserOrder()
-    // TODO: removeProductFromAuthUserOrder()
-    // TODO: removeMultipleProductsFromAuthUserOrder()
     // TODO: assignShippingDetailsToAuthUserOrder()
     // TODO: removeShippingDetailsFromAuthUserOrder()
     // TODO: addDiscountToAuthUserOrder()
