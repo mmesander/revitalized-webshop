@@ -12,8 +12,8 @@ public class OrderInputDto {
     @ValidStatus
     private String status;
 
-    @NotNull(message = "Is payed is required: set true or false")
-    private Boolean isPayed;
+    @NotNull(message = "Is paid is required: set true or false")
+    private Boolean isPaid;
 
     private String discountCode;
 }

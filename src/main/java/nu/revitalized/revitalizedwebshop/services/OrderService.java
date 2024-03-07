@@ -520,4 +520,19 @@ public class OrderService {
                     + orderNumber);
         }
     }
+
+    public OrderDto createAuthUserOrder(String username, AuthUserOrderInputDto inputDto) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Order order = new Order();
+        order.setOrderDate(createDate());
+        order.setStatus("in process");
+        order.setIsPaid(false);
+        order.setDiscountCode(inputDto.getDiscountCode());
+        order.setUser(user);
+        orderRepository.save(order);
+
+        return orderToDto(order);
+    }
 }
