@@ -1,9 +1,10 @@
 package nu.revitalized.revitalizedwebshop.controllers;
 
 // Imports
-import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.buildUriUsername;
 import static nu.revitalized.revitalizedwebshop.helpers.BindingResultHelper.handleBindingResultError;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildPersonalConfirmation;
+import static nu.revitalized.revitalizedwebshop.helpers.UriBuilder.*;
+
 import nu.revitalized.revitalizedwebshop.dtos.input.*;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
@@ -467,6 +468,29 @@ public class UserController {
             OrderDto dto = orderService.getAuthUserOrderById(username, orderNumber);
 
             return ResponseEntity.ok().body(dto);
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PostMapping("/auth/{username}/orders")
+    public ResponseEntity<OrderDto> createAuthUserOrder(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody AuthUserOrderInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username)) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                OrderDto dto = userService.addAuthUserOrder(username, inputDto);
+
+                URI uri = buildUriOrderNumber(dto);
+
+                return ResponseEntity.created(uri).body(dto);
+            }
         } else {
             throw new BadRequestException("Used token is not valid");
         }
