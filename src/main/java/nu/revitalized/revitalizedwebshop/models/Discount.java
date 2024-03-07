@@ -12,7 +12,7 @@ import java.util.Set;
 @Table(name = "discounts")
 public class Discount {
     // Variables
-    @SequenceGenerator(name = "discounts_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "discounts_seq", allocationSize = 1)
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "discounts_seq")
     private Long id;

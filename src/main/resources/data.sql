@@ -1,3 +1,21 @@
+-- Allergens
+INSERT INTO allergens (id, name)
+VALUES
+    (nextval('allergens_seq'), 'gluten (tarwe, rogge, gerst, haver en spelt)'),
+    (nextval('allergens_seq'), 'ei'),
+    (nextval('allergens_seq'), 'vis'),
+    (nextval('allergens_seq'), 'pinda'),
+    (nextval('allergens_seq'), 'noten'),
+    (nextval('allergens_seq'), 'soja'),
+    (nextval('allergens_seq'), 'melk (lactose)'),
+    (nextval('allergens_seq'), 'schaaldieren'),
+    (nextval('allergens_seq'), 'weekdieren'),
+    (nextval('allergens_seq'), 'selderij'),
+    (nextval('allergens_seq'), 'mosterd'),
+    (nextval('allergens_seq'), 'sesamzaad'),
+    (nextval('allergens_seq'), 'sulfiet'),
+    (nextval('allergens_seq'), 'lupine');
+
 -- Supplements
 INSERT INTO supplements (id, name, brand, description, price, stock, average_rating, contains)
 VALUES
@@ -9,6 +27,15 @@ VALUES
     (nextval('products_seq'), 'Protein Bar Killa Fudged Up', 'Grenade', 'Niet teveel eten ivm flatulentie', 3.29, 4, null, '60 gram'),
     (nextval('products_seq'), 'Protein Bar White Chocolate Salted Peanut', 'Grenade', 'Absurd lekker', 3.29, 3, null, '60 gram'),
     (nextval('products_seq'), 'Magnesium Bisglycinaat', 'Vitakruid', 'voor algemeen gebruik', 23.90, 0, null, '100 vega capsules');
+
+-- Supplement and Allergens relations
+INSERT INTO supplement_allergens (supplement_id, allergen_id)
+VALUES
+    (1011147, 1006),
+    (1011147, 1007),
+    (1013284, 1005),
+    (1013284, 1006),
+    (1013284, 1007);
 
 -- Garments
 INSERT INTO garments (id, name, brand, description, price, stock, average_rating, size, color)
@@ -28,33 +55,6 @@ VALUES
     (100213, 'Shirt m groen', 'Energize', 'Legendarisch shirt', 29.99, 3, null, 'M', 'groen'),
     (100214, 'Shirt l groen', 'Energize', 'Legendarisch shirt', 29.99, 22, null, 'L', 'groen'),
     (100215, 'Shirt xl groen', 'Energize', 'Legendarisch shirt', 29.99, 5, null, 'XL', 'groen');
-
--- Allergens
-INSERT INTO allergens (id, name)
-VALUES
-    (nextval('allergens_seq'), 'gluten (tarwe, rogge, gerst, haver en spelt)'),
-    (nextval('allergens_seq'), 'ei'),
-    (nextval('allergens_seq'), 'vis'),
-    (nextval('allergens_seq'), 'pinda'),
-    (nextval('allergens_seq'), 'noten'),
-    (nextval('allergens_seq'), 'soja'),
-    (nextval('allergens_seq'), 'melk (lactose)'),
-    (nextval('allergens_seq'), 'schaaldieren'),
-    (nextval('allergens_seq'), 'weekdieren'),
-    (nextval('allergens_seq'), 'selderij'),
-    (nextval('allergens_seq'), 'mosterd'),
-    (nextval('allergens_seq'), 'sesamzaad'),
-    (nextval('allergens_seq'), 'sulfiet'),
-    (nextval('allergens_seq'), 'lupine');
-
--- Supplement and Allergens relations
-INSERT INTO supplement_allergens (supplement_id, allergen_id)
-VALUES
-    (1011147, 1006),
-    (1011147, 1007),
-    (1013284, 1005),
-    (1013284, 1006),
-    (1013284, 1007);
 
 -- Shipping Details
 INSERT INTO shipping_details (id, details_name, name, country, city, zip_code, street, house_number, email)
