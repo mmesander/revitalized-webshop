@@ -9,6 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 public class MultipleIdInputDto {
-    @NotNull(message = "Id is required")
+    @NotNull(message = "ProductIds is required")
     private List<Long> productIds;
 }
