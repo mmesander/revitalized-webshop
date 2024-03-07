@@ -67,4 +67,13 @@ public class FileController {
 
         return ResponseEntity.ok().body("File: " + image + " has been uploaded to product: " + productId);
     }
+
+    @DeleteMapping("/image/{productId}")
+    public ResponseEntity<String> deleteImage(
+            @PathVariable("productId") Long productId
+    ) {
+        String confirmation = fileService.deleteImage(productId);
+
+        return ResponseEntity.ok().body(confirmation);
+    }
 }
