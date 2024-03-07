@@ -58,6 +58,10 @@ public class User {
     )
     private Set<Discount> discounts;
 
+    @OneToOne(mappedBy = "user")
+    private File file;
+
+
 
     // Methods
     public void addAuthority(Authority authority) {
