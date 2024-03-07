@@ -374,9 +374,8 @@ public class UserService {
         }
 
         ReviewDto createdReview = reviewService.createAuthUserReview(inputDto, user.getUsername());
-        Object objectDto = reviewService.assignReviewToProduct(productId, createdReview.getId());
 
-        return objectDto;
+        return reviewService.assignReviewToProduct(productId, createdReview.getId());
     }
 
     public OrderDto addAuthUserOrder(String username, AuthUserOrderInputDto inputDto) {
