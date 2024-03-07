@@ -413,13 +413,10 @@ public class UserService {
                     + inputDto.getShippingDetailsId());
         }
 
-
         OrderDto createdOrder = orderService.createAuthUserOrder(username, inputDto);
 
+        return orderService.assignMultipleProductsToOrder(
+                createdOrder.getOrderNumber(), inputDto.getProductIds()
+        );
     }
-
-    // Username
-    // List<Product>
-    // ShippingDetails ID
-    // Discount String
 }
