@@ -79,15 +79,19 @@ public class FileService {
             throw new RecordNotFoundException(buildIdNotFound("Product", productId));
         }
 
-        if (optionalSupplement.get().getFile() == null && optionalGarment.get().getFile() == null) {
-            throw new BadRequestException("Product with id: " + productId + " does not have an image");
-        }
-
         File file;
 
         if (optionalSupplement.isPresent()) {
+            Supplement supplement = optionalSupplement.get();
+            if (supplement.getFile() == null) {
+                throw new BadRequestException("Product with id: " + productId + " does not have an image");
+            }
             file = optionalSupplement.get().getFile();
         } else {
+            Garment garment = optionalGarment.get();
+            if (garment.getFile() == null) {
+                throw new BadRequestException("Product with id: " + productId + " does not have an image");
+            }
             file = optionalGarment.get().getFile();
         }
 
