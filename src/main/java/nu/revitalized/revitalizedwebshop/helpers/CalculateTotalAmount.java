@@ -5,7 +5,6 @@ import nu.revitalized.revitalizedwebshop.models.Discount;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Order;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
