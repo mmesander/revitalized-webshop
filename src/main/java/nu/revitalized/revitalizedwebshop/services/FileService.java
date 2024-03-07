@@ -1,14 +1,11 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
-import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.*;
 import nu.revitalized.revitalizedwebshop.repositories.FileRepository;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
-import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -23,18 +20,15 @@ public class FileService {
     private final FileRepository fileRepository;
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
-    private final UserRepository userRepository;
 
     public FileService(
             FileRepository fileRepository,
             SupplementRepository supplementRepository,
-            GarmentRepository garmentRepository,
-            UserRepository userRepository
+            GarmentRepository garmentRepository
     ) {
         this.fileRepository = fileRepository;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
-        this.userRepository = userRepository;
     }
 
     public String uploadImage(MultipartFile multipartFile, Long productId) throws IOException {
@@ -69,7 +63,7 @@ public class FileService {
         return returnValue;
     }
 
-    public byte[] downloadImage(Long productId) throws IOException {
+    public byte[] downloadImage(Long productId) {
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
 
@@ -86,24 +80,4 @@ public class FileService {
 
         return decompressFile(file.getFile());
     }
-
-
-
-
-//    public String uploadImage(MultipartFile multipartFile, String username) throws IOException {
-//        User user = userRepository.findById(username)
-//                .orElseThrow(() -> new UsernameNotFoundException(username));
-//
-//        File file = new File();
-//        file.setName(multipartFile.getName());
-//        file.setType(multipartFile.getContentType());
-//        file.setFile(compressFile(multipartFile.getBytes()));
-//        file.setUser(user);
-//
-//        File savedImage = fileRepository.save(file);
-//        user.setFile(savedImage);
-//        userRepository.save(user);
-//
-//        return savedImage.getName();
-//    }
 }
