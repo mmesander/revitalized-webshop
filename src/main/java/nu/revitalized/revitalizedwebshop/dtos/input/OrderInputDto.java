@@ -14,6 +14,4 @@ public class OrderInputDto {
 
     @NotNull(message = "Is paid is required: set true or false")
     private Boolean isPaid;
-
-    private String discountCode;
 }
