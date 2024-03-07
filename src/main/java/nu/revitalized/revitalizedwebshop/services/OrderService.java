@@ -542,12 +542,15 @@ public class OrderService {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(inputDto.getShippingDetailsId()).orElseThrow();
+
         Order order = new Order();
         order.setOrderDate(createDate());
         order.setStatus("in process");
         order.setIsPaid(false);
         order.setDiscountCode(inputDto.getDiscountCode());
         order.setUser(user);
+        order.setShippingDetails(shippingDetails);
         orderRepository.save(order);
 
         return orderToDto(order);
