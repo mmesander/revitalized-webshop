@@ -369,4 +369,76 @@ public class ReviewService {
 
         return reviewToDto(review);
     }
+
+    public ReviewDto updateAuthUserReview(String username, Long id, ReviewInputDto inputDto) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
+
+        Set<Review> reviews = user.getReviews();
+        boolean hasReview = false;
+
+        for (Review foundReview : reviews) {
+            if (foundReview.equals(review)) {
+                hasReview = true;
+                break;
+            }
+        }
+
+        if (!hasReview) {
+            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
+        }
+
+        return updateReview(id, inputDto);
+    }
+
+    public ReviewDto patchAuthUserReview(String username, Long id, ReviewPatchInputDto inputDto) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
+
+        Set<Review> reviews = user.getReviews();
+        boolean hasReview = false;
+
+        for (Review foundReview : reviews) {
+            if (foundReview.equals(review)) {
+                hasReview = true;
+                break;
+            }
+        }
+
+        if (!hasReview) {
+            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
+        }
+
+        return patchReview(id, inputDto);
+    }
+
+    public String deleteAuthUserReview(String username, Long id) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
+
+        Set<Review> reviews = user.getReviews();
+        boolean hasReview = false;
+
+        for (Review foundReview : reviews) {
+            if (foundReview.equals(review)) {
+                hasReview = true;
+                break;
+            }
+        }
+
+        if (!hasReview) {
+            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
+        }
+
+        return deleteReview(id);
+    }
 }
