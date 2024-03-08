@@ -48,9 +48,9 @@ public class GarmentService {
         if (garment.getReviews() != null) {
             List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : garment.getReviews()) {
-                dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
                 dtos.add(reviewToDto(review));
             }
+            dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             garmentDto.setReviews(dtos);
             garmentDto.setAverageRating(calculateAverageRating(garment));
         }

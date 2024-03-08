@@ -83,10 +83,12 @@ public class UserService {
         }
 
         if (user.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : user.getReviews()) {
                 dtos.add(reviewToDto(review));
+
             }
+            dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             userDto.setReviews(dtos);
         }
 

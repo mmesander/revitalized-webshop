@@ -62,9 +62,9 @@ public class SupplementService {
         if (supplement.getReviews() != null) {
             List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : supplement.getReviews()) {
-                dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
                 dtos.add(reviewToDto(review));
             }
+            dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             supplementDto.setReviews(dtos);
             supplementDto.setAverageRating(calculateAverageRating(supplement));
         }
