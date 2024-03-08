@@ -442,6 +442,11 @@ public class OrderService {
                     + " is not assigned to user: " + username);
         }
 
+        if (order.getDiscountCode() != null) {
+            order.setDiscountCode(null);
+            order.setTotalAmount(calculateTotalAmount(order));
+        }
+
         order.setUser(null);
         orderRepository.save(order);
 

@@ -87,4 +87,4 @@ VALUES ('mmesander', 'ROLE_ADMIN'),
 --
 INSERT INTO orders (order_number, order_date, status, is_paid, discount_code, total_amount, user_orders, shipping_details)
 VALUES (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10krijgen', 15.33, 'mmesander', 1),
-       (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10krijgen', 30.66, 'mmesander', 1);
+       (nextval('orders_seq'), CURRENT_DATE, 'delivered', FALSE, 'markgaateen10krijgen', 30.66, 'mmesander', 1);
