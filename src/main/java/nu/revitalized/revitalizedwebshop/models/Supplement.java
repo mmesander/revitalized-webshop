@@ -29,7 +29,7 @@ public class Supplement extends Product implements IdentifiableProduct {
             mappedBy = "supplement",
             fetch = FetchType.EAGER
     )
-    private Set<Review> reviews;
+    private List<Review> reviews;
 
     @ManyToMany(mappedBy = "supplements")
     List<Order> orders;

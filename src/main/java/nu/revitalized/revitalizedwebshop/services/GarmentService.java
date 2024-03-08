@@ -44,8 +44,9 @@ public class GarmentService {
         copyProperties(garment, garmentDto);
 
         if (garment.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : garment.getReviews()) {
+                dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
                 dtos.add(reviewToDto(review));
             }
             garmentDto.setReviews(dtos);

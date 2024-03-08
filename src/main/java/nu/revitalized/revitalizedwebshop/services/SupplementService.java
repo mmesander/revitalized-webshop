@@ -58,8 +58,9 @@ public class SupplementService {
         }
 
         if (supplement.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : supplement.getReviews()) {
+                dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
                 dtos.add(reviewToDto(review));
             }
             supplementDto.setReviews(dtos);

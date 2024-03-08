@@ -38,10 +38,11 @@ public class ProductService {
         copyProperties(supplement, productDto);
 
         if (supplement.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : supplement.getReviews()) {
                 dtos.add(reviewToDto(review));
             }
+            dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             productDto.setReviews(dtos);
         }
 
@@ -54,8 +55,9 @@ public class ProductService {
         copyProperties(garment, productDto);
 
         if (garment.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : garment.getReviews()) {
+                dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
                 dtos.add(reviewToDto(review));
             }
             productDto.setReviews(dtos);
