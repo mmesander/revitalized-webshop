@@ -252,7 +252,7 @@ public class ReviewService {
 
     public Object assignReviewToProduct(Long productId, Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", productId)));
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", reviewId)));
 
         if (review.getSupplement() != null || review.getGarment() != null) {
             String type = review.getSupplement() != null ? "supplement" : "garment";
@@ -284,7 +284,7 @@ public class ReviewService {
 
     public Object removeReviewFromProduct(Long productId, Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", productId)));
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", reviewId)));
 
         Object objectDto;
 
