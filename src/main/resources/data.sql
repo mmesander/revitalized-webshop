@@ -84,10 +84,23 @@ INSERT INTO authorities (username, authority)
 VALUES ('mmesander', 'ROLE_ADMIN'),
        ('mmesander', 'ROLE_USER'),
        ('rplooij', 'ROLE_USER');
---
+
 INSERT INTO orders (order_number, order_date, status, is_paid, discount_code, total_amount, user_orders, shipping_details)
-VALUES (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10krijgen', 15.33, 'mmesander', 1),
-       (nextval('orders_seq'), CURRENT_DATE, 'delivered', FALSE, 'markgaateen10krijgen', 30.66, 'mmesander', 1);
+VALUES (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10krijgen', 0.00, 'mmesander', 1),
+       (nextval('orders_seq'), CURRENT_DATE, 'delivered', FALSE, 'markgaateen10krijgen', 0.00, 'mmesander', 1);
+
+INSERT INTO order_garments (order_id, garment_id)
+VALUES (101, 100101),
+       (101, 100101),
+       (101, 100102),
+       (101, 100102),
+       (101, 100102),
+       (101, 100103),
+       (101, 100103),
+       (101, 100103),
+       (101, 100103),
+       (101, 100103),
+       (101, 100103);
 
 INSERT INTO reviews (id, review, rating, date, garment_id, supplement_id, user_id)
 VALUES (nextval('reviews_seq'), 'inderdaad legendarisch', 10, CURRENT_DATE, 100101, NULL, 'mmesander'),

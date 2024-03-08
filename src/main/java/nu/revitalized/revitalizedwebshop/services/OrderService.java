@@ -106,6 +106,7 @@ public class OrderService {
         }
 
         orderDto.setProducts(orderItemDtos);
+        orderDto.setTotalAmount(calculateTotalAmount(order));
 
         if (order.getShippingDetails() != null) {
             orderDto.setShippingDetails(shippingDetailsToShortDto(order.getShippingDetails()));
