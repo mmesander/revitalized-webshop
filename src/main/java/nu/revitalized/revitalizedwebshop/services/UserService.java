@@ -116,14 +116,6 @@ public class UserService {
         return userDto;
     }
 
-    public static ShortUserDto userToShortDto(User user) {
-        ShortUserDto shortUserDto = new ShortUserDto();
-
-        copyProperties(user, shortUserDto);
-
-        return shortUserDto;
-    }
-
     // CRUD Methods
     public List<UserDto> getUsers() {
         List<User> users = userRepository.findAll();
