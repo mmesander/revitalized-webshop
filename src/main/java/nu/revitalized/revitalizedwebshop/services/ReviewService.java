@@ -224,7 +224,7 @@ public class ReviewService {
 
     // Relation - Product Methods
     public List<ReviewDto> getAllReviewsFromProduct(Long productId) {
-        Set<Review> reviews;
+        List<Review> reviews;
 
         if (supplementRepository.existsById(productId)) {
             Supplement supplement = supplementRepository.findById(productId).orElseThrow();

@@ -4,12 +4,14 @@ package nu.revitalized.revitalizedwebshop.helpers;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
+
+import java.util.List;
 import java.util.Set;
 import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 
 public class UpdateRating {
     public static Supplement updateSupplementRating(Review review, Supplement supplement, boolean deleteRating, boolean update) {
-        Set<Review> reviews = supplement.getReviews();
+        List<Review> reviews = supplement.getReviews();
 
         if (deleteRating) {
             reviews.remove(review);
@@ -29,7 +31,7 @@ public class UpdateRating {
     }
 
     public static Garment updateGarmentRating(Review review, Garment garment, boolean deleteRating, boolean update) {
-        Set<Review> reviews = garment.getReviews();
+        List<Review> reviews = garment.getReviews();
 
         if (deleteRating) {
             reviews.remove(review);
