@@ -56,18 +56,35 @@ VALUES
     (100214, 'Shirt l groen', 'Energize', 'Legendarisch shirt', 29.99, 22, null, 'L', 'groen'),
     (100215, 'Shirt xl groen', 'Energize', 'Legendarisch shirt', 29.99, 5, null, 'XL', 'groen');
 
--- Shipping Details
-INSERT INTO shipping_details (id, details_name, name, country, city, zip_code, street, house_number, email)
-VALUES
-    (nextval('shipping_details_seq'), 'THUISADRES', 'Mark Mesander', 'Nederland', 'Haarlem', '1234AB', 'Test de Testlaan', 28, 'mark@test.nl'),
-    (nextval('shipping_details_seq'), 'WERKADRES', 'Mark Mesander', 'Nederland', 'Noordwijk', '3456CD', 'Test de Teststraat', 42, 'mark@test.nl');
-
 -- Users
 INSERT INTO users (username, password, email)
 VALUES ('mmesander', '$2a$12$RfLgBdcAj/9o/XkMZNm.Zerka9oTm3WRp5nm5rkPg/G5mwVQftbzq', 'mark@test.nl'),
        ('rplooij', '$2a$12$RfLgBdcAj/9o/XkMZNm.Zerka9oTm3WRp5nm5rkPg/G5mwVQftbzq', 'rowan@test.nl');
 
+-- Shipping Details
+INSERT INTO shipping_details (id, details_name, name, country, city, zip_code, street, house_number, email, user_shipping_details)
+VALUES
+    (nextval('shipping_details_seq'), 'THUISADRES', 'Mark Mesander', 'Nederland', 'Haarlem', '1234AB', 'Test de Testlaan', 28, 'mark@test.nl', 'mmesander'),
+    (nextval('shipping_details_seq'), 'WERKADRES', 'Mark Mesander', 'Nederland', 'Noordwijk', '3456CD', 'Test de Teststraat', 42, 'mark@test.nl', 'mmesander'),
+    (nextval('shipping_details_seq'), 'NIETTOEKOMSTADRES', 'Rowan Plooij', 'Nederland', 'Friesland', '3333DE', 'Vriendinstraat 101', '26E', 'rowan@test.nl', 'rplooij');
+
+-- -- Discounts
+INSERT INTO discounts (id, name, value)
+VALUES
+    (nextval('discounts_seq'), 'markgaateen8krijgen', 10),
+    (nextval('discounts_seq'), 'markgaateen9krijgen', 80),
+    (nextval('discounts_seq'), 'markgaateen10krijgen', 90);
+
+INSERT INTO discounts_users (discount_id, username)
+VALUES
+    (2, 'mmesander'),
+    (3, 'mmesander');
+
 INSERT INTO authorities (username, authority)
 VALUES ('mmesander', 'ROLE_ADMIN'),
        ('mmesander', 'ROLE_USER'),
        ('rplooij', 'ROLE_USER');
+--
+INSERT INTO orders (order_number, order_date, status, is_paid, discount_code, total_amount, user_orders, shipping_details)
+VALUES (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10krijgen', 15.33, 'mmesander', 1),
+       (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10krijgen', 30.66, 'mmesander', 1);

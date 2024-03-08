@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -29,6 +31,6 @@ public class ShippingDetails {
     @JoinColumn(name = "user_shipping_details")
     private User user;
 
-    @OneToOne(mappedBy = "shippingDetails")
-    private Order order;
+    @OneToMany(mappedBy = "shippingDetails")
+    private List<Order> orders;
 }
