@@ -30,7 +30,6 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdN
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
-import static nu.revitalized.revitalizedwebshop.services.UserService.userToShortDto;
 import static nu.revitalized.revitalizedwebshop.specifications.ShippingDetailsSpecification.*;
 
 @Service
@@ -68,7 +67,7 @@ public class ShippingDetailsService {
         copyProperties(shippingDetails, shippingDetailsDto);
 
         if (shippingDetails.getUser() != null) {
-            shippingDetailsDto.setUser(userToShortDto(shippingDetails.getUser()));
+            shippingDetailsDto.setUser(shippingDetails.getUser().getUsername());
         }
 
         return shippingDetailsDto;
