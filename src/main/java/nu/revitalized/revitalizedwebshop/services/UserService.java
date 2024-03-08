@@ -99,6 +99,7 @@ public class UserService {
                 ShortDiscountDto shortDto = discountToShortDto(discount);
                 discounts.add(shortDto);
             }
+            discounts.stream().sorted(Comparator.comparing(ShortDiscountDto::getValue).reversed());
             userDto.setDiscounts(discounts);
         }
 
