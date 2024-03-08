@@ -22,7 +22,7 @@ public class Garment extends Product implements IdentifiableProduct {
             mappedBy = "garment",
             fetch = FetchType.EAGER
     )
-    private Set<Review> reviews;
+    private List<Review> reviews;
 
     @ManyToMany(mappedBy = "garments")
     List<Order> orders;

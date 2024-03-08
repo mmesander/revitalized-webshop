@@ -3,6 +3,8 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 // Imports
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -18,5 +20,5 @@ public class ProductDto {
     private Double averageRating;
 
     // Relations
-    private Set<ReviewDto> reviews;
+    private List<ReviewDto> reviews;
 }

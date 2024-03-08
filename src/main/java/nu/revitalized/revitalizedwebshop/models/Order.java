@@ -45,7 +45,7 @@ public class Order {
     @JoinColumn(name = "user_orders")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "shipping_details")
     private ShippingDetails shippingDetails;
 }

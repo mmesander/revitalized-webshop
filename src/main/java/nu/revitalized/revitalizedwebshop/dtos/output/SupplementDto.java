@@ -4,6 +4,8 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
+
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -21,5 +23,5 @@ public class SupplementDto implements IdentifiableId {
 
     // Relations
     private Set<ShortAllergenDto> allergens;
-    private Set<ReviewDto> reviews;
+    private List<ReviewDto> reviews;
 }

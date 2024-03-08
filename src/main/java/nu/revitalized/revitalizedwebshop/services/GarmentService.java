@@ -8,6 +8,7 @@ import nu.revitalized.revitalizedwebshop.dtos.output.OrderItemDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
 import static nu.revitalized.revitalizedwebshop.specifications.GarmentSpecification.*;
@@ -44,11 +46,13 @@ public class GarmentService {
         copyProperties(garment, garmentDto);
 
         if (garment.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : garment.getReviews()) {
                 dtos.add(reviewToDto(review));
             }
+            dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             garmentDto.setReviews(dtos);
+            garmentDto.setAverageRating(calculateAverageRating(garment));
         }
 
         return garmentDto;

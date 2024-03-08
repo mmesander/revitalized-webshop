@@ -106,6 +106,7 @@ public class OrderService {
         }
 
         orderDto.setProducts(orderItemDtos);
+        orderDto.setTotalAmount(calculateTotalAmount(order));
 
         if (order.getShippingDetails() != null) {
             orderDto.setShippingDetails(shippingDetailsToShortDto(order.getShippingDetails()));
@@ -440,6 +441,15 @@ public class OrderService {
         if (order.getUser() == null || !order.getUser().equals(user)) {
             throw new BadRequestException("Order with order-number: " + orderNumber
                     + " is not assigned to user: " + username);
+        }
+
+        if (order.getDiscountCode() != null) {
+            order.setDiscountCode(null);
+            order.setTotalAmount(calculateTotalAmount(order));
+        }
+
+        if (order.getShippingDetails() != null) {
+            order.setShippingDetails(null);
         }
 
         order.setUser(null);

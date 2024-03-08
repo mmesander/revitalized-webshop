@@ -224,7 +224,7 @@ public class ReviewService {
 
     // Relation - Product Methods
     public List<ReviewDto> getAllReviewsFromProduct(Long productId) {
-        Set<Review> reviews;
+        List<Review> reviews;
 
         if (supplementRepository.existsById(productId)) {
             Supplement supplement = supplementRepository.findById(productId).orElseThrow();
@@ -252,7 +252,7 @@ public class ReviewService {
 
     public Object assignReviewToProduct(Long productId, Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", productId)));
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", reviewId)));
 
         if (review.getSupplement() != null || review.getGarment() != null) {
             String type = review.getSupplement() != null ? "supplement" : "garment";
@@ -284,7 +284,7 @@ public class ReviewService {
 
     public Object removeReviewFromProduct(Long productId, Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", productId)));
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", reviewId)));
 
         Object objectDto;
 
@@ -368,5 +368,77 @@ public class ReviewService {
         reviewRepository.save(review);
 
         return reviewToDto(review);
+    }
+
+    public ReviewDto updateAuthUserReview(String username, Long id, ReviewInputDto inputDto) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
+
+        Set<Review> reviews = user.getReviews();
+        boolean hasReview = false;
+
+        for (Review foundReview : reviews) {
+            if (foundReview.equals(review)) {
+                hasReview = true;
+                break;
+            }
+        }
+
+        if (!hasReview) {
+            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
+        }
+
+        return updateReview(id, inputDto);
+    }
+
+    public ReviewDto patchAuthUserReview(String username, Long id, ReviewPatchInputDto inputDto) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
+
+        Set<Review> reviews = user.getReviews();
+        boolean hasReview = false;
+
+        for (Review foundReview : reviews) {
+            if (foundReview.equals(review)) {
+                hasReview = true;
+                break;
+            }
+        }
+
+        if (!hasReview) {
+            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
+        }
+
+        return patchReview(id, inputDto);
+    }
+
+    public String deleteAuthUserReview(String username, Long id) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
+
+        Set<Review> reviews = user.getReviews();
+        boolean hasReview = false;
+
+        for (Review foundReview : reviews) {
+            if (foundReview.equals(review)) {
+                hasReview = true;
+                break;
+            }
+        }
+
+        if (!hasReview) {
+            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
+        }
+
+        return deleteReview(id);
     }
 }

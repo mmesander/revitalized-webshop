@@ -83,10 +83,12 @@ public class UserService {
         }
 
         if (user.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : user.getReviews()) {
                 dtos.add(reviewToDto(review));
+
             }
+            dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             userDto.setReviews(dtos);
         }
 
@@ -97,6 +99,7 @@ public class UserService {
                 ShortDiscountDto shortDto = discountToShortDto(discount);
                 discounts.add(shortDto);
             }
+            discounts.stream().sorted(Comparator.comparing(ShortDiscountDto::getValue).reversed());
             userDto.setDiscounts(discounts);
         }
 
@@ -111,14 +114,6 @@ public class UserService {
         }
 
         return userDto;
-    }
-
-    public static ShortUserDto userToShortDto(User user) {
-        ShortUserDto shortUserDto = new ShortUserDto();
-
-        copyProperties(user, shortUserDto);
-
-        return shortUserDto;
     }
 
     // CRUD Methods

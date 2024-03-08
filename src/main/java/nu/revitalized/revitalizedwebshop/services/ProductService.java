@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
@@ -38,11 +39,13 @@ public class ProductService {
         copyProperties(supplement, productDto);
 
         if (supplement.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : supplement.getReviews()) {
                 dtos.add(reviewToDto(review));
             }
+            dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             productDto.setReviews(dtos);
+            productDto.setAverageRating(calculateAverageRating(supplement));
         }
 
         return productDto;
@@ -54,11 +57,13 @@ public class ProductService {
         copyProperties(garment, productDto);
 
         if (garment.getReviews() != null) {
-            Set<ReviewDto> dtos = new TreeSet<>(Comparator.comparing(ReviewDto::getDate).reversed());
+            List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : garment.getReviews()) {
                 dtos.add(reviewToDto(review));
             }
+            dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             productDto.setReviews(dtos);
+            productDto.setAverageRating(calculateAverageRating(garment));
         }
 
         return productDto;
