@@ -6,6 +6,7 @@ import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
@@ -64,6 +66,7 @@ public class SupplementService {
                 dtos.add(reviewToDto(review));
             }
             supplementDto.setReviews(dtos);
+            supplementDto.setAverageRating(calculateAverageRating(supplement));
         }
 
         return supplementDto;

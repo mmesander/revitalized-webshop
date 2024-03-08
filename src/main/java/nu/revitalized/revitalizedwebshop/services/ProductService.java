@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
@@ -44,6 +45,7 @@ public class ProductService {
             }
             dtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
             productDto.setReviews(dtos);
+            productDto.setAverageRating(calculateAverageRating(supplement));
         }
 
         return productDto;
@@ -61,6 +63,7 @@ public class ProductService {
                 dtos.add(reviewToDto(review));
             }
             productDto.setReviews(dtos);
+            productDto.setAverageRating(calculateAverageRating(garment));
         }
 
         return productDto;

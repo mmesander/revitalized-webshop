@@ -91,4 +91,5 @@ VALUES (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10kr
 
 INSERT INTO reviews (id, review, rating, date, garment_id, supplement_id, user_id)
 VALUES (nextval('reviews_seq'), 'inderdaad legendarisch', 10, CURRENT_DATE, 100101, NULL, 'mmesander'),
-       (nextval('reviews_seq'), 'ik ben wat kritischer', 8, CURRENT_DATE, 100101, NULL, 'rplooij');
+       (nextval('reviews_seq'), 'ik ben wat kritischer', 8, CURRENT_DATE, 100101, NULL, 'rplooij'),
+       (nextval('reviews_seq'), 'mega lekker', 9, CURRENT_DATE, NULL, 1013284, 'mmesander');
