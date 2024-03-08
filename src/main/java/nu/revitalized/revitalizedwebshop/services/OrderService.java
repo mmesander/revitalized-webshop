@@ -447,6 +447,10 @@ public class OrderService {
             order.setTotalAmount(calculateTotalAmount(order));
         }
 
+        if (order.getShippingDetails() != null) {
+            order.setShippingDetails(null);
+        }
+
         order.setUser(null);
         orderRepository.save(order);
 
