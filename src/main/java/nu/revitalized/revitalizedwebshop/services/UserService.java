@@ -308,28 +308,8 @@ public class UserService {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        shippingDetailsService.createShippingDetails(inputDto, username);
-
-        String houseNumber = buildHouseNumber(inputDto);
-        ShippingDetails presentShippingDetails = null;
-        Optional<List<ShippingDetails>> optionalListOfShippingDetails =
-                shippingDetailsRepository.findByStreetIgnoreCaseAndHouseNumber(
-                        inputDto.getStreet(), houseNumber);
-
-        if (optionalListOfShippingDetails.isPresent()) {
-            for (ShippingDetails shippingDetails : optionalListOfShippingDetails.get()) {
-                if (shippingDetails.getUser() == null) {
-                    presentShippingDetails = shippingDetails;
-                }
-            }
-        }
-
-        if (presentShippingDetails != null) {
-            shippingDetailsService.assignUserToShippingDetails(username, presentShippingDetails.getId());
-        } else {
-            throw new BadRequestException("Shipping details with address: " + inputDto.getStreet() + houseNumber
-                    + " is not found");
-        }
+        ShippingDetailsDto createdShippingDetails = shippingDetailsService.createShippingDetails(username, inputDto);
+        shippingDetailsService.assignUserToShippingDetails(username, createdShippingDetails.getId());
 
         return userToDto(user);
     }

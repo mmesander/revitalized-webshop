@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
@@ -17,10 +18,12 @@ import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullNamePatch;
@@ -141,7 +144,7 @@ public class ShippingDetailsService {
         }
     }
 
-    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto, String username) {
+    public ShippingDetailsDto createShippingDetails(String username, ShippingDetailsInputDto inputDto) {
         ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
 
         boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumberAndUser_Username(
@@ -150,17 +153,17 @@ public class ShippingDetailsService {
 
         if (exists) {
             if (inputDto.getHouseNumberAddition() != null) {
-                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
-                        + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition().toUpperCase() + " already exists.");
+                throw new InvalidInputException("User: " + username + " already have a shipping details with address: "
+                        + inputDto.getStreet() + " " + inputDto.getHouseNumber()
+                        + inputDto.getHouseNumberAddition().toUpperCase());
             } else {
-                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
-                        + inputDto.getHouseNumber() + " already exists.");
+                throw new InvalidInputException("User: " + username + " already have a shipping details with address: "
+                        + inputDto.getStreet() + " " + inputDto.getHouseNumber());
             }
-        } else {
-            shippingDetailsRepository.save(shippingDetails);
-
-            return shippingDetailsToDto(shippingDetails);
         }
+        shippingDetailsRepository.save(shippingDetails);
+
+        return shippingDetailsToDto(shippingDetails);
     }
 
     public ShippingDetailsDto updateShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
