@@ -75,10 +75,11 @@ public class UserService {
         copyProperties(user, userDto);
 
         if (user.getShippingDetails() != null) {
-            Set<ShortShippingDetailsDto> dtos = new TreeSet<>(Comparator.comparingLong(ShortShippingDetailsDto::getId));
+            List<ShortShippingDetailsDto> dtos = new ArrayList<>();
             for (ShippingDetails shippingDetails : user.getShippingDetails()) {
                 dtos.add(shippingDetailsToShortDto(shippingDetails));
             }
+            dtos.sort(Comparator.comparing(ShortShippingDetailsDto::getId));
             userDto.setShippingDetails(dtos);
         }
 

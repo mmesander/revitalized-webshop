@@ -240,9 +240,23 @@ public class ShippingDetailsService {
                     + " is already assigned to user: " + shippingDetails.getUser().getUsername());
         }
 
-        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
-        shippingDetailsSet.add(shippingDetails);
-        user.setShippingDetails(shippingDetailsSet);
+        List<ShippingDetails> shippingDetailsList = user.getShippingDetails();
+
+        boolean exists = false;
+        for (ShippingDetails presentShippingDetails : shippingDetailsList) {
+            if (shippingDetails.getStreet().equalsIgnoreCase(presentShippingDetails.getStreet())
+                    && shippingDetails.getHouseNumber().equalsIgnoreCase(presentShippingDetails.getHouseNumber())) {
+                exists = true;
+                break;
+            }
+        }
+        if (exists) {
+            throw new InvalidInputException("User: " + username + " already have a shipping details with address: "
+                    + shippingDetails.getStreet() + " " + shippingDetails.getHouseNumber());
+        }
+
+        shippingDetailsList.add(shippingDetails);
+        user.setShippingDetails(shippingDetailsList);
         shippingDetails.setUser(user);
         shippingDetailsRepository.save(shippingDetails);
 
@@ -254,7 +268,7 @@ public class ShippingDetailsService {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
+        List<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
         List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
 
         for (ShippingDetails shippingDetails : shippingDetailsSet) {
@@ -277,7 +291,7 @@ public class ShippingDetailsService {
         ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
 
-        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
+        List<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
         ShippingDetailsDto dto = null;
 
         for (ShippingDetails foundShippingDetails : shippingDetailsSet) {

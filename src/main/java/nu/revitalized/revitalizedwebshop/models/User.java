@@ -40,7 +40,7 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private Set<ShippingDetails> shippingDetails;
+    private List<ShippingDetails> shippingDetails;
 
     @OneToMany(
             mappedBy = "user",
