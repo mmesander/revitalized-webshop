@@ -18,7 +18,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, unique = true)
@@ -40,14 +40,14 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private Set<ShippingDetails> shippingDetails;
+    private List<ShippingDetails> shippingDetails;
 
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
-    private Set<Review> reviews;
+    private List<Review> reviews;
 
     @OneToMany(
             mappedBy = "user",

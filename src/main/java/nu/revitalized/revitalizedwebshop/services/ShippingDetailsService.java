@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullNamePatch;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumberPatch;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CheckIfUserHasItem.checkIfUserHasShippingDetails;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
@@ -141,7 +141,7 @@ public class ShippingDetailsService {
         }
     }
 
-    public ShippingDetailsDto createShippingDetails(ShippingDetailsInputDto inputDto, String username) {
+    public ShippingDetailsDto createShippingDetails(String username, ShippingDetailsInputDto inputDto) {
         ShippingDetails shippingDetails = dtoToShippingDetails(inputDto);
 
         boolean exists = shippingDetailsRepository.existsByStreetIgnoreCaseAndHouseNumberAndUser_Username(
@@ -150,17 +150,17 @@ public class ShippingDetailsService {
 
         if (exists) {
             if (inputDto.getHouseNumberAddition() != null) {
-                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
-                        + inputDto.getHouseNumber() + inputDto.getHouseNumberAddition().toUpperCase() + " already exists.");
+                throw new InvalidInputException("User: " + username + " already have a shipping details with address: "
+                        + inputDto.getStreet() + " " + inputDto.getHouseNumber()
+                        + inputDto.getHouseNumberAddition().toUpperCase());
             } else {
-                throw new InvalidInputException("Shipping details with address: " + inputDto.getStreet() + " "
-                        + inputDto.getHouseNumber() + " already exists.");
+                throw new InvalidInputException("User: " + username + " already have a shipping details with address: "
+                        + inputDto.getStreet() + " " + inputDto.getHouseNumber());
             }
-        } else {
-            shippingDetailsRepository.save(shippingDetails);
-
-            return shippingDetailsToDto(shippingDetails);
         }
+        shippingDetailsRepository.save(shippingDetails);
+
+        return shippingDetailsToDto(shippingDetails);
     }
 
     public ShippingDetailsDto updateShippingDetails(Long id, ShippingDetailsInputDto inputDto) {
@@ -203,8 +203,11 @@ public class ShippingDetailsService {
         if (inputDto.getStreet() != null) {
             shippingDetails.setStreet(formatName(inputDto.getStreet()));
         }
-        if ((inputDto.getHouseNumber() != null && inputDto.getHouseNumberAddition() != null) ||
-                inputDto.getHouseNumber() != null) {
+        if (inputDto.getHouseNumber() == null && inputDto.getHouseNumberAddition() != null) {
+            throw new BadRequestException("Can't change house number addition without house number, " +
+                    "enter house number as well");
+        }
+        if (inputDto.getHouseNumber() != null) {
             shippingDetails.setHouseNumber(buildHouseNumberPatch(inputDto));
         }
         if (inputDto.getEmail() != null) {
@@ -218,6 +221,14 @@ public class ShippingDetailsService {
     public String deleteShippingDetailsById(Long id) {
         ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
+
+        if (shippingDetails.getUser() != null) {
+            User user = shippingDetails.getUser();
+            List<ShippingDetails> userShippingDetails = user.getShippingDetails();
+            userShippingDetails.remove(shippingDetails);
+            user.setShippingDetails(userShippingDetails);
+            userRepository.save(user);
+        }
 
         shippingDetailsRepository.deleteById(id);
 
@@ -237,9 +248,23 @@ public class ShippingDetailsService {
                     + " is already assigned to user: " + shippingDetails.getUser().getUsername());
         }
 
-        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
-        shippingDetailsSet.add(shippingDetails);
-        user.setShippingDetails(shippingDetailsSet);
+        List<ShippingDetails> shippingDetailsList = user.getShippingDetails();
+
+        boolean exists = false;
+        for (ShippingDetails presentShippingDetails : shippingDetailsList) {
+            if (shippingDetails.getStreet().equalsIgnoreCase(presentShippingDetails.getStreet())
+                    && shippingDetails.getHouseNumber().equalsIgnoreCase(presentShippingDetails.getHouseNumber())) {
+                exists = true;
+                break;
+            }
+        }
+        if (exists) {
+            throw new InvalidInputException("User: " + username + " already have a shipping details with address: "
+                    + shippingDetails.getStreet() + " " + shippingDetails.getHouseNumber());
+        }
+
+        shippingDetailsList.add(shippingDetails);
+        user.setShippingDetails(shippingDetailsList);
         shippingDetails.setUser(user);
         shippingDetailsRepository.save(shippingDetails);
 
@@ -251,7 +276,7 @@ public class ShippingDetailsService {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
+        List<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
         List<ShippingDetailsDto> shippingDetailsDtos = new ArrayList<>();
 
         for (ShippingDetails shippingDetails : shippingDetailsSet) {
@@ -263,6 +288,7 @@ public class ShippingDetailsService {
             throw new RecordNotFoundException("No shipping details found from user: " + username);
         } else {
             shippingDetailsDtos.sort(Comparator.comparing(ShippingDetailsDto::getId));
+
             return shippingDetailsDtos;
         }
     }
@@ -274,7 +300,7 @@ public class ShippingDetailsService {
         ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
 
-        Set<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
+        List<ShippingDetails> shippingDetailsSet = user.getShippingDetails();
         ShippingDetailsDto dto = null;
 
         for (ShippingDetails foundShippingDetails : shippingDetailsSet) {
@@ -288,5 +314,45 @@ public class ShippingDetailsService {
         }
 
         return dto;
+    }
+
+    public ShippingDetailsDto updateAuthUserShippingDetails(
+            String username, Long id, ShippingDetailsInputDto inputDto
+    ) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
+
+        checkIfUserHasShippingDetails(user, shippingDetails);
+
+        return updateShippingDetails(id, inputDto);
+    }
+
+    public ShippingDetailsDto patchAuthUserShippingDetails(
+            String username, Long id, ShippingDetailsPatchInputDto inputDto
+    ) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
+
+        checkIfUserHasShippingDetails(user, shippingDetails);
+
+        return patchShippingDetails(id, inputDto);
+    }
+
+    public String deleteAuthUserShippingDetails(String username, Long id) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
+
+        checkIfUserHasShippingDetails(user, shippingDetails);
+
+        return deleteShippingDetailsById(id);
     }
 }

@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.dtos.output;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableId;
-
 import java.util.List;
 import java.util.Set;
 

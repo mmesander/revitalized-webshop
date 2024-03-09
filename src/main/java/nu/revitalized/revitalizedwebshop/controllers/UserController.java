@@ -271,7 +271,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                ShippingDetailsDto dto = shippingDetailsService.updateShippingDetails(id, inputDto);
+                ShippingDetailsDto dto = shippingDetailsService.updateAuthUserShippingDetails(username, id, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -293,7 +293,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                ShippingDetailsDto dto = shippingDetailsService.patchShippingDetails(id, inputDto);
+                ShippingDetailsDto dto = shippingDetailsService.patchAuthUserShippingDetails(username, id, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -309,7 +309,7 @@ public class UserController {
             @PathVariable("id") Long id
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            String confirmation = shippingDetailsService.deleteShippingDetailsById(id);
+            String confirmation = shippingDetailsService.deleteAuthUserShippingDetails(username, id);
 
             return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, "user", username));
         } else {
@@ -382,7 +382,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                Object dto = reviewService.updateReview(reviewId, inputDto);
+                Object dto = reviewService.updateAuthUserReview(username, reviewId, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -404,7 +404,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                Object dto = reviewService.patchReview(reviewId, inputDto);
+                Object dto = reviewService.patchAuthUserReview(username, reviewId, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -420,7 +420,7 @@ public class UserController {
             @PathVariable("reviewId") Long reviewId
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            String confirmation = reviewService.deleteReview(reviewId);
+            String confirmation = reviewService.deleteAuthUserReview(username, reviewId);
 
             return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, "user", username));
         } else {

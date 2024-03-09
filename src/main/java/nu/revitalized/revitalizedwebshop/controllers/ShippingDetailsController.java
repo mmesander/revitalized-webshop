@@ -75,7 +75,7 @@ public class ShippingDetailsController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            ShippingDetailsDto dto = shippingDetailsService.createShippingDetails(inputDto, userDetails.getUsername());
+            ShippingDetailsDto dto = shippingDetailsService.createShippingDetails(userDetails.getUsername(), inputDto);
 
             URI uri = buildUriId(dto);
 

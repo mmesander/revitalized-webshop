@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
+import nu.revitalized.revitalizedwebshop.dtos.output.ImageOutputDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.File;
@@ -9,6 +10,7 @@ import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.FileRepository;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -73,7 +75,7 @@ public class FileService {
         return confirmation;
     }
 
-    public byte[] downloadImage(Long productId) {
+    public ImageOutputDto downloadImage(Long productId) {
         Optional<Supplement> optionalSupplement = supplementRepository.findById(productId);
         Optional<Garment> optionalGarment = garmentRepository.findById(productId);
 
@@ -82,6 +84,7 @@ public class FileService {
         }
 
         File file;
+        ImageOutputDto outputDto = new ImageOutputDto();
 
         if (optionalSupplement.isPresent()) {
             Supplement supplement = optionalSupplement.get();
@@ -96,8 +99,10 @@ public class FileService {
             }
             file = optionalGarment.get().getFile();
         }
+        outputDto.setMediaType(MediaType.valueOf(file.getType()));
+        outputDto.setImage(decompressFile(file.getFile()));
 
-        return decompressFile(file.getFile());
+        return outputDto;
     }
 
     public String deleteImage(Long productId) {

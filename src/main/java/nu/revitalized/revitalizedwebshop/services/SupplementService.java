@@ -6,7 +6,6 @@ import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
-import nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;

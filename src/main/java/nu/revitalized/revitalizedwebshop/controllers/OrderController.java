@@ -220,39 +220,6 @@ public class OrderController {
         }
     }
 
-    // Relation - User Requests
-    @PutMapping(value = "/users/orders/{orderNumber}/user")
-    public ResponseEntity<OrderDto> assignUserToOrder(
-            @PathVariable("orderNumber") Long orderNumber,
-            @Valid
-            @RequestBody UsernameInputDto inputDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasFieldErrors()) {
-            throw new InvalidInputException(handleBindingResultError(bindingResult));
-        } else {
-            OrderDto dto = orderService.assignUserToOrder(orderNumber, inputDto.getUsername());
-
-            return ResponseEntity.ok().body(dto);
-        }
-    }
-
-    @DeleteMapping(value = "/users/orders/{orderNumber}/user")
-    public ResponseEntity<OrderDto> removeUserFromOrder(
-            @PathVariable("orderNumber") Long orderNumber,
-            @Valid
-            @RequestBody UsernameInputDto inputDto,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasFieldErrors()) {
-            throw new InvalidInputException(handleBindingResultError(bindingResult));
-        } else {
-            OrderDto dto = orderService.removeUserFromOrder(orderNumber, inputDto.getUsername());
-
-            return ResponseEntity.ok().body(dto);
-        }
-    }
-
     // Relation - ShippingDetails Requests
     @PutMapping(value = "/users/orders/{orderNumber}/shipping-details")
     public ResponseEntity<Object> assignShippingDetailsToOrder(
@@ -281,6 +248,39 @@ public class OrderController {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
             OrderDto dto = orderService.removeShippingDetailsFromOrder(orderNumber, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    // Relation - User Requests
+    @PutMapping(value = "/users/orders/{orderNumber}/user")
+    public ResponseEntity<OrderDto> assignUserToOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody UsernameInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.assignUserToOrder(orderNumber, inputDto.getUsername());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping(value = "/users/orders/{orderNumber}/user")
+    public ResponseEntity<OrderDto> removeUserFromOrder(
+            @PathVariable("orderNumber") Long orderNumber,
+            @Valid
+            @RequestBody UsernameInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            OrderDto dto = orderService.removeUserFromOrder(orderNumber, inputDto.getUsername());
 
             return ResponseEntity.ok().body(dto);
         }

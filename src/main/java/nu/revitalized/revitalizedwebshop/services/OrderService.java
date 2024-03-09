@@ -30,7 +30,6 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ShippingDetailsRepository shippingDetailsRepository;
 
-
     public OrderService(
             OrderRepository orderRepository,
             SupplementRepository supplementRepository,
@@ -458,6 +457,7 @@ public class OrderService {
         return orderToDto(order);
     }
 
+    // Relation - ShippingDetails Methods
     public OrderDto assignShippingDetailsToOrder(Long orderNumber, Long shippingDetailsId) {
         Order order = orderRepository.findById(orderNumber)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Order", orderNumber)));

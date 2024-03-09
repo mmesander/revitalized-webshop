@@ -4,7 +4,6 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
 
 @Getter
@@ -13,7 +12,7 @@ import java.util.List;
 @Table(name = "shipping_details")
 public class ShippingDetails {
     // Variables
-    @SequenceGenerator(name = "shipping_details_seq", allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(name = "shipping_details_seq", allocationSize = 1)
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shipping_details_seq")
     private Long id;

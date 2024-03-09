@@ -4,9 +4,7 @@ package nu.revitalized.revitalizedwebshop.helpers;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
-
 import java.util.List;
-import java.util.Set;
 import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 
 public class UpdateRating {
