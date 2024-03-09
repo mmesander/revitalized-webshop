@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    //TODO: Deze nieuwe methodes in de controllers gebruiken
     //TODO: Checken of dit ook voor shippingdetails nodig is
     //TODO: JSON postman checken en afronden
     //TODO: Wederom alle imports, formatting en code nalopen

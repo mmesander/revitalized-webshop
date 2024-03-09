@@ -203,6 +203,14 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
+        if (review.getUser() != null) {
+            User user = review.getUser();
+            List<Review> userReviews = user.getReviews();
+            userReviews.remove(review);
+            user.setReviews(userReviews);
+            userRepository.save(user);
+        }
+
         if (review.getSupplement() != null) {
             supplementRepository.save(updateSupplementRating(review, review.getSupplement(), true, false));
             reviewRepository.deleteById(id);
@@ -305,7 +313,7 @@ public class ReviewService {
                 throw new BadRequestException("Review with id: " + reviewId
                         + " is not assigned to product: " + productId);
             }
-            garmentRepository.save(updateGarmentRating(review, review.getGarment(), true, false));
+            garmentRepository.save(updateGarmentRating(review, garment, true, false));
             reviewRepository.deleteById(reviewId);
             objectDto = garmentToDto(garment);
         } else {
@@ -405,6 +413,9 @@ public class ReviewService {
 
         checkIfUserHasReview(user, review);
 
-        return deleteReview(id);
+        String confirmation = deleteReview(id);
+        userRepository.save(user);
+
+        return confirmation;
     }
 }
