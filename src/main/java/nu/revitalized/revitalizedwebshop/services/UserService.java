@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.*;
-import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.security.config.SpringSecurityConfig.passwordEncoder;
@@ -28,7 +27,6 @@ import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification
 public class UserService {
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
-    private final ShippingDetailsRepository shippingDetailsRepository;
     private final SupplementRepository supplementRepository;
     private final GarmentRepository garmentRepository;
     private final ShippingDetailsService shippingDetailsService;
@@ -39,7 +37,6 @@ public class UserService {
     public UserService(
             UserRepository userRepository,
             AuthorityRepository authorityRepository,
-            ShippingDetailsRepository shippingDetailsRepository,
             SupplementRepository supplementRepository,
             GarmentRepository garmentRepository,
             ShippingDetailsService shippingDetailsService,
@@ -49,7 +46,6 @@ public class UserService {
     ) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
-        this.shippingDetailsRepository = shippingDetailsRepository;
         this.supplementRepository = supplementRepository;
         this.garmentRepository = garmentRepository;
         this.shippingDetailsService = shippingDetailsService;
@@ -94,13 +90,12 @@ public class UserService {
         }
 
         if (user.getDiscounts() != null) {
-            Set<ShortDiscountDto> discounts = new HashSet<>();
+            Set<ShortDiscountDto> discounts = new TreeSet<>(Comparator.comparing(ShortDiscountDto::getValue).reversed());
 
             for (Discount discount : user.getDiscounts()) {
                 ShortDiscountDto shortDto = discountToShortDto(discount);
                 discounts.add(shortDto);
             }
-            discounts.stream().sorted(Comparator.comparing(ShortDiscountDto::getValue).reversed());
             userDto.setDiscounts(discounts);
         }
 

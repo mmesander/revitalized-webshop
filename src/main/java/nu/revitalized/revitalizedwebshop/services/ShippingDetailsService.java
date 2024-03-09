@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
-
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.ShippingDetailsPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShippingDetailsDto;
@@ -11,7 +10,6 @@ import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
-import nu.revitalized.revitalizedwebshop.helpers.CheckIfUserHasItem;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
@@ -19,12 +17,9 @@ import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullName;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullNamePatch;
@@ -208,8 +203,11 @@ public class ShippingDetailsService {
         if (inputDto.getStreet() != null) {
             shippingDetails.setStreet(formatName(inputDto.getStreet()));
         }
-        if ((inputDto.getHouseNumber() != null && inputDto.getHouseNumberAddition() != null) ||
-                inputDto.getHouseNumber() != null) {
+        if (inputDto.getHouseNumber() == null && inputDto.getHouseNumberAddition() != null) {
+            throw new BadRequestException("Can't change house number addition without house number, " +
+                    "enter house number as well");
+        }
+        if (inputDto.getHouseNumber() != null) {
             shippingDetails.setHouseNumber(buildHouseNumberPatch(inputDto));
         }
         if (inputDto.getEmail() != null) {
@@ -346,7 +344,7 @@ public class ShippingDetailsService {
         return patchShippingDetails(id, inputDto);
     }
 
-    public String deleteAuthUserShippingDetails(String  username, Long id) {
+    public String deleteAuthUserShippingDetails(String username, Long id) {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
