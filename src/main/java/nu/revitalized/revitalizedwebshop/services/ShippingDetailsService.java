@@ -324,5 +324,29 @@ public class ShippingDetailsService {
         return updateShippingDetails(id, inputDto);
     }
 
+    public ShippingDetailsDto patchAuthUserShippingDetails(
+            String username, Long id, ShippingDetailsPatchInputDto inputDto
+    ) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
+
+        checkIfUserHasShippingDetails(user, shippingDetails);
+
+        return patchShippingDetails(id, inputDto);
+    }
+
+    public String deleteAuthUserShippingDetails(String  username, Long id) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
+
+        checkIfUserHasShippingDetails(user, shippingDetails);
+
+        return deleteShippingDetailsById(id);
+    }
 }

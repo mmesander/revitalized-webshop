@@ -413,9 +413,6 @@ public class ReviewService {
 
         checkIfUserHasReview(user, review);
 
-        String confirmation = deleteReview(id);
-        userRepository.save(user);
-
-        return confirmation;
+        return deleteReview(id);
     }
 }
