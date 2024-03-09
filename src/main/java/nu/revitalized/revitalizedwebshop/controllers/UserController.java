@@ -382,7 +382,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                Object dto = reviewService.updateReview(reviewId, inputDto);
+                Object dto = reviewService.updateAuthUserReview(username, reviewId, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -404,7 +404,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                Object dto = reviewService.patchReview(reviewId, inputDto);
+                Object dto = reviewService.patchAuthUserReview(username, reviewId, inputDto);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -420,7 +420,7 @@ public class UserController {
             @PathVariable("reviewId") Long reviewId
     ) {
         if (Objects.equals(userDetails.getUsername(), username)) {
-            String confirmation = reviewService.deleteReview(reviewId);
+            String confirmation = reviewService.deleteAuthUserReview(username, reviewId);
 
             return ResponseEntity.ok().body(buildPersonalConfirmation(confirmation, "user", username));
         } else {

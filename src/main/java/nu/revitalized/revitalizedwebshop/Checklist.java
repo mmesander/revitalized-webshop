@@ -1,7 +1,6 @@
 package nu.revitalized.revitalizedwebshop;
 
 public class Checklist {
-    //TODO: In de reviewservice een helper methode maken voor de methodes die nog niet gebruikt worden;
     //TODO: Deze nieuwe methodes in de controllers gebruiken
     //TODO: Checken of dit ook voor shippingdetails nodig is
     //TODO: JSON postman checken en afronden
