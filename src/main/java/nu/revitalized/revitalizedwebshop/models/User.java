@@ -47,7 +47,7 @@ public class User {
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
-    private Set<Review> reviews;
+    private List<Review> reviews;
 
     @OneToMany(
             mappedBy = "user",
