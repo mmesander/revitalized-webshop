@@ -318,7 +318,7 @@ public class ReviewService {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        Set<Review> reviews = user.getReviews();
+        List<Review> reviews = user.getReviews();
         List<ReviewDto> reviewDtos = new ArrayList<>();
 
         for (Review review : reviews) {
@@ -342,7 +342,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        Set<Review> reviews = user.getReviews();
+        List<Review> reviews = user.getReviews();
         ReviewDto dto = null;
 
         for (Review foundReview : reviews) {
@@ -377,7 +377,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        Set<Review> reviews = user.getReviews();
+        List<Review> reviews = user.getReviews();
         boolean hasReview = false;
 
         for (Review foundReview : reviews) {
@@ -401,7 +401,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        Set<Review> reviews = user.getReviews();
+        List<Review> reviews = user.getReviews();
         boolean hasReview = false;
 
         for (Review foundReview : reviews) {
@@ -425,7 +425,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        Set<Review> reviews = user.getReviews();
+        List<Review> reviews = user.getReviews();
         boolean hasReview = false;
 
         for (Review foundReview : reviews) {
