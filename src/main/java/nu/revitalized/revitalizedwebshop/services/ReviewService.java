@@ -7,6 +7,7 @@ import nu.revitalized.revitalizedwebshop.dtos.output.ReviewDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
+import nu.revitalized.revitalizedwebshop.helpers.CheckIfUserHasItem;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
@@ -22,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CheckIfUserHasItem.checkIfUserHasReview;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.helpers.FormatDate.formatDate;
@@ -377,19 +379,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        List<Review> reviews = user.getReviews();
-        boolean hasReview = false;
-
-        for (Review foundReview : reviews) {
-            if (foundReview.equals(review)) {
-                hasReview = true;
-                break;
-            }
-        }
-
-        if (!hasReview) {
-            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
-        }
+        checkIfUserHasReview(user, review);
 
         return updateReview(id, inputDto);
     }
@@ -401,19 +391,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        List<Review> reviews = user.getReviews();
-        boolean hasReview = false;
-
-        for (Review foundReview : reviews) {
-            if (foundReview.equals(review)) {
-                hasReview = true;
-                break;
-            }
-        }
-
-        if (!hasReview) {
-            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
-        }
+        checkIfUserHasReview(user, review);
 
         return patchReview(id, inputDto);
     }
@@ -425,19 +403,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Review", id)));
 
-        List<Review> reviews = user.getReviews();
-        boolean hasReview = false;
-
-        for (Review foundReview : reviews) {
-            if (foundReview.equals(review)) {
-                hasReview = true;
-                break;
-            }
-        }
-
-        if (!hasReview) {
-            throw new BadRequestException("User: " + username + " does not have review with id: " + id);
-        }
+        checkIfUserHasReview(user, review);
 
         return deleteReview(id);
     }

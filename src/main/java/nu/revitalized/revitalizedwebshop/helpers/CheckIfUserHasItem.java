@@ -7,7 +7,7 @@ import nu.revitalized.revitalizedwebshop.models.User;
 import java.util.List;
 
 public class CheckIfUserHasItem {
-    private void checkIfUserHasReview(User user, Review review) {
+    public static void checkIfUserHasReview(User user, Review review) {
         List<Review> reviews = user.getReviews();
         boolean hasReview = false;
 
