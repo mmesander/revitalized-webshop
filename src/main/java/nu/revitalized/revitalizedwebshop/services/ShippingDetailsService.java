@@ -224,6 +224,14 @@ public class ShippingDetailsService {
         ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
 
+        if (shippingDetails.getUser() != null) {
+            User user = shippingDetails.getUser();
+            List<ShippingDetails> userShippingDetails = user.getShippingDetails();
+            userShippingDetails.remove(shippingDetails);
+            user.setShippingDetails(userShippingDetails);
+            userRepository.save(user);
+        }
+
         shippingDetailsRepository.deleteById(id);
 
         return buildSpecificConfirmation("Shipping Details", shippingDetails.getDetailsName(), id);
