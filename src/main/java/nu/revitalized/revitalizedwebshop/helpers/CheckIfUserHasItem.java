@@ -1,9 +1,9 @@
 package nu.revitalized.revitalizedwebshop.helpers;
 
+// Imports
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.User;
-
 import java.util.List;
 
 public class CheckIfUserHasItem {
