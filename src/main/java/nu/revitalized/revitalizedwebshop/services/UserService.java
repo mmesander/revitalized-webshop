@@ -359,7 +359,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
         // Check if user has valid discount
-        if (!inputDto.getDiscountCode().isEmpty()) {
+        if (inputDto.getDiscountCode() != null && !inputDto.getDiscountCode().isEmpty()) {
             boolean hasDiscount = false;
             for (Discount discount : user.getDiscounts()) {
                 if (inputDto.getDiscountCode().equalsIgnoreCase(discount.getName())
