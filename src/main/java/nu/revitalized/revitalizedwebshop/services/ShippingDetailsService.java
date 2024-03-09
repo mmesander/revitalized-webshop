@@ -280,6 +280,7 @@ public class ShippingDetailsService {
             throw new RecordNotFoundException("No shipping details found from user: " + username);
         } else {
             shippingDetailsDtos.sort(Comparator.comparing(ShippingDetailsDto::getId));
+
             return shippingDetailsDtos;
         }
     }
