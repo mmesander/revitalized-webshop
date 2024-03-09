@@ -11,6 +11,7 @@ import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
+import nu.revitalized.revitalizedwebshop.helpers.CheckIfUserHasItem;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.ShippingDetailsRepository;
@@ -30,6 +31,7 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildFullName.buildFullN
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumber;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildHouseNumber.buildHouseNumberPatch;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
+import static nu.revitalized.revitalizedwebshop.helpers.CheckIfUserHasItem.checkIfUserHasShippingDetails;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.helpers.NameFormatter.formatName;
 import static nu.revitalized.revitalizedwebshop.services.UserService.userToDto;
@@ -307,4 +309,20 @@ public class ShippingDetailsService {
 
         return dto;
     }
+
+    public ShippingDetailsDto updateAuthUserShippingDetails(
+            String username, Long id, ShippingDetailsInputDto inputDto
+    ) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        ShippingDetails shippingDetails = shippingDetailsRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Shipping details", id)));
+
+        checkIfUserHasShippingDetails(user, shippingDetails);
+
+        return updateShippingDetails(id, inputDto);
+    }
+
+
 }
