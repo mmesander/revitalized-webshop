@@ -38,7 +38,7 @@ public class CheckIfUserHasItem {
 
         if (!hasShippingDetails) {
             throw new BadRequestException("User: " + user.getUsername()
-            + " does not have shipping details with id: " + shippingDetails.getId());
+                    + " does not have shipping details with id: " + shippingDetails.getId());
         }
     }
 }
