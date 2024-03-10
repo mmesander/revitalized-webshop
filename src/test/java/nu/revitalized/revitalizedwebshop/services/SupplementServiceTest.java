@@ -19,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 
@@ -277,15 +279,38 @@ class SupplementServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
     }
-//
-//    @Test
-//    void getSupplementById() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
+
+    @Test
+    void getSupplementById() {
+        // Arrange
+        Long id = 1L;
+        Supplement supplement = getSupplement1();
+        when(supplementRepository.findById(id)).thenReturn(Optional.of(supplement));
+
+        // Act
+        SupplementDto result = supplementService.getSupplementById(id);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(supplement.getName(), result.getName());
+    }
+
+    @Test
+    void getSupplementById_Exception() {
+        // Arrange
+        Long id = 3L;
+        when(supplementRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.getSupplementById(id));
+
+        // Assert
+        String expectedMessage = "Supplement with id: 3 not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
 //
 //    @Test
 //    void getSupplementsByParam() {
