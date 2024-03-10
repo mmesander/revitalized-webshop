@@ -51,7 +51,7 @@ public class SupplementService {
         copyProperties(supplement, supplementDto);
 
         if (supplement.getAllergens() != null) {
-            Set<ShortAllergenDto> shortAllergenDtos = new HashSet<>();
+            Set<ShortAllergenDto> shortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
             for (Allergen allergen : supplement.getAllergens()) {
                 shortAllergenDtos.add(allergenToShortDto(allergen));
             }
