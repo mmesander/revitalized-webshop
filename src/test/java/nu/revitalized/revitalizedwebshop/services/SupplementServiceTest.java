@@ -2,34 +2,27 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
+import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.helpers.CreateDate;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 
-
-
-
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 class SupplementServiceTest {
     @Mock
     private SupplementRepository supplementRepository;
@@ -55,7 +48,7 @@ class SupplementServiceTest {
         return inputDto;
     }
 
-    public Supplement getSupplement() {
+    public Supplement getSupplement1() {
         Supplement supplement = new Supplement();
         supplement.setId(1L);
         supplement.setName("Creatine");
@@ -64,6 +57,53 @@ class SupplementServiceTest {
         supplement.setPrice(26.99);
         supplement.setStock(5);
         supplement.setContains("500g");
+
+        Allergen allergen1 = new Allergen();
+        allergen1.setId(1L);
+        allergen1.setName("Allergen one");
+
+        Allergen allergen2 = new Allergen();
+        allergen2.setId(2L);
+        allergen2.setName("Allergen two");
+
+        Set<Allergen> allergens = new HashSet<>();
+        allergens.add(allergen1);
+        allergens.add(allergen2);
+
+        supplement.setAllergens(allergens);
+
+        Review review1 = new Review();
+        review1.setId(1L);
+        review1.setReview("Goed product");
+        review1.setRating(10);
+        review1.setSupplement(supplement);
+        review1.setDate(CreateDate.createDate());
+
+        Review review2 = new Review();
+        review2.setId(2L);
+        review2.setReview("Slecht product");
+        review2.setRating(1);
+        review2.setSupplement(supplement);
+        review2.setDate(CreateDate.createDate());
+
+        List<Review> reviews = new ArrayList<>();
+        reviews.add(review1);
+        reviews.add(review2);
+
+        supplement.setReviews(reviews);
+
+        return supplement;
+    }
+
+    public Supplement getSupplement2() {
+        Supplement supplement = new Supplement();
+        supplement.setId(2L);
+        supplement.setName("Protein Shake");
+        supplement.setBrand("Energize Supps");
+        supplement.setDescription("De beste eiwitshakes");
+        supplement.setPrice(44.99);
+        supplement.setStock(8);
+        supplement.setContains("2500g");
 
         Allergen allergen1 = new Allergen();
         allergen1.setId(1L);
@@ -125,7 +165,7 @@ class SupplementServiceTest {
     @DisplayName("Should transfer supplement to supplementDto")
     void supplementToDto() {
         // Arrange
-        Supplement supplement = getSupplement();
+        Supplement supplement = getSupplement1();
         Set<ShortAllergenDto> shortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
         List<ReviewDto> reviewDtos = new ArrayList<>();
 
@@ -171,7 +211,7 @@ class SupplementServiceTest {
     @Test
     void supplementToShortDto() {
         // Arrange
-        Supplement supplement = getSupplement();
+        Supplement supplement = getSupplement1();
 
         // Act
         ShortSupplementDto result = SupplementService.supplementToShortDto(supplement);
@@ -189,7 +229,7 @@ class SupplementServiceTest {
     @Test
     void supplementToOrderItemDto() {
         // Arrange
-        Supplement supplement = getSupplement();
+        Supplement supplement = getSupplement1();
 
         // Act
         OrderItemDto result = SupplementService.supplementToOrderItemDto(supplement);
@@ -200,15 +240,43 @@ class SupplementServiceTest {
         assertEquals(supplement.getPrice(), result.getPrice());
         assertEquals(1, result.getQuantity());
     }
-//
-//    @Test
-//    void getAllSupplements() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
+
+    @Test
+    void getAllSupplements() {
+        // Arrange
+        List<Supplement> supplements = new ArrayList<>();
+        Supplement supplement1 = getSupplement1();
+        Supplement supplement2 = getSupplement2();
+        supplements.add(supplement1);
+        supplements.add(supplement2);
+        when(supplementRepository.findAll()).thenReturn(supplements);
+
+        // Act
+        List<SupplementDto> result = supplementService.getAllSupplements();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(1L, result.get(0).getId());
+        assertEquals(2L, result.get(1).getId());
+        assertEquals(supplement1.getName(), result.get(0).getName());
+        assertEquals(supplement2.getName(), result.get(1).getName());
+    }
+
+    @Test
+    void getAllSupplements_Exception() {
+        // Arrange
+        when(supplementRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class, () -> supplementService.getAllSupplements());
+
+        // Assert
+        String expectedMessage = "No supplements are found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
 //
 //    @Test
 //    void getSupplementById() {
