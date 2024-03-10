@@ -14,14 +14,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 
 
 @ExtendWith(MockitoExtension.class)
@@ -57,7 +58,7 @@ class SupplementServiceTest {
         supplement.setBrand("Energize Supps");
         supplement.setDescription("Creatine van energize is top");
         supplement.setPrice(26.99);
-        supplement.setStock(5);
+        supplement.setStock(0);
         supplement.setContains("500g");
 
         Allergen allergen1 = new Allergen();
@@ -100,12 +101,12 @@ class SupplementServiceTest {
     public Supplement getSupplement2() {
         Supplement supplement = new Supplement();
         supplement.setId(2L);
-        supplement.setName("Protein Shake");
+        supplement.setName("Creatine Blend");
         supplement.setBrand("Energize Supps");
-        supplement.setDescription("De beste eiwitshakes");
+        supplement.setDescription("De beste creatine");
         supplement.setPrice(44.99);
-        supplement.setStock(8);
-        supplement.setContains("2500g");
+        supplement.setStock(20);
+        supplement.setContains("800g");
 
         Allergen allergen1 = new Allergen();
         allergen1.setId(1L);
@@ -268,7 +269,7 @@ class SupplementServiceTest {
     @Test
     void getAllSupplements_Exception() {
         // Arrange
-        when(supplementRepository.findAll()).thenReturn(new ArrayList<>());
+        doReturn(Optional.empty()).when(supplementRepository).findAll();
 
         // Act
         Exception exception = assertThrows(RecordNotFoundException.class, () -> supplementService.getAllSupplements());
@@ -285,7 +286,7 @@ class SupplementServiceTest {
         // Arrange
         Long id = 1L;
         Supplement supplement = getSupplement1();
-        when(supplementRepository.findById(id)).thenReturn(Optional.of(supplement));
+        doReturn(Optional.of(supplement)).when(supplementRepository).findById(id);
 
         // Act
         SupplementDto result = supplementService.getSupplementById(id);
@@ -299,7 +300,7 @@ class SupplementServiceTest {
     void getSupplementById_Exception() {
         // Arrange
         Long id = 3L;
-        when(supplementRepository.findById(id)).thenReturn(Optional.empty());
+        doReturn(Optional.empty()).when(supplementRepository).findById(id);
 
         // Act
         Exception exception = assertThrows(RecordNotFoundException.class,
@@ -311,15 +312,72 @@ class SupplementServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
     }
-//
-//    @Test
-//    void getSupplementsByParam() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
+
+    @Test
+    void getSupplementsByParam() {
+        // Arrange
+        List<Supplement> supplements = new ArrayList<>();
+        Supplement supplement1 = getSupplement1();
+        Supplement supplement2 = getSupplement2();
+        supplements.add(supplement1);
+        supplements.add(supplement2);
+
+        String name = "Crea";
+        String brand = "Ener";
+        Double price = null;
+        Double minPrice = 10.0;
+        Double maxPrice = 50.0;
+        Integer stock = null;
+        Integer minStock = 0;
+        Integer maxStock = 30;
+        Double averageRating = null;
+        Double minRating = null;
+        Double maxRating = null;
+        String contains = null;
+
+        doReturn(supplements).when(supplementRepository).findAll((Specification<Supplement>) any());
+
+        // Act
+        List<SupplementDto> result = supplementService.getSupplementsByParam(
+                name, brand, price, minPrice, maxPrice, stock, minStock, maxStock, averageRating, minRating,
+                maxRating, contains
+        );
+
+        // Assert
+        assertEquals(2, result.size(), "Size should be equal");
+        assertEquals(0, result.get(0).getStock());
+    }
+
+    @Test
+    void getAllSupplementsByParam_Exception() {
+        // Arrange
+        doReturn(new ArrayList<>()).when(supplementRepository).findAll((Specification<Supplement>) any());
+        String name = "Crea";
+        String brand = "Ener";
+        Double price = null;
+        Double minPrice = 10.0;
+        Double maxPrice = 50.0;
+        Integer stock = null;
+        Integer minStock = 0;
+        Integer maxStock = 30;
+        Double averageRating = null;
+        Double minRating = null;
+        Double maxRating = null;
+        String contains = null;
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.getSupplementsByParam(name, brand, price, minPrice, maxPrice, stock,
+                        minStock, maxStock, averageRating, minRating, maxRating, contains));
+
+        // Assert
+        String expectedMessage = "No supplements found with the specified filters";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+
 //
 //    @Test
 //    void getOutOfStockSupplements() {
