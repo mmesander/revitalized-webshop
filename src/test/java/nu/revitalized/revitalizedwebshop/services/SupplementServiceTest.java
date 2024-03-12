@@ -418,9 +418,15 @@ class SupplementServiceTest {
     void getOutOfStockSupplements_Succes() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1, mockSupplement2
+        Supplement mockSupplement3 = new Supplement();
+        mockSupplement3.setName("Out of stock Supplement");
+        mockSupplement3.setStock(0);
         List<Supplement> mockSupplements = new ArrayList<>();
-        mockSupplements.add(mockSupplement1); // Out of stock
+        mockSupplements.add(mockSupplement1); // In stock
         mockSupplements.add(mockSupplement2); // In stock
+        mockSupplements.add(mockSupplement3); // Out of stock
+
+
         doReturn(mockSupplements).when(supplementRepository).findAll();
 
         // Act
@@ -428,7 +434,7 @@ class SupplementServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(mockSupplement1.getName(), result.get(0).getName());
+        assertEquals(mockSupplement3.getName(), result.get(0).getName());
     }
 
     @Test
@@ -452,17 +458,22 @@ class SupplementServiceTest {
     void getInOfStockSupplements_Succes() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1, mockSupplement2
+        Supplement mockSupplement3 = new Supplement();
+        mockSupplement3.setName("Out of stock Supplement");
+        mockSupplement3.setStock(0);
         List<Supplement> mockSupplements = new ArrayList<>();
-        mockSupplements.add(mockSupplement1); // Out of stock
+        mockSupplements.add(mockSupplement1); // In stock
         mockSupplements.add(mockSupplement2); // In stock
+        mockSupplements.add(mockSupplement3); // Out of stock
+
         doReturn(mockSupplements).when(supplementRepository).findAll();
 
         // Act
         List<SupplementDto> result = supplementService.getInStockSupplements();
 
         // Assert
-        assertEquals(1, result.size());
-        assertEquals(mockSupplement2.getName(), result.get(0).getName());
+        assertEquals(2, result.size());
+        assertEquals(mockSupplement1.getName(), result.get(0).getName());
     }
 
     @Test
