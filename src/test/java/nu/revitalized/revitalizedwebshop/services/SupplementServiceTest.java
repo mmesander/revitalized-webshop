@@ -1,5 +1,6 @@
 package nu.revitalized.revitalizedwebshop.services;
 
+// Imports
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
@@ -21,13 +22,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
-
 
 @ExtendWith(MockitoExtension.class)
 class SupplementServiceTest {
@@ -342,8 +339,29 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should get all supplements by parameters")
-    void getSupplementsByParam_Succes() {
+    @DisplayName("Should get all supplements without specified parameters")
+    void getSupplementsByParam_Succes_WithoutParameters() {
+        // Arrange
+        // BeforeEach init Supplement: mockSupplement1, mockSupplement2
+        List<Supplement> mockSupplements = new ArrayList<>();
+        mockSupplements.add(mockSupplement1);
+        mockSupplements.add(mockSupplement2);
+
+        doReturn(mockSupplements).when(supplementRepository).findAll((Specification<Supplement>) any());
+
+        // Act
+        List<SupplementDto> result = supplementService.getSupplementsByParam(
+                null, null, null, null, null, null, null, null, null, null, null, null);
+
+        // Arrange
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    @DisplayName("Should get all supplements with specified parameters")
+    void getSupplementsByParam_Succes_WithParameters() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1, mockSupplement2
         List<Supplement> mockSupplements = new ArrayList<>();
@@ -352,27 +370,21 @@ class SupplementServiceTest {
 
         String name = "Crea";
         String brand = "Ener";
-        Double price = null;
         Double minPrice = 10.0;
         Double maxPrice = 50.0;
-        Integer stock = null;
         Integer minStock = 0;
         Integer maxStock = 30;
-        Double averageRating = null;
-        Double minRating = null;
-        Double maxRating = null;
-        String contains = null;
 
         doReturn(mockSupplements).when(supplementRepository).findAll((Specification<Supplement>) any());
 
         // Act
         List<SupplementDto> result = supplementService.getSupplementsByParam(
-                name, brand, price, minPrice, maxPrice, stock, minStock, maxStock, averageRating, minRating,
-                maxRating, contains
+                name, brand, null, minPrice, maxPrice, null, minStock, maxStock, null, null,
+                null, null
         );
 
         // Assert
-        assertEquals(2, result.size(), "Size should be equal");
+        assertEquals(2, result.size());
         assertEquals(0, result.get(0).getStock());
     }
 
@@ -382,22 +394,17 @@ class SupplementServiceTest {
         // Arrange
         String name = "Crea";
         String brand = "Ener";
-        Double price = null;
         Double minPrice = 10.0;
         Double maxPrice = 50.0;
-        Integer stock = null;
         Integer minStock = 0;
         Integer maxStock = 30;
-        Double averageRating = null;
-        Double minRating = null;
-        Double maxRating = null;
-        String contains = null;
+
         doReturn(new ArrayList<>()).when(supplementRepository).findAll((Specification<Supplement>) any());
 
         // Act
         Exception exception = assertThrows(RecordNotFoundException.class,
-                () -> supplementService.getSupplementsByParam(name, brand, price, minPrice, maxPrice, stock,
-                        minStock, maxStock, averageRating, minRating, maxRating, contains));
+                () -> supplementService.getSupplementsByParam(name, brand, null, minPrice, maxPrice, null,
+                        minStock, maxStock, null, null, null, null));
 
         // Assert
         String expectedMessage = "No supplements found with the specified filters";
