@@ -8,9 +8,11 @@ import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.*;
-import nu.revitalized.revitalizedwebshop.repositories.*;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jpa.domain.Specification;
+import nu.revitalized.revitalizedwebshop.repositories.AuthorityRepository;
+import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
+import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
+import nu.revitalized.revitalizedwebshop.specifications.UserSpecification;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
@@ -20,8 +22,6 @@ import static nu.revitalized.revitalizedwebshop.services.DiscountService.discoun
 import static nu.revitalized.revitalizedwebshop.services.OrderService.orderToShortDto;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.shippingDetailsToShortDto;
-import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.getUserEmailLike;
-import static nu.revitalized.revitalizedwebshop.specifications.UserSpecification.getUserUsernameLikeFilter;
 
 @Service
 public class UserService {
@@ -141,9 +141,7 @@ public class UserService {
             String username,
             String email
     ) {
-        Specification<User> params = Specification.where
-                        (StringUtils.isBlank(username) ? null : getUserUsernameLikeFilter(username))
-                .and(StringUtils.isBlank(email) ? null : getUserEmailLike(email));
+        UserSpecification params = new UserSpecification(username, email);
 
         List<User> filteredUsers = userRepository.findAll(params);
         List<UserDto> userDtos = new ArrayList<>();
