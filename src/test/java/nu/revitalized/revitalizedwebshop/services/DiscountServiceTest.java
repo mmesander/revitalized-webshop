@@ -2,8 +2,10 @@ package nu.revitalized.revitalizedwebshop.services;
 
 // Imports
 import nu.revitalized.revitalizedwebshop.dtos.input.DiscountInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.DiscountPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShortDiscountDto;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Discount;
 import nu.revitalized.revitalizedwebshop.models.User;
@@ -18,13 +20,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class DiscountServiceTest {
@@ -148,6 +148,7 @@ class DiscountServiceTest {
         assertEquals(mockDiscount2.getName(), result.get(1).getName());
         assertEquals(mockDiscount2.getValue(), result.get(1).getValue());
     }
+
     @Test
     @DisplayName("Should throw exception for getAllDiscounts method when not found")
     void getAllDiscounts_Exception_WhenNotFound() {
@@ -263,6 +264,7 @@ class DiscountServiceTest {
     }
 
     @Test
+    @DisplayName("Should get all active discounts")
     void getAllActiveDiscounts_Succes() {
         // Arrange
         // BeforeEach init Discount: mockDiscount1, mockDiscount2, User: mockUser1
@@ -287,7 +289,7 @@ class DiscountServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from getAllActiveDiscounts method when not found")
     void getAllActiveDiscounts_Exception_WhenNotFound() {
         // Arrange
         doReturn(new ArrayList<>()).when(discountRepository).findAll();
@@ -305,6 +307,7 @@ class DiscountServiceTest {
     }
 
     @Test
+    @DisplayName("Should get all inactive discounts")
     void getAllInactiveDiscounts_Succes() {
         // Arrange
         // BeforeEach init Discount: mockDiscount1, mockDiscount2, User: mockUser1
@@ -329,7 +332,7 @@ class DiscountServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from getAllInactiveDiscounts method when not found")
     void getAllInactiveDiscounts_Exception_WhenNotFound() {
         // Arrange
         doReturn(new ArrayList<>()).when(discountRepository).findAll();
@@ -347,78 +350,167 @@ class DiscountServiceTest {
     }
 
     @Test
+    @DisplayName("Should create new discount")
     void createDiscount_Succes() {
         // Arrange
+        // BeforeEach init DiscountInputDto: mockInputDto
 
         // Act
+        DiscountDto result = discountService.createDiscount(mockInputDto);
 
         // Assert
+        assertNotNull(result);
+        assertEquals(mockInputDto.getName(), result.getName());
     }
 
     @Test
+    @DisplayName("Should update existing discount")
     void updateDiscount_Succes() {
         // Arrange
+        // BeforeEach init DiscountInputDto: mockInputDto, Discount: mockDiscount1
+        Long id = 10L;
+        mockDiscount1.setId(10L);
+
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(id);
+        doAnswer(invocation -> invocation.getArgument(0)).when(discountRepository).save(any(Discount.class));
 
         // Act
+        DiscountDto result = discountService.updateDiscount(id, mockInputDto);
 
         // Assert
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        assertEquals(mockInputDto.getName(), result.getName());
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from updateDiscount method when not found")
     void updateDiscount_Exception_WhenNotFound() {
         // Arrange
+        // BeforeEach init DiscountInputDto: mockInputDto
+        Long id = 20L;
+        doReturn(Optional.empty()).when(discountRepository).findById(id);
 
         // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> discountService.updateDiscount(id, mockInputDto));
 
         // Assert
+        String expectedMessage = "Discount with id: " + id + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
+    @DisplayName("Should patch existing discount")
     void patchDiscount_Succes() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1
+        Long id = 20L;
+        mockDiscount1.setId(id);
+        DiscountPatchInputDto mockPatchInputDto = new DiscountPatchInputDto();
+        mockPatchInputDto.setName("PatchedDiscount");
+        mockPatchInputDto.setValue(50.25);
+
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(id);
+        doAnswer(invocation -> invocation.getArgument(0)).when(discountRepository).save(any(Discount.class));
 
         // Act
+        DiscountDto result = discountService.patchDiscount(id, mockPatchInputDto);
 
         // Assert
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        assertEquals(mockPatchInputDto.getName(), result.getName());
+        assertEquals(mockPatchInputDto.getValue(), result.getValue());
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from patchDiscount method when not found")
     void patchDiscount_Exception_WhenNotFound() {
         // Arrange
+        Long id = 20L;
+        DiscountPatchInputDto mockPatchInputDto = new DiscountPatchInputDto();
+        doReturn(Optional.empty()).when(discountRepository).findById(id);
 
         // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> discountService.patchDiscount(id, mockPatchInputDto));
 
         // Assert
+        String expectedMessage = "Discount with id: " + id + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
+    @DisplayName("Should delete existing discount")
     void deleteDiscount_Succes() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1
+        Long id = 13L;
+        mockDiscount1.setId(13L);
+        String mockDiscountName = mockDiscount1.getName();
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(id);
 
         // Act
+        String confirmation = discountService.deleteDiscount(id);
 
         // Assert
+        String expectedMessage = "Discount: " + mockDiscountName + " with id: " + id + " is removed";
+
+        assertNotNull(confirmation);
+        assertEquals(expectedMessage, confirmation);
+        verify(discountRepository, times(1)).deleteById(id);
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from deleteDiscount method when not found")
     void deleteDiscount_Exception_WhenNotFound() {
         // Arrange
+        Long id = 13L;
+        doReturn(Optional.empty()).when(discountRepository).findById(id);
 
         // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> discountService.deleteDiscount(id));
 
         // Assert
+        String expectedMessage = "Discount with id: " + id + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, actualMessage);
+        verify(discountRepository, never()).deleteById(anyLong());
     }
 
     @Test
-    void assignUserToDiscount_Succes() {
+    @DisplayName("Should throw exception from deleteDiscount method when contains users")
+    void deleteDiscount_Exception_WhenContainsUser() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Set<User> mockDiscountUsers = new HashSet<>();
+        Long id = 66L;
+        mockDiscountUsers.add(mockUser1);
+        mockDiscount1.setId(id);
+        mockDiscount1.setUsers(mockDiscountUsers);
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(id);
 
         // Act
+        Exception exception = assertThrows(BadRequestException.class,
+                () -> discountService.deleteDiscount(id));
 
         // Assert
+        String expectedMessage = "Can't remove an active discount, remove all users from discount first";
+        String actualMessage = exception.getMessage();
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, actualMessage);
+        verify(discountRepository, never()).deleteById(anyLong());
     }
 
     @Test
