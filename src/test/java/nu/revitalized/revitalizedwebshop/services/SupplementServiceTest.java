@@ -639,6 +639,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should assign unique allergen to supplement")
     void assignAllergenToSupplement_Succes() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1
@@ -663,6 +664,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception from assignAllergenToSupplement method when supplement not found")
     void assignAllergenToSupplement_Exception_WhenSupplementNotFound() {
         // Arrange
         Long supplementId = 5L;
@@ -683,6 +685,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception from assignAllergenToSupplement method when allergen not found")
     void assignAllergenToSupplement_Exception_WhenAllergenNotFound() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1
@@ -706,6 +709,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception from assignAllergenToSupplement method when already contains")
     void assignAllergenToSupplement_Exception_WhenAlreadyContains() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1
@@ -737,12 +741,12 @@ class SupplementServiceTest {
     }
 
 
-//    @Test
-//    void removeAllergenFromSupplement() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
+    @Test
+    void removeAllergenFromSupplement() {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
 }
