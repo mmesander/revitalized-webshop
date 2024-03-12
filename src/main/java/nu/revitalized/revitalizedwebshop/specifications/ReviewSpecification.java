@@ -24,11 +24,11 @@ public class ReviewSpecification implements Specification<Review> {
         List<Predicate> predicates = new ArrayList<>();
 
         if (minRating != null) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("averageRating"), minRating));
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("rating"), minRating));
         }
 
         if (maxRating != null) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("averageRating"), maxRating));
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("rating"), maxRating));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
