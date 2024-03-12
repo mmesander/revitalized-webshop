@@ -44,7 +44,7 @@ public class GarmentService {
 
         copyProperties(garment, garmentDto);
 
-        if (garment.getReviews() != null) {
+        if (garment.getReviews() != null && !garment.getReviews().isEmpty()) {
             List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : garment.getReviews()) {
                 dtos.add(reviewToDto(review));
