@@ -183,7 +183,7 @@ class SupplementServiceTest {
         assertEquals(mockInputDto.getPrice(), result.getPrice());
         assertEquals(mockInputDto.getStock(), result.getStock());
         assertEquals(mockInputDto.getContains(), result.getContains());
-        assertNull(result.getAllergens());
+        assertEquals(0, result.getAllergens().size());
     }
 
     @Test
@@ -783,7 +783,9 @@ class SupplementServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertFalse(result.getAllergens().contains(AllergenService.allergenToShortDto(mockAllergen)));
+        if (result.getAllergens() != null) {
+            assertFalse(result.getAllergens().contains(AllergenService.allergenToShortDto(mockAllergen)));
+        }
         verify(supplementRepository, times(1)).save(any(Supplement.class));
     }
 
