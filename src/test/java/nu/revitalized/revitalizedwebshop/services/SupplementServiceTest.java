@@ -3,6 +3,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.helpers.CreateDate;
@@ -11,6 +12,7 @@ import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -643,37 +645,99 @@ class SupplementServiceTest {
     @Test
     void assignAllergenToSupplement_Succes() {
         // Arrange
+        // BeforeEach init Supplement: mockSupplement1
+        Long supplementId = 5L;
+        Long allergenId = 5L;
+        mockSupplement1.setId(supplementId);
+        Allergen mockAllergen = new Allergen();
+        mockAllergen.setId(allergenId);
+        mockAllergen.setName("New allergen");
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(supplementId);
+        doReturn(Optional.of(mockAllergen)).when(allergenRepository).findById(allergenId);
+        doAnswer(invocation -> invocation.getArgument(0)).when(supplementRepository).save(any(Supplement.class));
 
         // Act
+        SupplementDto result = supplementService.assignAllergenToSupplement(supplementId, allergenId);
 
         // Assert
+        assertNotNull(result);
+        assertTrue(result.getAllergens().contains(AllergenService.allergenToShortDto(mockAllergen)));
+        verify(supplementRepository, times(1)).save(any(Supplement.class));
     }
 
     @Test
     void assignAllergenToSupplement_Exception_WhenSupplementNotFound() {
         // Arrange
+        Long supplementId = 5L;
+        Long allergenId = 5L;
+        doReturn(Optional.empty()).when(supplementRepository).findById(supplementId);
 
         // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.assignAllergenToSupplement(supplementId, allergenId));
 
         // Assert
+        String expectedMessage = "Supplement with id: " + supplementId + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(allergenRepository, never()).findById(anyLong());
+        verify(supplementRepository, never()).save(any());
     }
 
     @Test
     void assignAllergenToSupplement_Exception_WhenAllergenNotFound() {
         // Arrange
+        // BeforeEach init Supplement: mockSupplement1
+        Long supplementId = 5L;
+        Long allergenId = 5L;
+        mockSupplement1.setId(supplementId);
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(supplementId);
+        doReturn(Optional.empty()).when(allergenRepository).findById(allergenId);
 
         // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.assignAllergenToSupplement(supplementId, allergenId));
 
         // Assert
+        String expectedMessage = "Allergen with id: " + allergenId + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(supplementRepository, never()).save(any());
     }
 
     @Test
     void assignAllergenToSupplement_Exception_WhenAlreadyContains() {
         // Arrange
+        // BeforeEach init Supplement: mockSupplement1
+        Long supplementId = 5L;
+        Long allergenId = 5L;
+        Allergen mockAllergen = new Allergen();
+        mockAllergen.setId(allergenId);
+        mockAllergen.setName("Existing Allergen");
+        Set<Allergen> mockAllergens = new HashSet<>();
+        mockAllergens.add(mockAllergen);
+
+        mockSupplement1.setId(supplementId);
+        mockSupplement1.setAllergens(mockAllergens);
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(supplementId);
+        doReturn(Optional.of(mockAllergen)).when(allergenRepository).findById(allergenId);
 
         // Act
+        Exception exception = assertThrows(BadRequestException.class,
+                () -> supplementService.assignAllergenToSupplement(supplementId, allergenId));
 
         // Assert
+        String expectedMessage = "Supplement already contains allergen: " + mockAllergen.getName()
+                + " with id: " + allergenId;
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(supplementRepository, never()).save(any());
     }
 
 

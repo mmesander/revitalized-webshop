@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
@@ -261,7 +262,7 @@ public class SupplementService {
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Allergen", allergenId)));
 
         if (supplement.getAllergens().contains(allergen)) {
-            throw new InvalidInputException("Supplement already contains allergen: " + allergen.getName() + " with id: " + allergenId);
+            throw new BadRequestException("Supplement already contains allergen: " + allergen.getName() + " with id: " + allergenId);
         }
 
         supplement.getAllergens().add(allergen);
