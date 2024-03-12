@@ -45,6 +45,19 @@ class SupplementServiceTest {
     SupplementInputDto mockInputDto;
     Supplement mockSupplement1;
     Supplement mockSupplement2;
+    Allergen mockAllergen1;
+    Allergen mockAllergen2;
+    Allergen mockAllergen3;
+    Allergen mockAllergen4;
+    Set<Allergen> mockAllergens1;
+    Set<Allergen> mockAllergens2;
+    Review mockReview1;
+    Review mockReview2;
+    Review mockReview3;
+    Review mockReview4;
+    Set<Review> mockReviews1;
+    Set<Review> mockReviews2;
+
 
     @BeforeEach
     void init() {
@@ -57,6 +70,62 @@ class SupplementServiceTest {
         mockInputDto.setStock(10);
         mockInputDto.setContains("200g");
 
+        // Allergen 1, 2, 3, 4
+        Allergen mockAllergen1 = new Allergen();
+        Allergen mockAllergen2 = new Allergen();
+        Allergen mockAllergen3 = new Allergen();
+        Allergen mockAllergen4 = new Allergen();
+        mockAllergen1.setId(1L);
+        mockAllergen2.setId(2L);
+        mockAllergen3.setId(3L);
+        mockAllergen4.setId(4L);
+        mockAllergen1.setName("Allergen one");
+        mockAllergen2.setName("Allergen two");
+        mockAllergen3.setName("Allergen three");
+        mockAllergen4.setName("Allergen four");
+
+        // Allergens 1, 2
+        Set<Allergen> mockAllergens1 = new HashSet<>();
+        Set<Allergen> mockALlergens2 = new HashSet<>();
+        mockAllergens1.add(mockAllergen1);
+        mockAllergens1.add(mockAllergen2);
+        mockALlergens2.add(mockAllergen3);
+        mockALlergens2.add(mockAllergen4);
+
+        // Review 1, 2, 3, 4
+        Review mockReview1 = new Review();
+        Review mockReview2 = new Review();
+        Review mockReview3 = new Review();
+        Review mockReview4 = new Review();
+        mockReview1.setId(1L);
+        mockReview2.setId(2L);
+        mockReview3.setId(3L);
+        mockReview4.setId(4L);
+        mockReview1.setReview("Goed product");
+        mockReview2.setReview("Slecht product");
+        mockReview3.setReview("Goed product");
+        mockReview4.setReview("Slecht product");
+        mockReview1.setRating(10);
+        mockReview2.setRating(1);
+        mockReview3.setRating(9);
+        mockReview4.setRating(3);
+        mockReview1.setSupplement(mockSupplement1);
+        mockReview2.setSupplement(mockSupplement1);
+        mockReview3.setSupplement(mockSupplement2);
+        mockReview4.setSupplement(mockSupplement2);
+        mockReview1.setDate(CreateDate.createDate());
+        mockReview2.setDate(CreateDate.createDate());
+        mockReview3.setDate(CreateDate.createDate());
+        mockReview4.setDate(CreateDate.createDate());
+
+        // Reviews 1, 2
+        List<Review> mockReviews1 = new ArrayList<>();
+        List<Review> mockReviews2 = new ArrayList<>();
+        mockReviews1.add(mockReview1);
+        mockReviews1.add(mockReview2);
+        mockReviews2.add(mockReview3);
+        mockReviews2.add(mockReview4);
+
         // Supplement 1
         mockSupplement1 = new Supplement();
         mockSupplement1.setId(1L);
@@ -66,39 +135,7 @@ class SupplementServiceTest {
         mockSupplement1.setPrice(26.99);
         mockSupplement1.setStock(0);
         mockSupplement1.setContains("500g");
-
-        Allergen mockAllergen1 = new Allergen();
-        mockAllergen1.setId(1L);
-        mockAllergen1.setName("Allergen one");
-
-        Allergen mockAllergen2 = new Allergen();
-        mockAllergen2.setId(2L);
-        mockAllergen2.setName("Allergen two");
-
-        Set<Allergen> mockAllergens1 = new HashSet<>();
-        mockAllergens1.add(mockAllergen1);
-        mockAllergens1.add(mockAllergen2);
-
         mockSupplement1.setAllergens(mockAllergens1);
-
-        Review mockReview1 = new Review();
-        mockReview1.setId(1L);
-        mockReview1.setReview("Goed product");
-        mockReview1.setRating(10);
-        mockReview1.setSupplement(mockSupplement1);
-        mockReview1.setDate(CreateDate.createDate());
-
-        Review mockReview2 = new Review();
-        mockReview2.setId(2L);
-        mockReview2.setReview("Slecht product");
-        mockReview2.setRating(1);
-        mockReview2.setSupplement(mockSupplement1);
-        mockReview2.setDate(CreateDate.createDate());
-
-        List<Review> mockReviews1 = new ArrayList<>();
-        mockReviews1.add(mockReview1);
-        mockReviews1.add(mockReview2);
-
         mockSupplement1.setReviews(mockReviews1);
 
         // Supplement 2
@@ -110,39 +147,7 @@ class SupplementServiceTest {
         mockSupplement2.setPrice(44.99);
         mockSupplement2.setStock(20);
         mockSupplement2.setContains("800g");
-
-        Allergen mockAllergen3 = new Allergen();
-        mockAllergen3.setId(3L);
-        mockAllergen3.setName("Allergen one");
-
-        Allergen mockAllergen4 = new Allergen();
-        mockAllergen4.setId(4L);
-        mockAllergen4.setName("Allergen two");
-
-        Set<Allergen> mockALlergens2 = new HashSet<>();
-        mockALlergens2.add(mockAllergen3);
-        mockALlergens2.add(mockAllergen4);
-
         mockSupplement2.setAllergens(mockALlergens2);
-
-        Review mockReview3 = new Review();
-        mockReview3.setId(3L);
-        mockReview3.setReview("Goed product");
-        mockReview3.setRating(9);
-        mockReview3.setSupplement(mockSupplement2);
-        mockReview3.setDate(CreateDate.createDate());
-
-        Review mockReview4 = new Review();
-        mockReview4.setId(4L);
-        mockReview4.setReview("Slecht product");
-        mockReview4.setRating(3);
-        mockReview4.setSupplement(mockSupplement2);
-        mockReview4.setDate(CreateDate.createDate());
-
-        List<Review> mockReviews2 = new ArrayList<>();
-        mockReviews2.add(mockReview3);
-        mockReviews2.add(mockReview4);
-
         mockSupplement2.setReviews(mockReviews2);
     }
 
@@ -151,6 +156,18 @@ class SupplementServiceTest {
         mockInputDto = null;
         mockSupplement1 = null;
         mockSupplement2 = null;
+        mockAllergen1 = null;
+        mockAllergen2 = null;
+        mockAllergen3 = null;
+        mockAllergen4 = null;
+        mockAllergens1 = null;
+        mockAllergens2 = null;
+        mockReview1 = null;
+        mockReview2 = null;
+        mockReview3 = null;
+        mockReview4 = null;
+        mockReviews1 = null;
+        mockReviews2 = null;
     }
 
 
@@ -180,7 +197,6 @@ class SupplementServiceTest {
         // BeforeEach init Supplement: mockSupplement1
         Set<ShortAllergenDto> MockShortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
         List<ReviewDto> mockReviewDtos = new ArrayList<>();
-
 
         for (Allergen mockALlergen : mockSupplement1.getAllergens()) {
             ShortAllergenDto mockShortAllergenDto = AllergenService.allergenToShortDto(mockALlergen);
@@ -624,15 +640,43 @@ class SupplementServiceTest {
         verify(supplementRepository, never()).deleteById(anyLong());
     }
 
-//    @Test
-//    void assignAllergenToSupplement() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
-//
+    @Test
+    void assignAllergenToSupplement_Succes() {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
+
+    @Test
+    void assignAllergenToSupplement_Exception_WhenSupplementNotFound() {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
+
+    @Test
+    void assignAllergenToSupplement_Exception_WhenAllergenNotFound() {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
+
+    @Test
+    void assignAllergenToSupplement_Exception_WhenAlreadyContains() {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
+
+
 //    @Test
 //    void removeAllergenFromSupplement() {
 //        // Arrange
