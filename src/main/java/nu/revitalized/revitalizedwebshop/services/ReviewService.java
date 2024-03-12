@@ -15,7 +15,7 @@ import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
 import nu.revitalized.revitalizedwebshop.repositories.ReviewRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
-import org.springframework.data.jpa.domain.Specification;
+import nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,7 +29,6 @@ import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.updateGarme
 import static nu.revitalized.revitalizedwebshop.helpers.UpdateRating.updateSupplementRating;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToDto;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToDto;
-import static nu.revitalized.revitalizedwebshop.specifications.ReviewSpecification.*;
 
 @Service
 public class ReviewService {
@@ -106,14 +105,10 @@ public class ReviewService {
     }
 
     public List<ReviewDto> getReviewsByParam(
-            Integer rating,
             Integer minRating,
             Integer maxRating
     ) {
-        Specification<Review> params = Specification.where
-                        (rating == null ? null : getReviewRatingLikeFilter(rating))
-                .and(minRating == null ? null : getReviewRatingMoreThanFilter(minRating))
-                .and(maxRating == null ? null : getReviewRatingLessThanFilter(maxRating));
+        ReviewSpecification params = new ReviewSpecification(minRating, maxRating);
 
         List<Review> filteredReviews = reviewRepository.findAll(params);
         List<ReviewDto> reviewDtos = new ArrayList<>();

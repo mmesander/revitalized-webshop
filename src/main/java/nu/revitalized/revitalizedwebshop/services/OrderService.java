@@ -162,7 +162,7 @@ public class OrderService {
     public List<OrderDto> getALlOrdersByParam(
             Double minTotalAmount,
             Double maxTotalAmount
-            ) {
+    ) {
         OrderSpecification params = new OrderSpecification(
                 minTotalAmount, maxTotalAmount);
 
