@@ -591,12 +591,10 @@ class DiscountServiceTest {
         Long discountId = 5L;
         String username = mockUser1.getUsername();
         mockDiscount1.setId(discountId);
-        Set<User> mockUsers = new HashSet<>();
-        Set<Discount> mockDiscounts = new HashSet<>();
-        mockUsers.add(mockUser1);
-        mockDiscounts.add(mockDiscount1);
-        mockDiscount1.setUsers(mockUsers);
-        mockUser1.setDiscounts(mockDiscounts);
+
+        Set<Discount> userDiscounts = new HashSet<>();
+        userDiscounts.add(mockDiscount1);
+        mockUser1.setDiscounts(userDiscounts);
 
         doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(discountId);
         doReturn(Optional.of(mockUser1)).when(userRepository).findById(username);
