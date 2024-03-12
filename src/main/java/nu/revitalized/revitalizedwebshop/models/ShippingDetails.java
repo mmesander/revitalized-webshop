@@ -4,6 +4,8 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,5 +33,5 @@ public class ShippingDetails {
     private User user;
 
     @OneToMany(mappedBy = "shippingDetails")
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 }
