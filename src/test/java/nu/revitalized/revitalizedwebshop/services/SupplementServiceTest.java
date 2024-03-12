@@ -493,16 +493,45 @@ class SupplementServiceTest {
 
         assertEquals(expectedMessage, actualMessage);
     }
-//
-//    @Test
-//    void updateSupplement() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
-//
+
+    @Test
+    @DisplayName("Should update supplement")
+    void updateSupplement_Succes() {
+        // Arrange
+        // BeforeEach init SupplementInputDto: mockInputDto, Supplement: supplement1
+        Long id = 10L;
+        mockSupplement1.setId(10L);
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(id);
+        doAnswer(invocation -> invocation.getArgument(0)).when(supplementRepository).save(any(Supplement.class));
+
+        // Act
+        SupplementDto result = supplementService.updateSupplement(id, mockInputDto);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(mockSupplement1.getName(), result.getName());
+        assertEquals(mockSupplement1.getStock(), result.getStock());
+    }
+
+    @Test
+    @DisplayName("Should throw exception from updateSupplement method")
+    void updateSupplement_Exception() {
+        // Arrange
+        Long id = 20L;
+        doReturn(Optional.empty()).when(supplementRepository).findById(id);
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.updateSupplement(id, mockInputDto));
+
+        // Assert
+        String expectedMessage = "Supplement with id: " + id + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
 //    @Test
 //    void patchSupplement() {
 //        // Arrange
