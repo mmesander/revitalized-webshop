@@ -9,6 +9,8 @@ import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,8 +41,13 @@ class SupplementServiceTest {
     @InjectMocks
     private SupplementService supplementService;
 
-    public SupplementInputDto getSupplementInputDto() {
-        SupplementInputDto inputDto = new SupplementInputDto();
+    SupplementInputDto inputDto;
+    Supplement supplement1;
+    Supplement supplement2;
+
+    @BeforeEach
+    void init() {
+        // Supplement InputDto
         inputDto.setName("Pre Workout");
         inputDto.setBrand("Energize");
         inputDto.setDescription("Hiermee ga je als een raket");
@@ -48,18 +55,14 @@ class SupplementServiceTest {
         inputDto.setStock(10);
         inputDto.setContains("200g");
 
-        return inputDto;
-    }
-
-    public Supplement getSupplement1() {
-        Supplement supplement = new Supplement();
-        supplement.setId(1L);
-        supplement.setName("Creatine");
-        supplement.setBrand("Energize Supps");
-        supplement.setDescription("Creatine van energize is top");
-        supplement.setPrice(26.99);
-        supplement.setStock(0);
-        supplement.setContains("500g");
+        // Supplement 1
+        supplement1.setId(1L);
+        supplement1.setName("Creatine");
+        supplement1.setBrand("Energize Supps");
+        supplement1.setDescription("Creatine van energize is top");
+        supplement1.setPrice(26.99);
+        supplement1.setStock(0);
+        supplement1.setContains("500g");
 
         Allergen allergen1 = new Allergen();
         allergen1.setId(1L);
@@ -69,87 +72,89 @@ class SupplementServiceTest {
         allergen2.setId(2L);
         allergen2.setName("Allergen two");
 
-        Set<Allergen> allergens = new HashSet<>();
-        allergens.add(allergen1);
-        allergens.add(allergen2);
+        Set<Allergen> allergens1 = new HashSet<>();
+        allergens1.add(allergen1);
+        allergens1.add(allergen2);
 
-        supplement.setAllergens(allergens);
+        supplement1.setAllergens(allergens1);
 
         Review review1 = new Review();
         review1.setId(1L);
         review1.setReview("Goed product");
         review1.setRating(10);
-        review1.setSupplement(supplement);
+        review1.setSupplement(supplement1);
         review1.setDate(CreateDate.createDate());
 
         Review review2 = new Review();
         review2.setId(2L);
         review2.setReview("Slecht product");
         review2.setRating(1);
-        review2.setSupplement(supplement);
+        review2.setSupplement(supplement1);
         review2.setDate(CreateDate.createDate());
 
         List<Review> reviews = new ArrayList<>();
         reviews.add(review1);
         reviews.add(review2);
 
-        supplement.setReviews(reviews);
+        supplement1.setReviews(reviews);
 
-        return supplement;
+        // Supplement 2
+        supplement2.setId(2L);
+        supplement2.setName("Creatine Blend");
+        supplement2.setBrand("Energize Supps");
+        supplement2.setDescription("De beste creatine");
+        supplement2.setPrice(44.99);
+        supplement2.setStock(20);
+        supplement2.setContains("800g");
+
+        Allergen allergen3 = new Allergen();
+        allergen3.setId(3L);
+        allergen3.setName("Allergen one");
+
+        Allergen allergen4 = new Allergen();
+        allergen4.setId(4L);
+        allergen4.setName("Allergen two");
+
+        Set<Allergen> allergens2 = new HashSet<>();
+        allergens2.add(allergen3);
+        allergens2.add(allergen4);
+
+        supplement2.setAllergens(allergens2);
+
+        Review review3 = new Review();
+        review3.setId(3L);
+        review3.setReview("Goed product");
+        review3.setRating(10);
+        review3.setSupplement(supplement2);
+        review3.setDate(CreateDate.createDate());
+
+        Review review4 = new Review();
+        review4.setId(4L);
+        review4.setReview("Slecht product");
+        review4.setRating(1);
+        review4.setSupplement(supplement2);
+        review4.setDate(CreateDate.createDate());
+
+        List<Review> reviews2 = new ArrayList<>();
+        reviews2.add(review3);
+        reviews2.add(review4);
+
+        supplement2.setReviews(reviews2);
     }
 
-    public Supplement getSupplement2() {
-        Supplement supplement = new Supplement();
-        supplement.setId(2L);
-        supplement.setName("Creatine Blend");
-        supplement.setBrand("Energize Supps");
-        supplement.setDescription("De beste creatine");
-        supplement.setPrice(44.99);
-        supplement.setStock(20);
-        supplement.setContains("800g");
-
-        Allergen allergen1 = new Allergen();
-        allergen1.setId(1L);
-        allergen1.setName("Allergen one");
-
-        Allergen allergen2 = new Allergen();
-        allergen2.setId(2L);
-        allergen2.setName("Allergen two");
-
-        Set<Allergen> allergens = new HashSet<>();
-        allergens.add(allergen1);
-        allergens.add(allergen2);
-
-        supplement.setAllergens(allergens);
-
-        Review review1 = new Review();
-        review1.setId(1L);
-        review1.setReview("Goed product");
-        review1.setRating(10);
-        review1.setSupplement(supplement);
-        review1.setDate(CreateDate.createDate());
-
-        Review review2 = new Review();
-        review2.setId(2L);
-        review2.setReview("Slecht product");
-        review2.setRating(1);
-        review2.setSupplement(supplement);
-        review2.setDate(CreateDate.createDate());
-
-        List<Review> reviews = new ArrayList<>();
-        reviews.add(review1);
-        reviews.add(review2);
-
-        supplement.setReviews(reviews);
-
-        return supplement;
+    @AfterEach
+    void tearDown() {
+        inputDto = null;
+        supplement1 = null;
+        supplement2 = null;
     }
+
 
     @Test
     @DisplayName("Should transfer inputDto to supplement")
     void dtoToSupplement() {
         // Arrange
-        SupplementInputDto inputDto = getSupplementInputDto();
+        // BeforeEach init SupplementInputDto: inputDto
 
         // Act
         Supplement result = SupplementService.dtoToSupplement(inputDto);
