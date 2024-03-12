@@ -4,6 +4,7 @@ package nu.revitalized.revitalizedwebshop.services;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
+import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
@@ -51,7 +52,7 @@ public class SupplementService {
         copyProperties(supplement, supplementDto);
 
         if (supplement.getAllergens() != null) {
-            Set<ShortAllergenDto> shortAllergenDtos = new HashSet<>();
+            Set<ShortAllergenDto> shortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
             for (Allergen allergen : supplement.getAllergens()) {
                 shortAllergenDtos.add(allergenToShortDto(allergen));
             }
@@ -261,7 +262,7 @@ public class SupplementService {
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Allergen", allergenId)));
 
         if (supplement.getAllergens().contains(allergen)) {
-            throw new InvalidInputException("Supplement already contains allergen: " + allergen.getName() + " with id: " + allergenId);
+            throw new BadRequestException("Supplement already contains allergen: " + allergen.getName() + " with id: " + allergenId);
         }
 
         supplement.getAllergens().add(allergen);
@@ -278,7 +279,7 @@ public class SupplementService {
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Allergen", allergenId)));
 
         if (!supplement.getAllergens().remove(allergen)) {
-            throw new InvalidInputException("Supplement doesn't contain allergen: " + allergen.getName() + " with id: " + allergenId);
+            throw new BadRequestException("Supplement doesn't contain allergen: " + allergen.getName() + " with id: " + allergenId);
         }
 
         supplementRepository.save(supplement);
