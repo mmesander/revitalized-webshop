@@ -46,7 +46,7 @@ public class DiscountService {
 
         copyProperties(discount, discountDto);
 
-        if (discount.getUsers() != null) {
+        if (discount.getUsers() != null && !discount.getUsers().isEmpty()) {
             Set<String> users = new HashSet<>();
 
             for (User user : discount.getUsers()) {

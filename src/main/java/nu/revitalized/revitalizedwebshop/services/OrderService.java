@@ -59,7 +59,7 @@ public class OrderService {
 
         List<OrderItemDto> orderItemDtos = new ArrayList<>();
 
-        if (order.getSupplements() != null) {
+        if (order.getSupplements() != null && !order.getSupplements().isEmpty()) {
             List<OrderItemDto> orderItems = new ArrayList<>();
 
             for (Supplement supplement : order.getSupplements()) {
@@ -80,7 +80,7 @@ public class OrderService {
             orderItemDtos.addAll(orderItems);
         }
 
-        if (order.getGarments() != null) {
+        if (order.getGarments() != null && !order.getGarments().isEmpty()) {
             List<OrderItemDto> orderItems = new ArrayList<>();
 
             for (Garment garment : order.getGarments()) {

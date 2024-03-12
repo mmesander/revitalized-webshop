@@ -70,7 +70,7 @@ public class UserService {
 
         copyProperties(user, userDto);
 
-        if (user.getShippingDetails() != null) {
+        if (user.getShippingDetails() != null && !user.getShippingDetails().isEmpty()) {
             List<ShortShippingDetailsDto> dtos = new ArrayList<>();
             for (ShippingDetails shippingDetails : user.getShippingDetails()) {
                 dtos.add(shippingDetailsToShortDto(shippingDetails));
@@ -79,7 +79,7 @@ public class UserService {
             userDto.setShippingDetails(dtos);
         }
 
-        if (user.getReviews() != null) {
+        if (user.getReviews() != null && !user.getReviews().isEmpty()) {
             List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : user.getReviews()) {
                 dtos.add(reviewToDto(review));
@@ -89,7 +89,7 @@ public class UserService {
             userDto.setReviews(dtos);
         }
 
-        if (user.getDiscounts() != null) {
+        if (user.getDiscounts() != null && !user.getDiscounts().isEmpty()) {
             Set<ShortDiscountDto> discounts = new TreeSet<>(Comparator.comparing(ShortDiscountDto::getValue).reversed());
 
             for (Discount discount : user.getDiscounts()) {
@@ -99,7 +99,7 @@ public class UserService {
             userDto.setDiscounts(discounts);
         }
 
-        if (user.getOrders() != null) {
+        if (user.getOrders() != null && !user.getOrders().isEmpty()) {
             List<ShortOrderDto> shortOrderDtos = new ArrayList<>();
 
             for (Order order : user.getOrders()) {

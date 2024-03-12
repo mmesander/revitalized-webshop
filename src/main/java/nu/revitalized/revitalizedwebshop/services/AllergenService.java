@@ -39,7 +39,7 @@ public class AllergenService {
 
         copyProperties(allergen, allergenDto);
 
-        if (allergen.getSupplements() != null) {
+        if (allergen.getSupplements() != null && !allergen.getSupplements().isEmpty()) {
             Set<ShortSupplementDto> shortSupplementDtos = new HashSet<>();
             for (Supplement supplement : allergen.getSupplements()) {
                 shortSupplementDtos.add(supplementToShortDto(supplement));

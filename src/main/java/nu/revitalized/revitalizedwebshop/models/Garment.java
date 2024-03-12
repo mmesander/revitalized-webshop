@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import nu.revitalized.revitalizedwebshop.interfaces.IdentifiableProduct;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,10 +23,10 @@ public class Garment extends Product implements IdentifiableProduct {
             mappedBy = "garment",
             fetch = FetchType.EAGER
     )
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     @ManyToMany(mappedBy = "garments")
-    List<Order> orders;
+    List<Order> orders = new ArrayList<>();
 
     // Relations
     @OneToOne(mappedBy = "garment")
