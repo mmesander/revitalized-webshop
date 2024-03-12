@@ -173,34 +173,34 @@ class SupplementServiceTest {
     @DisplayName("Should transfer supplement to supplementDto")
     void supplementToDto() {
         // Arrange
-        Supplement supplement = getSupplement1();
+        // BeforeEach init supplement1
         Set<ShortAllergenDto> shortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
         List<ReviewDto> reviewDtos = new ArrayList<>();
 
 
-        for (Allergen allergen : supplement.getAllergens()) {
+        for (Allergen allergen : supplement1.getAllergens()) {
             ShortAllergenDto shortAllergenDto = AllergenService.allergenToShortDto(allergen);
             shortAllergenDtos.add(shortAllergenDto);
         }
 
-        for (Review review : supplement.getReviews()) {
+        for (Review review : supplement1.getReviews()) {
             ReviewDto reviewDto = ReviewService.reviewToDto(review);
             reviewDtos.add(reviewDto);
         }
         reviewDtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
 
         // Act
-        SupplementDto result = SupplementService.supplementToDto(supplement);
+        SupplementDto result = SupplementService.supplementToDto(supplement1);
 
 
         // Assert
-        assertEquals(supplement.getId(), result.getId());
-        assertEquals(supplement.getName(), result.getName());
-        assertEquals(supplement.getBrand(), result.getBrand());
-        assertEquals(supplement.getDescription(), result.getDescription());
-        assertEquals(supplement.getPrice(), result.getPrice());
-        assertEquals(supplement.getStock(), result.getStock());
-        assertEquals(supplement.getContains(), result.getContains());
+        assertEquals(supplement1.getId(), result.getId());
+        assertEquals(supplement1.getName(), result.getName());
+        assertEquals(supplement1.getBrand(), result.getBrand());
+        assertEquals(supplement1.getDescription(), result.getDescription());
+        assertEquals(supplement1.getPrice(), result.getPrice());
+        assertEquals(supplement1.getStock(), result.getStock());
+        assertEquals(supplement1.getContains(), result.getContains());
         assertEquals(shortAllergenDtos.isEmpty(), result.getAllergens().isEmpty());
         if (!shortAllergenDtos.isEmpty() && !result.getAllergens().isEmpty()) {
             ShortAllergenDto expectedDto = shortAllergenDtos.iterator().next();
@@ -219,45 +219,44 @@ class SupplementServiceTest {
     @Test
     void supplementToShortDto() {
         // Arrange
-        Supplement supplement = getSupplement1();
+        // BeforeEach init supplement1
 
         // Act
-        ShortSupplementDto result = SupplementService.supplementToShortDto(supplement);
+        ShortSupplementDto result = SupplementService.supplementToShortDto(supplement1);
 
         // Assert
-        assertEquals(supplement.getId(), result.getId());
-        assertEquals(supplement.getName(), result.getName());
-        assertEquals(supplement.getBrand(), result.getBrand());
-        assertEquals(supplement.getDescription(), result.getDescription());
-        assertEquals(supplement.getPrice(), result.getPrice());
-        assertEquals(supplement.getStock(), result.getStock());
-        assertEquals(supplement.getContains(), result.getContains());
+        assertEquals(supplement1.getId(), result.getId());
+        assertEquals(supplement1.getName(), result.getName());
+        assertEquals(supplement1.getBrand(), result.getBrand());
+        assertEquals(supplement1.getDescription(), result.getDescription());
+        assertEquals(supplement1.getPrice(), result.getPrice());
+        assertEquals(supplement1.getStock(), result.getStock());
+        assertEquals(supplement1.getContains(), result.getContains());
     }
 
     @Test
     void supplementToOrderItemDto() {
         // Arrange
-        Supplement supplement = getSupplement1();
+        // BeforeEach init supplement1
 
         // Act
-        OrderItemDto result = SupplementService.supplementToOrderItemDto(supplement);
+        OrderItemDto result = SupplementService.supplementToOrderItemDto(supplement1);
 
         // Assert
-        assertEquals(supplement.getId(), result.getId());
-        assertEquals(supplement.getName(), result.getName());
-        assertEquals(supplement.getPrice(), result.getPrice());
+        assertEquals(supplement1.getId(), result.getId());
+        assertEquals(supplement1.getName(), result.getName());
+        assertEquals(supplement1.getPrice(), result.getPrice());
         assertEquals(1, result.getQuantity());
     }
 
     @Test
-    void getAllSupplements() {
+    void getAllSupplements_Succes() {
         // Arrange
+        // BeforeEach init supplement1, supplement2
         List<Supplement> supplements = new ArrayList<>();
-        Supplement supplement1 = getSupplement1();
-        Supplement supplement2 = getSupplement2();
         supplements.add(supplement1);
         supplements.add(supplement2);
-        when(supplementRepository.findAll()).thenReturn(supplements);
+        doReturn(supplements).when(supplementRepository).findAll();
 
         // Act
         List<SupplementDto> result = supplementService.getAllSupplements();
@@ -287,18 +286,18 @@ class SupplementServiceTest {
     }
 
     @Test
-    void getSupplementById() {
+    void getSupplementById_Succes() {
         // Arrange
+        // BeforeEach init supplement1
         Long id = 1L;
-        Supplement supplement = getSupplement1();
-        doReturn(Optional.of(supplement)).when(supplementRepository).findById(id);
+        doReturn(Optional.of(supplement1)).when(supplementRepository).findById(id);
 
         // Act
         SupplementDto result = supplementService.getSupplementById(id);
 
         // Assert
         assertNotNull(result);
-        assertEquals(supplement.getName(), result.getName());
+        assertEquals(supplement1.getName(), result.getName());
     }
 
     @Test
@@ -319,11 +318,10 @@ class SupplementServiceTest {
     }
 
     @Test
-    void getSupplementsByParam() {
+    void getSupplementsByParam_Succes() {
         // Arrange
+        // BeforeEach init supplement1, supplement 2
         List<Supplement> supplements = new ArrayList<>();
-        Supplement supplement1 = getSupplement1();
-        Supplement supplement2 = getSupplement2();
         supplements.add(supplement1);
         supplements.add(supplement2);
 
