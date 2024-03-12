@@ -709,8 +709,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from assignAllergenToSupplement method when already contains")
-    void assignAllergenToSupplement_Exception_WhenAlreadyContains() {
+    @DisplayName("Should throw exception from assignAllergenToSupplement method when already contains allergen")
+    void assignAllergenToSupplement_Exception_WhenAlreadyContainsAllergen() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1
         Long supplementId = 5L;
@@ -742,11 +742,101 @@ class SupplementServiceTest {
 
 
     @Test
-    void removeAllergenFromSupplement() {
+    void removeAllergenFromSupplement_Succes() {
         // Arrange
+        // BeforeEach init Supplement: mockSupplement1
+        Long supplementId = 5L;
+        Long allergenId = 5L;
+        Allergen mockAllergen = new Allergen();
+        mockAllergen.setName("New allergen");
+        mockAllergen.setId(allergenId);
+        Set<Allergen> mockAllergens = new HashSet<>();
+        mockAllergens.add(mockAllergen);
+
+        mockSupplement1.setId(supplementId);
+        mockSupplement1.setAllergens(mockAllergens);
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(supplementId);
+        doReturn(Optional.of(mockAllergen)).when(allergenRepository).findById(allergenId);
+        doAnswer(invocation -> invocation.getArgument(0)).when(supplementRepository).save(any(Supplement.class));
 
         // Act
+        SupplementDto result = supplementService.removeAllergenFromSupplement(supplementId, allergenId);
 
         // Assert
+        assertNotNull(result);
+        assertFalse(result.getAllergens().contains(AllergenService.allergenToShortDto(mockAllergen)));
+        verify(supplementRepository, times(1)).save(any(Supplement.class));
+    }
+
+    @Test
+    void removeAllergenFromSupplement_Exception_WhenSupplementNotFound() {
+        // Arrange
+        Long supplementId = 66L;
+        Long allergenId = 66L;
+
+        doReturn(Optional.empty()).when(supplementRepository).findById(supplementId);
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.removeAllergenFromSupplement(supplementId, allergenId));
+
+        // Assert
+        String expectedMessage = "Supplement with id: " + supplementId + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(allergenRepository, never()).findById(anyLong());
+        verify(supplementRepository, never()).save(any());
+    }
+
+    @Test
+    void removeAllergenFromSupplement_Exception_WhenAllergenNotFound() {
+        // Arrange
+        // BeforeEach init Supplement: mockSupplement1
+        Long supplementId = 66L;
+        Long allergenId = 66L;
+        mockSupplement1.setId(supplementId);
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(supplementId);
+        doReturn(Optional.empty()).when(allergenRepository).findById(allergenId);
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.removeAllergenFromSupplement(supplementId, allergenId));
+
+        // Assert
+        String expectedMessage = "Allergen with id: " + allergenId + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(supplementRepository, never()).save(any());
+    }
+
+    @Test
+    void removeAllergenFromSupplement_Exception_WhenNotContainsAllergen() {
+        // Arrange
+        Long supplementId = 66L;
+        Long allergenId = 66L;
+        Supplement mockSupplement = new Supplement();
+        mockSupplement.setId(supplementId);
+        Allergen mockAllergen = new Allergen();
+        mockAllergen.setId(allergenId);
+        mockAllergen.setName("Not Existing Allergen");
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(supplementId);
+        doReturn(Optional.of(mockAllergen)).when(allergenRepository).findById(allergenId);
+
+        // Act
+        Exception exception = assertThrows(BadRequestException.class,
+                () -> supplementService.removeAllergenFromSupplement(supplementId, allergenId));
+
+        // Assert
+        String expectedMessage = "Supplement doesn't contain allergen: " + mockAllergen.getName()
+                + " with id: " + allergenId;
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(supplementRepository, never()).save(any());
     }
 }
