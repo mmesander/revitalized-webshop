@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -48,6 +47,7 @@ class SupplementServiceTest {
     @BeforeEach
     void init() {
         // Supplement InputDto
+        inputDto = new SupplementInputDto();
         inputDto.setName("Pre Workout");
         inputDto.setBrand("Energize");
         inputDto.setDescription("Hiermee ga je als een raket");
@@ -56,6 +56,7 @@ class SupplementServiceTest {
         inputDto.setContains("200g");
 
         // Supplement 1
+        supplement1 = new Supplement();
         supplement1.setId(1L);
         supplement1.setName("Creatine");
         supplement1.setBrand("Energize Supps");
@@ -99,6 +100,7 @@ class SupplementServiceTest {
         supplement1.setReviews(reviews);
 
         // Supplement 2
+        supplement2 = new Supplement();
         supplement2.setId(2L);
         supplement2.setName("Creatine Blend");
         supplement2.setBrand("Energize Supps");
@@ -217,6 +219,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should transfer supplement to shortSupplementDto")
     void supplementToShortDto() {
         // Arrange
         // BeforeEach init supplement1
@@ -235,6 +238,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should transfer supplement to orderItemDto")
     void supplementToOrderItemDto() {
         // Arrange
         // BeforeEach init supplement1
@@ -250,6 +254,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should get all supplements")
     void getAllSupplements_Succes() {
         // Arrange
         // BeforeEach init supplement1, supplement2
@@ -271,9 +276,10 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception from getAllSupplements")
     void getAllSupplements_Exception() {
         // Arrange
-        doReturn(Optional.empty()).when(supplementRepository).findAll();
+        doReturn(new ArrayList<>()).when(supplementRepository).findAll();
 
         // Act
         Exception exception = assertThrows(RecordNotFoundException.class, () -> supplementService.getAllSupplements());
@@ -286,6 +292,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should get supplement by id")
     void getSupplementById_Succes() {
         // Arrange
         // BeforeEach init supplement1
@@ -301,6 +308,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception from getSupplementById")
     void getSupplementById_Exception() {
         // Arrange
         Long id = 3L;
@@ -318,6 +326,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should get all supplements by parameters")
     void getSupplementsByParam_Succes() {
         // Arrange
         // BeforeEach init supplement1, supplement 2
@@ -352,6 +361,7 @@ class SupplementServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception from getAllSupplementsByParam")
     void getAllSupplementsByParam_Exception() {
         // Arrange
         doReturn(new ArrayList<>()).when(supplementRepository).findAll((Specification<Supplement>) any());
