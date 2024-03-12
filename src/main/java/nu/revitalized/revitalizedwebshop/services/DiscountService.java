@@ -6,7 +6,6 @@ import nu.revitalized.revitalizedwebshop.dtos.input.DiscountPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShortDiscountDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
-import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Discount;
@@ -214,11 +213,10 @@ public class DiscountService {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        for (Discount presentDiscount : user.getDiscounts()) {
-            if (presentDiscount.getName().equalsIgnoreCase(discount.getName())) {
-                throw new InvalidInputException("User: " + username + " already has discount: " + discount.getName());
+        for (Discount presentDiscount : user.getDiscounts())
+            if (presentDiscount.equals(discount)) {
+                throw new BadRequestException("User: " + username + " already has discount: " + discount.getName());
             }
-        }
 
         Set<User> users = discount.getUsers();
         users.add(user);
@@ -238,7 +236,7 @@ public class DiscountService {
         Set<User> users = discount.getUsers();
 
         if (!users.contains(user)) {
-            throw new InvalidInputException("User: " + username + " does not have discount: " + discount.getName());
+            throw new BadRequestException("User: " + username + " does not have discount: " + discount.getName());
         }
 
         users.remove(user);

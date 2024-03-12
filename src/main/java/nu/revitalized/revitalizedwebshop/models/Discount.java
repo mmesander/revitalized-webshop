@@ -4,6 +4,8 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -26,5 +28,5 @@ public class Discount {
             joinColumns = @JoinColumn(name = "discount_id"),
             inverseJoinColumns = @JoinColumn(name = "username")
     )
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 }
