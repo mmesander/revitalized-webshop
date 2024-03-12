@@ -2,6 +2,7 @@ package nu.revitalized.revitalizedwebshop.services;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
+import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.helpers.CreateDate;
 import nu.revitalized.revitalizedwebshop.models.Allergen;
@@ -156,7 +157,7 @@ class SupplementServiceTest {
     @DisplayName("Should transfer inputDto to supplement")
     void dtoToSupplement() {
         // Arrange
-        // BeforeEach init SupplementInputDto: inputDto
+        // BeforeEach init SupplementInputDto: mockInputDto
 
         // Act
         Supplement result = SupplementService.dtoToSupplement(mockInputDto);
@@ -175,7 +176,7 @@ class SupplementServiceTest {
     @DisplayName("Should transfer supplement to supplementDto")
     void supplementToDto() {
         // Arrange
-        // BeforeEach init supplement1
+        // BeforeEach init Supplement: mockSupplement1
         Set<ShortAllergenDto> MockShortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
         List<ReviewDto> mockReviewDtos = new ArrayList<>();
 
@@ -222,7 +223,7 @@ class SupplementServiceTest {
     @DisplayName("Should transfer supplement to shortSupplementDto")
     void supplementToShortDto() {
         // Arrange
-        // BeforeEach init supplement1
+        // BeforeEach init Supplement: mockSupplement1
 
         // Act
         ShortSupplementDto result = SupplementService.supplementToShortDto(mockSupplement1);
@@ -241,7 +242,7 @@ class SupplementServiceTest {
     @DisplayName("Should transfer supplement to orderItemDto")
     void supplementToOrderItemDto() {
         // Arrange
-        // BeforeEach init supplement1
+        // BeforeEach init Supplement: mockSupplement1
 
         // Act
         OrderItemDto result = SupplementService.supplementToOrderItemDto(mockSupplement1);
@@ -257,7 +258,7 @@ class SupplementServiceTest {
     @DisplayName("Should get all supplements")
     void getAllSupplements_Succes() {
         // Arrange
-        // BeforeEach init supplement1, supplement2
+        // BeforeEach init Supplement: mockSupplement1, mockSupplement2
         List<Supplement> mockSupplements = new ArrayList<>();
         mockSupplements.add(mockSupplement1);
         mockSupplements.add(mockSupplement2);
@@ -295,7 +296,7 @@ class SupplementServiceTest {
     @DisplayName("Should get supplement by id")
     void getSupplementById_Succes() {
         // Arrange
-        // BeforeEach init supplement1
+        // BeforeEach init Supplement: mockSupplement1
         Long id = 1L;
         doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(id);
 
@@ -329,7 +330,7 @@ class SupplementServiceTest {
     @DisplayName("Should get all supplements by parameters")
     void getSupplementsByParam_Succes() {
         // Arrange
-        // BeforeEach init supplement1, supplement 2
+        // BeforeEach init Supplement: mockSupplement1, mockSupplement2
         List<Supplement> mockSupplements = new ArrayList<>();
         mockSupplements.add(mockSupplement1);
         mockSupplements.add(mockSupplement2);
@@ -364,7 +365,6 @@ class SupplementServiceTest {
     @DisplayName("Should throw exception from getAllSupplementsByParam method")
     void getAllSupplementsByParam_Exception() {
         // Arrange
-        doReturn(new ArrayList<>()).when(supplementRepository).findAll((Specification<Supplement>) any());
         String name = "Crea";
         String brand = "Ener";
         Double price = null;
@@ -377,6 +377,7 @@ class SupplementServiceTest {
         Double minRating = null;
         Double maxRating = null;
         String contains = null;
+        doReturn(new ArrayList<>()).when(supplementRepository).findAll((Specification<Supplement>) any());
 
         // Act
         Exception exception = assertThrows(RecordNotFoundException.class,
@@ -394,7 +395,7 @@ class SupplementServiceTest {
     @DisplayName("Should get all out of stock supplements")
     void getOutOfStockSupplements_Succes() {
         // Arrange
-        // BeforeEach init supplement1, supplement2
+        // BeforeEach init Supplement: mockSupplement1, mockSupplement2
         List<Supplement> mockSupplements = new ArrayList<>();
         mockSupplements.add(mockSupplement1); // Out of stock
         mockSupplements.add(mockSupplement2); // In stock
@@ -428,7 +429,7 @@ class SupplementServiceTest {
     @DisplayName("Should get all in stock supplements")
     void getInOfStockSupplements_Succes() {
         // Arrange
-        // BeforeEach init supplement1, supplement2
+        // BeforeEach init Supplement: mockSupplement1, mockSupplement2
         List<Supplement> mockSupplements = new ArrayList<>();
         mockSupplements.add(mockSupplement1); // Out of stock
         mockSupplements.add(mockSupplement2); // In stock
@@ -458,17 +459,40 @@ class SupplementServiceTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
+    @Test
+    @DisplayName("Should create new not existing supplement")
+    void createSupplement_Succes() {
+        // Arrange
+        // BeforeEach init SupplementInputDto: mockInputDto
+        mockInputDto.setName("New Supplement");
+        doReturn(false).when(supplementRepository).existsByNameIgnoreCase(mockInputDto.getName());
 
+        // Act
+        SupplementDto result = supplementService.createSupplement(mockInputDto);
 
+        // Assert
+        assertNotNull(result);
+        assertEquals(mockInputDto.getName(), result.getName());
+    }
 
-//    @Test
-//    void createSupplement() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
+    @Test
+    @DisplayName("Should throw exception from createSupplement method")
+    void createSupplement_Exception() {
+        // Arrange
+        // BeforeEach init SupplementInputDto: mockInputDto
+        mockInputDto.setName("Existing Supplement");
+        doReturn(true).when(supplementRepository).existsByNameIgnoreCase(mockInputDto.getName());
+
+        // Act
+        Exception exception = assertThrows(InvalidInputException.class,
+                () -> supplementService.createSupplement(mockInputDto));
+
+        // Assert
+        String expectedMessage = "Supplement with name: " + mockInputDto.getName() + " already exists.";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
 //
 //    @Test
 //    void updateSupplement() {
