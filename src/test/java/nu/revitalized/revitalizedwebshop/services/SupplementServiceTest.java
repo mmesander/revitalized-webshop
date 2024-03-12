@@ -1,6 +1,7 @@
 package nu.revitalized.revitalizedwebshop.services;
 
 import nu.revitalized.revitalizedwebshop.dtos.input.SupplementInputDto;
+import nu.revitalized.revitalizedwebshop.dtos.input.SupplementPatchInputDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.*;
 import nu.revitalized.revitalizedwebshop.exceptions.InvalidInputException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
@@ -518,6 +519,7 @@ class SupplementServiceTest {
     @DisplayName("Should throw exception from updateSupplement method")
     void updateSupplement_Exception() {
         // Arrange
+        // BeforeEach init SupplementInputDto: mockInputDto
         Long id = 20L;
         doReturn(Optional.empty()).when(supplementRepository).findById(id);
 
@@ -532,15 +534,54 @@ class SupplementServiceTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
-//    @Test
-//    void patchSupplement() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
-//
+    @Test
+    void patchSupplement() {
+        // Arrange
+        // BeforeEach init Supplement: supplement1
+        Long id = 20L;
+        SupplementPatchInputDto mockPatchInputDto = new SupplementPatchInputDto();
+        mockPatchInputDto.setName("Patched name");
+        mockPatchInputDto.setBrand("Patched brand");
+        mockPatchInputDto.setDescription("Patched description");
+        mockPatchInputDto.setPrice(200.99);
+        mockPatchInputDto.setStock(100);
+        mockPatchInputDto.setContains("Patched contains");
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(id);
+        doAnswer(invocation -> invocation.getArgument(0)).when(supplementRepository).save(any(Supplement.class));
+
+        // Act
+        SupplementDto result = supplementService.patchSupplement(id, mockPatchInputDto);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(mockPatchInputDto.getName(), result.getName());
+        assertEquals(mockPatchInputDto.getBrand(), result.getBrand());
+        assertEquals(mockPatchInputDto.getDescription(), result.getDescription());
+        assertEquals(mockPatchInputDto.getPrice(), result.getPrice());
+        assertEquals(mockPatchInputDto.getStock(), result.getStock());
+        assertEquals(mockPatchInputDto.getContains(), result.getContains());
+    }
+
+    @Test
+    @DisplayName("Should throw exception from patchSupplement method")
+    void patchSupplement_Exception() {
+        // Arrange
+        Long id = 20L;
+        SupplementPatchInputDto mockPatchInputDto = new SupplementPatchInputDto();
+        doReturn(Optional.empty()).when(supplementRepository).findById(id);
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.patchSupplement(id, mockPatchInputDto));
+
+        // Assert
+        String expectedMessage = "Supplement with id: " + id + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
 //    @Test
 //    void deleteSupplement() {
 //        // Arrange
