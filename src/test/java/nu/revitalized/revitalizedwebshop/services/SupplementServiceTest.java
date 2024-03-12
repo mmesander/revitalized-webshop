@@ -40,115 +40,115 @@ class SupplementServiceTest {
     @InjectMocks
     private SupplementService supplementService;
 
-    SupplementInputDto inputDto;
-    Supplement supplement1;
-    Supplement supplement2;
+    SupplementInputDto mockInputDto;
+    Supplement mockSupplement1;
+    Supplement mockSupplement2;
 
     @BeforeEach
     void init() {
         // Supplement InputDto
-        inputDto = new SupplementInputDto();
-        inputDto.setName("Pre Workout");
-        inputDto.setBrand("Energize");
-        inputDto.setDescription("Hiermee ga je als een raket");
-        inputDto.setPrice(34.99);
-        inputDto.setStock(10);
-        inputDto.setContains("200g");
+        mockInputDto = new SupplementInputDto();
+        mockInputDto.setName("Pre Workout");
+        mockInputDto.setBrand("Energize");
+        mockInputDto.setDescription("Hiermee ga je als een raket");
+        mockInputDto.setPrice(34.99);
+        mockInputDto.setStock(10);
+        mockInputDto.setContains("200g");
 
         // Supplement 1
-        supplement1 = new Supplement();
-        supplement1.setId(1L);
-        supplement1.setName("Creatine");
-        supplement1.setBrand("Energize Supps");
-        supplement1.setDescription("Creatine van energize is top");
-        supplement1.setPrice(26.99);
-        supplement1.setStock(0);
-        supplement1.setContains("500g");
+        mockSupplement1 = new Supplement();
+        mockSupplement1.setId(1L);
+        mockSupplement1.setName("Creatine");
+        mockSupplement1.setBrand("Energize Supps");
+        mockSupplement1.setDescription("Creatine van energize is top");
+        mockSupplement1.setPrice(26.99);
+        mockSupplement1.setStock(0);
+        mockSupplement1.setContains("500g");
 
-        Allergen allergen1 = new Allergen();
-        allergen1.setId(1L);
-        allergen1.setName("Allergen one");
+        Allergen mockAllergen1 = new Allergen();
+        mockAllergen1.setId(1L);
+        mockAllergen1.setName("Allergen one");
 
-        Allergen allergen2 = new Allergen();
-        allergen2.setId(2L);
-        allergen2.setName("Allergen two");
+        Allergen mockAllergen2 = new Allergen();
+        mockAllergen2.setId(2L);
+        mockAllergen2.setName("Allergen two");
 
-        Set<Allergen> allergens1 = new HashSet<>();
-        allergens1.add(allergen1);
-        allergens1.add(allergen2);
+        Set<Allergen> mockAllergens1 = new HashSet<>();
+        mockAllergens1.add(mockAllergen1);
+        mockAllergens1.add(mockAllergen2);
 
-        supplement1.setAllergens(allergens1);
+        mockSupplement1.setAllergens(mockAllergens1);
 
-        Review review1 = new Review();
-        review1.setId(1L);
-        review1.setReview("Goed product");
-        review1.setRating(10);
-        review1.setSupplement(supplement1);
-        review1.setDate(CreateDate.createDate());
+        Review mockReview1 = new Review();
+        mockReview1.setId(1L);
+        mockReview1.setReview("Goed product");
+        mockReview1.setRating(10);
+        mockReview1.setSupplement(mockSupplement1);
+        mockReview1.setDate(CreateDate.createDate());
 
-        Review review2 = new Review();
-        review2.setId(2L);
-        review2.setReview("Slecht product");
-        review2.setRating(1);
-        review2.setSupplement(supplement1);
-        review2.setDate(CreateDate.createDate());
+        Review mockReview2 = new Review();
+        mockReview2.setId(2L);
+        mockReview2.setReview("Slecht product");
+        mockReview2.setRating(1);
+        mockReview2.setSupplement(mockSupplement1);
+        mockReview2.setDate(CreateDate.createDate());
 
-        List<Review> reviews = new ArrayList<>();
-        reviews.add(review1);
-        reviews.add(review2);
+        List<Review> mockReviews1 = new ArrayList<>();
+        mockReviews1.add(mockReview1);
+        mockReviews1.add(mockReview2);
 
-        supplement1.setReviews(reviews);
+        mockSupplement1.setReviews(mockReviews1);
 
         // Supplement 2
-        supplement2 = new Supplement();
-        supplement2.setId(2L);
-        supplement2.setName("Creatine Blend");
-        supplement2.setBrand("Energize Supps");
-        supplement2.setDescription("De beste creatine");
-        supplement2.setPrice(44.99);
-        supplement2.setStock(20);
-        supplement2.setContains("800g");
+        mockSupplement2 = new Supplement();
+        mockSupplement2.setId(2L);
+        mockSupplement2.setName("Creatine Blend");
+        mockSupplement2.setBrand("Energize Supps");
+        mockSupplement2.setDescription("De beste creatine");
+        mockSupplement2.setPrice(44.99);
+        mockSupplement2.setStock(20);
+        mockSupplement2.setContains("800g");
 
-        Allergen allergen3 = new Allergen();
-        allergen3.setId(3L);
-        allergen3.setName("Allergen one");
+        Allergen mockAllergen3 = new Allergen();
+        mockAllergen3.setId(3L);
+        mockAllergen3.setName("Allergen one");
 
-        Allergen allergen4 = new Allergen();
-        allergen4.setId(4L);
-        allergen4.setName("Allergen two");
+        Allergen mockAllergen4 = new Allergen();
+        mockAllergen4.setId(4L);
+        mockAllergen4.setName("Allergen two");
 
-        Set<Allergen> allergens2 = new HashSet<>();
-        allergens2.add(allergen3);
-        allergens2.add(allergen4);
+        Set<Allergen> mockALlergens2 = new HashSet<>();
+        mockALlergens2.add(mockAllergen3);
+        mockALlergens2.add(mockAllergen4);
 
-        supplement2.setAllergens(allergens2);
+        mockSupplement2.setAllergens(mockALlergens2);
 
-        Review review3 = new Review();
-        review3.setId(3L);
-        review3.setReview("Goed product");
-        review3.setRating(10);
-        review3.setSupplement(supplement2);
-        review3.setDate(CreateDate.createDate());
+        Review mockReview3 = new Review();
+        mockReview3.setId(3L);
+        mockReview3.setReview("Goed product");
+        mockReview3.setRating(9);
+        mockReview3.setSupplement(mockSupplement2);
+        mockReview3.setDate(CreateDate.createDate());
 
-        Review review4 = new Review();
-        review4.setId(4L);
-        review4.setReview("Slecht product");
-        review4.setRating(1);
-        review4.setSupplement(supplement2);
-        review4.setDate(CreateDate.createDate());
+        Review mockReview4 = new Review();
+        mockReview4.setId(4L);
+        mockReview4.setReview("Slecht product");
+        mockReview4.setRating(3);
+        mockReview4.setSupplement(mockSupplement2);
+        mockReview4.setDate(CreateDate.createDate());
 
-        List<Review> reviews2 = new ArrayList<>();
-        reviews2.add(review3);
-        reviews2.add(review4);
+        List<Review> mockReviews2 = new ArrayList<>();
+        mockReviews2.add(mockReview3);
+        mockReviews2.add(mockReview4);
 
-        supplement2.setReviews(reviews2);
+        mockSupplement2.setReviews(mockReviews2);
     }
 
     @AfterEach
     void tearDown() {
-        inputDto = null;
-        supplement1 = null;
-        supplement2 = null;
+        mockInputDto = null;
+        mockSupplement1 = null;
+        mockSupplement2 = null;
     }
 
 
@@ -159,15 +159,15 @@ class SupplementServiceTest {
         // BeforeEach init SupplementInputDto: inputDto
 
         // Act
-        Supplement result = SupplementService.dtoToSupplement(inputDto);
+        Supplement result = SupplementService.dtoToSupplement(mockInputDto);
 
         // Assert
-        assertEquals(inputDto.getName(), result.getName());
-        assertEquals(inputDto.getBrand(), result.getBrand());
-        assertEquals(inputDto.getDescription(), result.getDescription());
-        assertEquals(inputDto.getPrice(), result.getPrice());
-        assertEquals(inputDto.getStock(), result.getStock());
-        assertEquals(inputDto.getContains(), result.getContains());
+        assertEquals(mockInputDto.getName(), result.getName());
+        assertEquals(mockInputDto.getBrand(), result.getBrand());
+        assertEquals(mockInputDto.getDescription(), result.getDescription());
+        assertEquals(mockInputDto.getPrice(), result.getPrice());
+        assertEquals(mockInputDto.getStock(), result.getStock());
+        assertEquals(mockInputDto.getContains(), result.getContains());
         assertNull(result.getAllergens());
     }
 
@@ -176,43 +176,43 @@ class SupplementServiceTest {
     void supplementToDto() {
         // Arrange
         // BeforeEach init supplement1
-        Set<ShortAllergenDto> shortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
-        List<ReviewDto> reviewDtos = new ArrayList<>();
+        Set<ShortAllergenDto> MockShortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
+        List<ReviewDto> mockReviewDtos = new ArrayList<>();
 
 
-        for (Allergen allergen : supplement1.getAllergens()) {
-            ShortAllergenDto shortAllergenDto = AllergenService.allergenToShortDto(allergen);
-            shortAllergenDtos.add(shortAllergenDto);
+        for (Allergen mockALlergen : mockSupplement1.getAllergens()) {
+            ShortAllergenDto mockShortAllergenDto = AllergenService.allergenToShortDto(mockALlergen);
+            MockShortAllergenDtos.add(mockShortAllergenDto);
         }
 
-        for (Review review : supplement1.getReviews()) {
-            ReviewDto reviewDto = ReviewService.reviewToDto(review);
-            reviewDtos.add(reviewDto);
+        for (Review mockReview : mockSupplement1.getReviews()) {
+            ReviewDto mockReviewDto = ReviewService.reviewToDto(mockReview);
+            mockReviewDtos.add(mockReviewDto);
         }
-        reviewDtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
+        mockReviewDtos.sort(Comparator.comparing(ReviewDto::getDate).reversed());
 
         // Act
-        SupplementDto result = SupplementService.supplementToDto(supplement1);
+        SupplementDto result = SupplementService.supplementToDto(mockSupplement1);
 
 
         // Assert
-        assertEquals(supplement1.getId(), result.getId());
-        assertEquals(supplement1.getName(), result.getName());
-        assertEquals(supplement1.getBrand(), result.getBrand());
-        assertEquals(supplement1.getDescription(), result.getDescription());
-        assertEquals(supplement1.getPrice(), result.getPrice());
-        assertEquals(supplement1.getStock(), result.getStock());
-        assertEquals(supplement1.getContains(), result.getContains());
-        assertEquals(shortAllergenDtos.isEmpty(), result.getAllergens().isEmpty());
-        if (!shortAllergenDtos.isEmpty() && !result.getAllergens().isEmpty()) {
-            ShortAllergenDto expectedDto = shortAllergenDtos.iterator().next();
+        assertEquals(mockSupplement1.getId(), result.getId());
+        assertEquals(mockSupplement1.getName(), result.getName());
+        assertEquals(mockSupplement1.getBrand(), result.getBrand());
+        assertEquals(mockSupplement1.getDescription(), result.getDescription());
+        assertEquals(mockSupplement1.getPrice(), result.getPrice());
+        assertEquals(mockSupplement1.getStock(), result.getStock());
+        assertEquals(mockSupplement1.getContains(), result.getContains());
+        assertEquals(MockShortAllergenDtos.isEmpty(), result.getAllergens().isEmpty());
+        if (!MockShortAllergenDtos.isEmpty() && !result.getAllergens().isEmpty()) {
+            ShortAllergenDto expectedDto = MockShortAllergenDtos.iterator().next();
             ShortAllergenDto actualDto = result.getAllergens().iterator().next();
             assertEquals(expectedDto.getId(), actualDto.getId());
             assertEquals(expectedDto.getName(), actualDto.getName());
         }
-        assertEquals(reviewDtos.isEmpty(), result.getReviews().isEmpty());
-        if (!reviewDtos.isEmpty() && !result.getReviews().isEmpty()) {
-            ReviewDto expectedDto = reviewDtos.iterator().next();
+        assertEquals(mockReviewDtos.isEmpty(), result.getReviews().isEmpty());
+        if (!mockReviewDtos.isEmpty() && !result.getReviews().isEmpty()) {
+            ReviewDto expectedDto = mockReviewDtos.iterator().next();
             ReviewDto actualDto = result.getReviews().iterator().next();
             assertEquals(expectedDto.getId(), actualDto.getId());
         }
@@ -225,16 +225,16 @@ class SupplementServiceTest {
         // BeforeEach init supplement1
 
         // Act
-        ShortSupplementDto result = SupplementService.supplementToShortDto(supplement1);
+        ShortSupplementDto result = SupplementService.supplementToShortDto(mockSupplement1);
 
         // Assert
-        assertEquals(supplement1.getId(), result.getId());
-        assertEquals(supplement1.getName(), result.getName());
-        assertEquals(supplement1.getBrand(), result.getBrand());
-        assertEquals(supplement1.getDescription(), result.getDescription());
-        assertEquals(supplement1.getPrice(), result.getPrice());
-        assertEquals(supplement1.getStock(), result.getStock());
-        assertEquals(supplement1.getContains(), result.getContains());
+        assertEquals(mockSupplement1.getId(), result.getId());
+        assertEquals(mockSupplement1.getName(), result.getName());
+        assertEquals(mockSupplement1.getBrand(), result.getBrand());
+        assertEquals(mockSupplement1.getDescription(), result.getDescription());
+        assertEquals(mockSupplement1.getPrice(), result.getPrice());
+        assertEquals(mockSupplement1.getStock(), result.getStock());
+        assertEquals(mockSupplement1.getContains(), result.getContains());
     }
 
     @Test
@@ -244,12 +244,12 @@ class SupplementServiceTest {
         // BeforeEach init supplement1
 
         // Act
-        OrderItemDto result = SupplementService.supplementToOrderItemDto(supplement1);
+        OrderItemDto result = SupplementService.supplementToOrderItemDto(mockSupplement1);
 
         // Assert
-        assertEquals(supplement1.getId(), result.getId());
-        assertEquals(supplement1.getName(), result.getName());
-        assertEquals(supplement1.getPrice(), result.getPrice());
+        assertEquals(mockSupplement1.getId(), result.getId());
+        assertEquals(mockSupplement1.getName(), result.getName());
+        assertEquals(mockSupplement1.getPrice(), result.getPrice());
         assertEquals(1, result.getQuantity());
     }
 
@@ -258,10 +258,10 @@ class SupplementServiceTest {
     void getAllSupplements_Succes() {
         // Arrange
         // BeforeEach init supplement1, supplement2
-        List<Supplement> supplements = new ArrayList<>();
-        supplements.add(supplement1);
-        supplements.add(supplement2);
-        doReturn(supplements).when(supplementRepository).findAll();
+        List<Supplement> mockSupplements = new ArrayList<>();
+        mockSupplements.add(mockSupplement1);
+        mockSupplements.add(mockSupplement2);
+        doReturn(mockSupplements).when(supplementRepository).findAll();
 
         // Act
         List<SupplementDto> result = supplementService.getAllSupplements();
@@ -271,12 +271,12 @@ class SupplementServiceTest {
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).getId());
         assertEquals(2L, result.get(1).getId());
-        assertEquals(supplement1.getName(), result.get(0).getName());
-        assertEquals(supplement2.getName(), result.get(1).getName());
+        assertEquals(mockSupplement1.getName(), result.get(0).getName());
+        assertEquals(mockSupplement2.getName(), result.get(1).getName());
     }
 
     @Test
-    @DisplayName("Should throw exception from getAllSupplements")
+    @DisplayName("Should throw exception from getAllSupplements method")
     void getAllSupplements_Exception() {
         // Arrange
         doReturn(new ArrayList<>()).when(supplementRepository).findAll();
@@ -297,18 +297,18 @@ class SupplementServiceTest {
         // Arrange
         // BeforeEach init supplement1
         Long id = 1L;
-        doReturn(Optional.of(supplement1)).when(supplementRepository).findById(id);
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(id);
 
         // Act
         SupplementDto result = supplementService.getSupplementById(id);
 
         // Assert
         assertNotNull(result);
-        assertEquals(supplement1.getName(), result.getName());
+        assertEquals(mockSupplement1.getName(), result.getName());
     }
 
     @Test
-    @DisplayName("Should throw exception from getSupplementById")
+    @DisplayName("Should throw exception from getSupplementById method")
     void getSupplementById_Exception() {
         // Arrange
         Long id = 3L;
@@ -330,9 +330,9 @@ class SupplementServiceTest {
     void getSupplementsByParam_Succes() {
         // Arrange
         // BeforeEach init supplement1, supplement 2
-        List<Supplement> supplements = new ArrayList<>();
-        supplements.add(supplement1);
-        supplements.add(supplement2);
+        List<Supplement> mockSupplements = new ArrayList<>();
+        mockSupplements.add(mockSupplement1);
+        mockSupplements.add(mockSupplement2);
 
         String name = "Crea";
         String brand = "Ener";
@@ -347,7 +347,7 @@ class SupplementServiceTest {
         Double maxRating = null;
         String contains = null;
 
-        doReturn(supplements).when(supplementRepository).findAll((Specification<Supplement>) any());
+        doReturn(mockSupplements).when(supplementRepository).findAll((Specification<Supplement>) any());
 
         // Act
         List<SupplementDto> result = supplementService.getSupplementsByParam(
@@ -361,7 +361,7 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from getAllSupplementsByParam")
+    @DisplayName("Should throw exception from getAllSupplementsByParam method")
     void getAllSupplementsByParam_Exception() {
         // Arrange
         doReturn(new ArrayList<>()).when(supplementRepository).findAll((Specification<Supplement>) any());
@@ -390,26 +390,43 @@ class SupplementServiceTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
+    @Test
+    @DisplayName("Should get all out of stock supplements")
+    void getOutOfStockSupplements_Succes() {
+        // Arrange
+        // BeforeEach init supplement1, supplement2
+        List<Supplement> mockSupplements = new ArrayList<>();
+        mockSupplements.add(mockSupplement1); // Out of stock
+        mockSupplements.add(mockSupplement2); // In stock
+        doReturn(mockSupplements).when(supplementRepository).findAll();
 
-//
-//    @Test
-//    void getOutOfStockSupplements() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
-//
-//    @Test
-//    void getInStockSupplements() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
-//
+        // Act
+        List<SupplementDto> result = supplementService.getOutOfStockSupplements();
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(mockSupplement1.getName(), result.get(0).getName());
+    }
+
+    @Test
+    @DisplayName("Should trow exception from getAllOutOfStockSupplements method")
+    void getOutOfStockSupplements_Exception() {
+        doReturn(new ArrayList<>()).when(supplementRepository).findAll();
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.getOutOfStockSupplements());
+
+        // Assert
+        String expectedMessage = "No supplements out of stock found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+
+
+
 //    @Test
 //    void createSupplement() {
 //        // Arrange
