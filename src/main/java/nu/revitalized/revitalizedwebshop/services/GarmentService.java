@@ -98,8 +98,8 @@ public class GarmentService {
             Double maxPrice,
             Integer minStock,
             Integer maxStock,
-            Double minRating,
-            Double maxRating,
+            Integer minRating,
+            Integer maxRating,
             String size,
             String color
     ) {

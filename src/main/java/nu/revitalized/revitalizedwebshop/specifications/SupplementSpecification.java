@@ -17,8 +17,8 @@ public class SupplementSpecification implements Specification<Supplement> {
     private final Double maxPrice;
     private final Integer minStock;
     private final Integer maxStock;
-    private final Double minRating;
-    private final Double maxRating;
+    private final Integer minRating;
+    private final Integer maxRating;
     private String contains;
 
     public SupplementSpecification(
@@ -28,8 +28,8 @@ public class SupplementSpecification implements Specification<Supplement> {
             Double maxPrice,
             Integer minStock,
             Integer maxStock,
-            Double minRating,
-            Double maxRating,
+            Integer minRating,
+            Integer maxRating,
             String contains
     ) {
         this.name = name;

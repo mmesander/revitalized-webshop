@@ -119,8 +119,8 @@ public class SupplementService {
             Double maxPrice,
             Integer minStock,
             Integer maxStock,
-            Double minRating,
-            Double maxRating,
+            Integer minRating,
+            Integer maxRating,
             String contains
     ) {
         SupplementSpecification params = new SupplementSpecification(

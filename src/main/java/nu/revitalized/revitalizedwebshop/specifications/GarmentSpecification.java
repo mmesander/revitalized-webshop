@@ -17,8 +17,8 @@ public class GarmentSpecification implements Specification<Garment> {
     private final Double maxPrice;
     private final Integer minStock;
     private final Integer maxStock;
-    private final Double minRating;
-    private final Double maxRating;
+    private final Integer minRating;
+    private final Integer maxRating;
     private String size;
     private String color;
 
@@ -29,8 +29,8 @@ public class GarmentSpecification implements Specification<Garment> {
             Double maxPrice,
             Integer minStock,
             Integer maxStock,
-            Double minRating,
-            Double maxRating,
+            Integer minRating,
+            Integer maxRating,
             String size,
             String color
     ) {

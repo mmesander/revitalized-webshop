@@ -48,8 +48,8 @@ public class GarmentController {
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) Integer minStock,
             @RequestParam(required = false) Integer maxStock,
-            @RequestParam(required = false) Double minRating,
-            @RequestParam(required = false) Double maxRating,
+            @RequestParam(required = false) Integer minRating,
+            @RequestParam(required = false) Integer maxRating,
             @RequestParam(required = false) String size,
             @RequestParam(required = false) String color
     ) {
