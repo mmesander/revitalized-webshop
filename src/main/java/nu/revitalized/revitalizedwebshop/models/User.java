@@ -59,7 +59,7 @@ public class User {
             mappedBy = "users",
             fetch = FetchType.EAGER
     )
-    private Set<Discount> discounts;
+    private Set<Discount> discounts = new HashSet<>();
 
     // Methods
     public void addAuthority(Authority authority) {

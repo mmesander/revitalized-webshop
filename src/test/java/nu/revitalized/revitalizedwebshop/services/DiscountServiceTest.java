@@ -7,7 +7,9 @@ import nu.revitalized.revitalizedwebshop.dtos.output.DiscountDto;
 import nu.revitalized.revitalizedwebshop.dtos.output.ShortDiscountDto;
 import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
+import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Discount;
+import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.DiscountRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
@@ -514,72 +516,204 @@ class DiscountServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should assign existing discount to existing user")
+    void assignUserToDiscount_Succes() {
+        // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Long discountId = 5L;
+        String username = mockUser1.getUsername();
+        mockDiscount1.setId(discountId);
+
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(discountId);
+        doReturn(Optional.of(mockUser1)).when(userRepository).findById(username);
+        doAnswer(invocation -> invocation.getArgument(0)).when(discountRepository).save(any(Discount.class));
+
+        // Act
+        DiscountDto result = discountService.assignUserToDiscount(username, discountId);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.getUsers().contains(username));
+        verify(discountRepository, times(1)).save(any(Discount.class));
+    }
+
+    @Test
+    @DisplayName("Should throw exception from assignUserToDiscount method when discount not found")
     void assignUserToDiscount_Exception_WhenDiscountNotFound() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Long discountId = 5L;
+        String username = mockUser1.getUsername();
+        doReturn(Optional.empty()).when(discountRepository).findById(discountId);
+
 
         // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> discountService.assignUserToDiscount(username, discountId));
 
         // Assert
+        String expectedMessage = "Discount with id: " + discountId + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(userRepository, never()).findById(anyString());
+        verify(discountRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from assignUserToDiscount method when user not found")
     void assignUserToDiscount_Exception_WhenUserNotFound() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Long discountId = 5L;
+        String username = mockUser1.getUsername();
+        mockDiscount1.setId(discountId);
+
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(discountId);
+        doReturn(Optional.empty()).when(userRepository).findById(username);
 
         // Act
+        Exception exception = assertThrows(UsernameNotFoundException.class,
+                () -> discountService.assignUserToDiscount(username, discountId));
 
         // Assert
+        String expectedMessage = "Can't find user: " + username;
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(discountRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from assignUserToDiscount method when already contains user")
     void assignUserToDiscount_Exception_WhenAlreadyContainsUser() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Long discountId = 5L;
+        String username = mockUser1.getUsername();
+        mockDiscount1.setId(discountId);
+        Set<User> mockUsers = new HashSet<>();
+        Set<Discount> mockDiscounts = new HashSet<>();
+        mockUsers.add(mockUser1);
+        mockDiscounts.add(mockDiscount1);
+        mockDiscount1.setUsers(mockUsers);
+        mockUser1.setDiscounts(mockDiscounts);
+
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(discountId);
+        doReturn(Optional.of(mockUser1)).when(userRepository).findById(username);
 
         // Act
+        Exception exception = assertThrows(BadRequestException.class,
+                () -> discountService.assignUserToDiscount(username, discountId));
 
         // Assert
+        String expectedMessage = "User: " + username + " already has discount: " + mockDiscount1.getName();
+        String actualMessage = exception.getMessage();
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, actualMessage);
+        verify(discountRepository, never()).save(any());
     }
 
     @Test
+    @DisplayName("Should remove existing user from existing discount")
     void removeUserFromDiscount_Succes() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Long discountId = 5L;
+        String username = mockUser1.getUsername();
+        Set<User> mockUsers = new HashSet<>();
+        mockUsers.add(mockUser1);
+
+        mockDiscount1.setId(discountId);
+        mockDiscount1.setUsers(mockUsers);
+
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(discountId);
+        doReturn(Optional.of(mockUser1)).when(userRepository).findById(username);
+        doAnswer(invocation -> invocation.getArgument(0)).when(discountRepository).save(any(Discount.class));
 
         // Act
+        String confirmation = discountService.removeUserFromDiscount(username, discountId);
 
         // Assert
+        String expectedMessage = "Discount: " + mockDiscount1.getName() + " with id: " + discountId
+                + " is removed from user: " + username;
+
+        assertNotNull(confirmation);
+        assertEquals(expectedMessage, confirmation);
+        assertFalse(mockDiscount1.getUsers().contains(mockUser1));
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from removeUserFromDiscount method when discount not found")
     void removeUserFromDiscount_Exception_WhenDiscountNotFound() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Long discountId = 5L;
+        String username = mockUser1.getUsername();
+        doReturn(Optional.empty()).when(discountRepository).findById(discountId);
+
 
         // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> discountService.removeUserFromDiscount(username, discountId));
 
         // Assert
+        String expectedMessage = "Discount with id: " + discountId + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(userRepository, never()).findById(anyString());
+        verify(discountRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from removeUserFromDiscount method when user not found")
     void removeUserFromDiscount_Exception_WhenUserNotFound() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Long discountId = 5L;
+        String username = mockUser1.getUsername();
+        mockDiscount1.setId(discountId);
+
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(discountId);
+        doReturn(Optional.empty()).when(userRepository).findById(username);
 
         // Act
+        Exception exception = assertThrows(UsernameNotFoundException.class,
+                () -> discountService.assignUserToDiscount(username, discountId));
 
         // Assert
+        String expectedMessage = "Can't find user: " + username;
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+        verify(discountRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from removeUserFromDiscount method when not contains user")
     void removeUserFromDiscount_Exception_WhenNotContainsUser() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, User: mockUser1
+        Long discountId = 5L;
+        String username = mockUser1.getUsername();
+        mockDiscount1.setId(discountId);
+
+        doReturn(Optional.of(mockDiscount1)).when(discountRepository).findById(discountId);
+        doReturn(Optional.of(mockUser1)).when(userRepository).findById(username);
 
         // Act
+        Exception exception = assertThrows(BadRequestException.class,
+                () -> discountService.removeUserFromDiscount(username, discountId));
 
         // Assert
+        String expectedMessage = "User: " + username + " does not have discount: " + mockDiscount1.getName();
+        String actualMessage = exception.getMessage();
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, actualMessage);
+        verify(discountRepository, never()).save(any());
     }
 
     @Test

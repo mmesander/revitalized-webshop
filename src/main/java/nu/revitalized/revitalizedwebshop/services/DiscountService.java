@@ -216,7 +216,7 @@ public class DiscountService {
 
         for (Discount presentDiscount : user.getDiscounts()) {
             if (presentDiscount.getName().equalsIgnoreCase(discount.getName())) {
-                throw new InvalidInputException("User: " + username + " already has discount: " + discount.getName());
+                throw new BadRequestException("User: " + username + " already has discount: " + discount.getName());
             }
         }
 
@@ -238,7 +238,7 @@ public class DiscountService {
         Set<User> users = discount.getUsers();
 
         if (!users.contains(user)) {
-            throw new InvalidInputException("User: " + username + " does not have discount: " + discount.getName());
+            throw new BadRequestException("User: " + username + " does not have discount: " + discount.getName());
         }
 
         users.remove(user);
