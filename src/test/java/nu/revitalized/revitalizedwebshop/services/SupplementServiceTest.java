@@ -409,7 +409,7 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should trow exception from getAllOutOfStockSupplements method")
+    @DisplayName("Should trow exception from getOutOfStockSupplements method")
     void getOutOfStockSupplements_Exception() {
         doReturn(new ArrayList<>()).when(supplementRepository).findAll();
 
@@ -419,6 +419,40 @@ class SupplementServiceTest {
 
         // Assert
         String expectedMessage = "No supplements out of stock found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    @DisplayName("Should get all in stock supplements")
+    void getInOfStockSupplements_Succes() {
+        // Arrange
+        // BeforeEach init supplement1, supplement2
+        List<Supplement> mockSupplements = new ArrayList<>();
+        mockSupplements.add(mockSupplement1); // Out of stock
+        mockSupplements.add(mockSupplement2); // In stock
+        doReturn(mockSupplements).when(supplementRepository).findAll();
+
+        // Act
+        List<SupplementDto> result = supplementService.getInStockSupplements();
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(mockSupplement2.getName(), result.get(0).getName());
+    }
+
+    @Test
+    @DisplayName("Should trow exception from getInStockSupplements method")
+    void getInStockSupplements_Exception() {
+        doReturn(new ArrayList<>()).when(supplementRepository).findAll();
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.getInStockSupplements());
+
+        // Assert
+        String expectedMessage = "No supplements in stock found";
         String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
