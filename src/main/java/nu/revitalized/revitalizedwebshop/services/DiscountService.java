@@ -13,14 +13,12 @@ import nu.revitalized.revitalizedwebshop.models.Discount;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.DiscountRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jpa.domain.Specification;
+import nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
-import static nu.revitalized.revitalizedwebshop.specifications.DiscountSpecification.*;
 
 @Service
 public class DiscountService {
@@ -102,11 +100,9 @@ public class DiscountService {
             Double minValue,
             Double maxValue
     ) {
-        Specification<Discount> params = Specification.where
-                        (StringUtils.isBlank(name) ? null : getDiscountNameLikeFilter(name))
-                .and(value == null ? null : getDiscountValueLikeFilter(value))
-                .and(minValue == null ? null : getDiscountValueMoreThanFilter(minValue))
-                .and(maxValue == null ? null : getDiscountValueLessThanFilter(maxValue));
+        DiscountSpecification params = new DiscountSpecification(
+                name, value, minValue, maxValue
+        );
 
         List<Discount> filteredDiscounts = discountRepository.findAll(params);
         List<DiscountDto> discountDtos = new ArrayList<>();

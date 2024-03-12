@@ -12,8 +12,7 @@ import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jpa.domain.Specification;
+import nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildConfirmation.buildSpecificConfirmation;
@@ -22,7 +21,6 @@ import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.c
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.AllergenService.allergenToShortDto;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
-import static nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification.*;
 
 @Service
 public class SupplementService {
@@ -117,30 +115,17 @@ public class SupplementService {
     public List<SupplementDto> getSupplementsByParam(
             String name,
             String brand,
-            Double price,
             Double minPrice,
             Double maxPrice,
-            Integer stock,
             Integer minStock,
             Integer maxStock,
-            Double averageRating,
-            Double minRating,
-            Double maxRating,
+            Integer minRating,
+            Integer maxRating,
             String contains
     ) {
-        Specification<Supplement> params = Specification.where
-                        (StringUtils.isBlank(name) ? null : getSupplementNameLikeFilter(name))
-                .and(StringUtils.isBlank(brand) ? null : getSupplementBrandLikeFilter(brand))
-                .and(price == null ? null : getSupplementPriceLikeFilter(price))
-                .and(minPrice == null ? null : getSupplementPriceMoreThanFilter(minPrice))
-                .and(maxPrice == null ? null : getSupplementPriceLessThanFilter(maxPrice))
-                .and(stock == null ? null : getSupplementStockLikeFilter(stock))
-                .and(minStock == null ? null : getSupplementStockMoreThanFilter(minStock))
-                .and(maxStock == null ? null : getSupplementStockLessThanFilter(maxStock))
-                .and(averageRating == null ? null : getSupplementAverageRatingLikeFilter(averageRating))
-                .and(minRating == null ? null : getSupplementAverageRatingMoreThanFilter(maxRating))
-                .and(maxRating == null ? null : getSupplementAverageRatingLessThanFilter(maxRating))
-                .and(StringUtils.isBlank(contains) ? null : getSupplementContainsLikeFilter(contains));
+        SupplementSpecification params = new SupplementSpecification(
+                name, brand, minPrice, maxPrice, minStock, maxStock, minRating, maxRating, contains
+        );
 
         List<Supplement> filteredSupplements = supplementRepository.findAll(params);
         List<SupplementDto> supplementDtos = new ArrayList<>();

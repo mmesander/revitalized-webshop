@@ -13,6 +13,7 @@ import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
+import nu.revitalized.revitalizedwebshop.specifications.SupplementSpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.jpa.domain.Specification;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -128,7 +129,7 @@ class SupplementServiceTest {
         mockSupplement1.setBrand("Energize Supps");
         mockSupplement1.setDescription("Creatine van energize is top");
         mockSupplement1.setPrice(26.99);
-        mockSupplement1.setStock(0);
+        mockSupplement1.setStock(2);
         mockSupplement1.setContains("500g");
         mockSupplement1.setAllergens(mockAllergens1);
         mockSupplement1.setReviews(mockReviews1);
@@ -347,11 +348,12 @@ class SupplementServiceTest {
         mockSupplements.add(mockSupplement1);
         mockSupplements.add(mockSupplement2);
 
-        doReturn(mockSupplements).when(supplementRepository).findAll((Specification<Supplement>) any());
+        doReturn(mockSupplements).when(supplementRepository).findAll(any(SupplementSpecification.class));
 
         // Act
         List<SupplementDto> result = supplementService.getSupplementsByParam(
-                null, null, null, null, null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null,
+                null, null, null);
 
         // Arrange
         assertNotNull(result);
@@ -368,24 +370,22 @@ class SupplementServiceTest {
         mockSupplements.add(mockSupplement1);
         mockSupplements.add(mockSupplement2);
 
-        String name = "Crea";
-        String brand = "Ener";
-        Double minPrice = 10.0;
-        Double maxPrice = 50.0;
-        Integer minStock = 0;
-        Integer maxStock = 30;
+        Integer minStock = 2;
+        Integer maxStock = 20;
 
-        doReturn(mockSupplements).when(supplementRepository).findAll((Specification<Supplement>) any());
+        doReturn(mockSupplements).when(supplementRepository).findAll(any(SupplementSpecification.class));
+
+        Mockito.verifyNoMoreInteractions(supplementRepository);
 
         // Act
         List<SupplementDto> result = supplementService.getSupplementsByParam(
-                name, brand, null, minPrice, maxPrice, null, minStock, maxStock, null, null,
-                null, null
+                null, null, null, null, minStock, maxStock,
+                null, null, null
         );
 
         // Assert
         assertEquals(2, result.size());
-        assertEquals(0, result.get(0).getStock());
+        assertEquals(minStock, result.get(0).getStock());
     }
 
     @Test
@@ -394,17 +394,17 @@ class SupplementServiceTest {
         // Arrange
         String name = "Crea";
         String brand = "Ener";
-        Double minPrice = 10.0;
-        Double maxPrice = 50.0;
+        Double minPrice = 0.00;
+        Double maxPrice = 0.00;
         Integer minStock = 0;
         Integer maxStock = 30;
 
-        doReturn(new ArrayList<>()).when(supplementRepository).findAll((Specification<Supplement>) any());
+        doReturn(new ArrayList<>()).when(supplementRepository).findAll(any(SupplementSpecification.class));
 
         // Act
         Exception exception = assertThrows(RecordNotFoundException.class,
-                () -> supplementService.getSupplementsByParam(name, brand, null, minPrice, maxPrice, null,
-                        minStock, maxStock, null, null, null, null));
+                () -> supplementService.getSupplementsByParam(name, brand, minPrice, maxPrice,
+                        minStock, maxStock, null, null, null));
 
         // Assert
         String expectedMessage = "No supplements found with the specified filters";
@@ -418,9 +418,15 @@ class SupplementServiceTest {
     void getOutOfStockSupplements_Succes() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1, mockSupplement2
+        Supplement mockSupplement3 = new Supplement();
+        mockSupplement3.setName("Out of stock Supplement");
+        mockSupplement3.setStock(0);
         List<Supplement> mockSupplements = new ArrayList<>();
-        mockSupplements.add(mockSupplement1); // Out of stock
+        mockSupplements.add(mockSupplement1); // In stock
         mockSupplements.add(mockSupplement2); // In stock
+        mockSupplements.add(mockSupplement3); // Out of stock
+
+
         doReturn(mockSupplements).when(supplementRepository).findAll();
 
         // Act
@@ -428,7 +434,7 @@ class SupplementServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(mockSupplement1.getName(), result.get(0).getName());
+        assertEquals(mockSupplement3.getName(), result.get(0).getName());
     }
 
     @Test
@@ -452,17 +458,22 @@ class SupplementServiceTest {
     void getInOfStockSupplements_Succes() {
         // Arrange
         // BeforeEach init Supplement: mockSupplement1, mockSupplement2
+        Supplement mockSupplement3 = new Supplement();
+        mockSupplement3.setName("Out of stock Supplement");
+        mockSupplement3.setStock(0);
         List<Supplement> mockSupplements = new ArrayList<>();
-        mockSupplements.add(mockSupplement1); // Out of stock
+        mockSupplements.add(mockSupplement1); // In stock
         mockSupplements.add(mockSupplement2); // In stock
+        mockSupplements.add(mockSupplement3); // Out of stock
+
         doReturn(mockSupplements).when(supplementRepository).findAll();
 
         // Act
         List<SupplementDto> result = supplementService.getInStockSupplements();
 
         // Assert
-        assertEquals(1, result.size());
-        assertEquals(mockSupplement2.getName(), result.get(0).getName());
+        assertEquals(2, result.size());
+        assertEquals(mockSupplement1.getName(), result.get(0).getName());
     }
 
     @Test

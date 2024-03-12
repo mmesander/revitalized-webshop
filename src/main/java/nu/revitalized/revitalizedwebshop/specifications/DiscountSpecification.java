@@ -1,35 +1,54 @@
 package nu.revitalized.revitalizedwebshop.specifications;
 
 // Imports
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import nu.revitalized.revitalizedwebshop.models.Discount;
 import org.springframework.data.jpa.domain.Specification;
+import java.util.ArrayList;
+import java.util.List;
 
-public class DiscountSpecification {
-    private DiscountSpecification() {
+public class DiscountSpecification implements Specification<Discount> {
+    private String name;
+    private final Double value;
+    private final Double minValue;
+    private final Double maxValue;
+
+    public DiscountSpecification(
+            String name,
+            Double value,
+            Double minValue,
+            Double maxValue
+    ) {
+        this.name = name;
+        this.value = value;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
     }
 
-    // Request Filter: Discount name
-    public static Specification<Discount> getDiscountNameLikeFilter(String nameLike) {
-        String formattedNameLike = "%" + nameLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("name")), formattedNameLike));
-    }
+    @Override
+    public Predicate toPredicate(Root<Discount> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        List<Predicate> predicates = new ArrayList<>();
 
-    // Request Filter: Discount value
-    public static Specification<Discount> getDiscountValueLikeFilter(Double valueLike) {
-        return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .equal(root.get("value"), valueLike)));
-    }
+        if (name != null && !name.isEmpty()) {
+            name = name.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name + "%"));
+        }
 
-    // Request Filter: Discount minValue
-    public static Specification<Discount> getDiscountValueMoreThanFilter(Double minValueLike) {
-        return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .greaterThanOrEqualTo(root.get("price"), minValueLike)));
-    }
+        if (value != null) {
+            predicates.add(criteriaBuilder.equal(root.get("value"), value));
+        }
 
-    // Request Filter: Discount maxValue
-    public static Specification<Discount> getDiscountValueLessThanFilter(Double maxValueLike) {
-        return (((root, query, criteriaBuilder) -> criteriaBuilder
-                .lessThanOrEqualTo(root.get("price"), maxValueLike)));
+        if (minValue != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("value"), minValue));
+        }
+
+        if (maxValue != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("value"), maxValue));
+        }
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 }

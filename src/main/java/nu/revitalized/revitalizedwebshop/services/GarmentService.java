@@ -11,8 +11,7 @@ import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Garment;
 import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.repositories.GarmentRepository;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jpa.domain.Specification;
+import nu.revitalized.revitalizedwebshop.specifications.GarmentSpecification;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,7 +21,6 @@ import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdN
 import static nu.revitalized.revitalizedwebshop.helpers.CalculateAverageRating.calculateAverageRating;
 import static nu.revitalized.revitalizedwebshop.helpers.CopyProperties.copyProperties;
 import static nu.revitalized.revitalizedwebshop.services.ReviewService.reviewToDto;
-import static nu.revitalized.revitalizedwebshop.specifications.GarmentSpecification.*;
 
 @Service
 public class GarmentService {
@@ -96,32 +94,19 @@ public class GarmentService {
     public List<GarmentDto> getGarmentsByParam(
             String name,
             String brand,
-            Double price,
             Double minPrice,
             Double maxPrice,
-            Integer stock,
             Integer minStock,
             Integer maxStock,
-            Double averageRating,
-            Double minRating,
-            Double maxRating,
+            Integer minRating,
+            Integer maxRating,
             String size,
             String color
     ) {
-        Specification<Garment> params = Specification.where
-                        (StringUtils.isBlank(name) ? null : getGarmentNameLikeFilter(name))
-                .and(StringUtils.isBlank(brand) ? null : getGarmentBrandLikeFilter(brand))
-                .and(price == null ? null : getGarmentPriceLikeFilter(price))
-                .and(minPrice == null ? null : getGarmentPriceMoreThanFilter(minPrice))
-                .and(maxPrice == null ? null : getGarmentPriceLessThanFilter(maxPrice))
-                .and(stock == null ? null : getGarmentStockLikeFilter(stock))
-                .and(minStock == null ? null : getGarmentStockMoreThanFilter(minStock))
-                .and(maxStock == null ? null : getGarmentStockLessThanFilter(maxStock))
-                .and(averageRating == null ? null : getGarmentAverageRatingLikeFilter(averageRating))
-                .and(minRating == null ? null : getGarmentAverageRatingMoreThanFilter(maxRating))
-                .and(maxRating == null ? null : getGarmentAverageRatingLessThanFilter(maxRating))
-                .and(StringUtils.isBlank(size) ? null : getGarmentSizeLikeFilter(size))
-                .and(StringUtils.isBlank(color) ? null : getGarmentColorLike(color));
+        GarmentSpecification params = new GarmentSpecification(
+                name, brand, minPrice, maxPrice, minStock, maxStock,
+                minRating, maxRating, size, color
+        );
 
         List<Garment> filteredGarments = garmentRepository.findAll(params);
         List<GarmentDto> garmentDtos = new ArrayList<>();

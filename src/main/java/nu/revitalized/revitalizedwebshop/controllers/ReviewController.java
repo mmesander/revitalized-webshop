@@ -43,12 +43,11 @@ public class ReviewController {
 
     @GetMapping("/products/reviews/search")
     public ResponseEntity<List<ReviewDto>> getReviewsByParam(
-            @RequestParam(required = false) Integer rating,
             @RequestParam(required = false) Integer minRating,
             @RequestParam(required = false) Integer maxRating
     ) {
         List<ReviewDto> dtos = reviewService.getReviewsByParam(
-                rating, minRating, maxRating
+                minRating, maxRating
         );
 
         return ResponseEntity.ok().body(dtos);

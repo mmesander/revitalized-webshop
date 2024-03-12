@@ -40,13 +40,11 @@ public class OrderController {
 
     @GetMapping("/users/orders/search")
     public ResponseEntity<List<OrderDto>> getOrdersByParam(
-            @RequestParam(required = false) Double price,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice
+            @RequestParam(required = false) Double minTotalAmount,
+            @RequestParam(required = false) Double maxTotalAmount
     ) {
         List<OrderDto> dtos = orderService.getALlOrdersByParam(
-                price, minPrice, maxPrice
-        );
+                minTotalAmount, maxTotalAmount);
 
         return ResponseEntity.ok().body(dtos);
     }

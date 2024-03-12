@@ -1,66 +1,89 @@
 package nu.revitalized.revitalizedwebshop.specifications;
 
 // Imports
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import nu.revitalized.revitalizedwebshop.models.ShippingDetails;
 import org.springframework.data.jpa.domain.Specification;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ShippingDetailsSpecification {
-    private ShippingDetailsSpecification() {
+public class ShippingDetailsSpecification implements Specification<ShippingDetails> {
+    private String detailsName;
+    private String name;
+    private String country;
+    private String city;
+    private String zipCode;
+    private String street;
+    private String houseNumber;
+    private String email;
+
+    public ShippingDetailsSpecification(
+            String detailsName,
+            String name,
+            String country,
+            String city,
+            String zipCode,
+            String street,
+            String houseNumber,
+            String email
+    ) {
+        this.detailsName = detailsName;
+        this.name = name;
+        this.country = country;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.email = email;
     }
 
-    // Request Filter: ShippingDetails detailsName
-    public static Specification<ShippingDetails> getShippingDetailsDetailsNameLikeFilter(String detailsNameLike) {
-        String formattedDetailsNameLike = "%" + detailsNameLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("detailsName")), formattedDetailsNameLike));
-    }
+    @Override
+    public Predicate toPredicate(Root<ShippingDetails> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        List<Predicate> predicates = new ArrayList<>();
 
-    // Request Filter: ShippingDetails name
-    public static Specification<ShippingDetails> getShippingDetailsNameLikeFilter(String nameLike) {
-        String formattedNameLike = "%" + nameLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("name")), formattedNameLike));
-    }
+        if (detailsName != null && !detailsName.isEmpty()) {
+            detailsName = detailsName.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("detailsName")), "%" + detailsName + "%"));
+        }
 
-    // Request Filter: ShippingDetails country
-    public static Specification<ShippingDetails> getShippingDetailsCountryLikeFilter(String countryLike) {
-        String formattedCountryLike = "%" + countryLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("country")), formattedCountryLike));
-    }
+        if (name != null && !name.isEmpty()) {
+            name = name.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name + "%"));
+        }
 
-    // Request Filter: ShippingDetails city
-    public static Specification<ShippingDetails> getShippingDetailsCityLikeFilter(String cityLike) {
-        String formattedCityLike = "%" + cityLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("city")), formattedCityLike));
-    }
+        if (country != null && !country.isEmpty()) {
+            country = country.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("country")), "%" + country + "%"));
+        }
 
-    // Request Filter: ShippingDetails zipCode
-    public static Specification<ShippingDetails> getShippingDetailsZipCodeLikeFilter(String zipCodeLike) {
-        String formattedZipCodeLike = "%" + zipCodeLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("zipCode")), formattedZipCodeLike));
-    }
+        if (city != null && !city.isEmpty()) {
+            city = city.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("city")), "%" + city + "%"));
+        }
 
-    // Request Filter: Shipping Details street
-    public static Specification<ShippingDetails> getShippingDetailsStreetLikeFilter(String streetLike) {
-        String formattedStreetLike = "%" + streetLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("street")), formattedStreetLike));
-    }
+        if (zipCode != null && !zipCode.isEmpty()) {
+            zipCode = zipCode.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("zipCode")), "%" + zipCode + "%"));
+        }
 
-    // Request Filter: Shipping Details houseNumber
-    public static Specification<ShippingDetails> getShippingDetailsHouseNumberLikeFilter(String houseNumberLike) {
-        String formattedHouseNumberLike = "%" + houseNumberLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("houseNumber")), formattedHouseNumberLike));
-    }
+        if (street != null && !street.isEmpty()) {
+            street = street.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("street")), "%" + street + "%"));
+        }
 
-    // Request Filter: Shipping Details email
-    public static Specification<ShippingDetails> getShippingDetailsEmailLikeFilter(String emailLike) {
-        String formattedEmailLike = "%" + emailLike.toLowerCase() + "%";
-        return ((root, query, criteriaBuilder) -> criteriaBuilder
-                .like(criteriaBuilder.lower(root.get("email")), formattedEmailLike));
+        if (houseNumber != null && !houseNumber.isEmpty()) {
+            houseNumber = houseNumber.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("houseNumber")), "%" + houseNumber + "%"));
+        }
+
+        if (email != null && !email.isEmpty()) {
+            email = email.toLowerCase();
+            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), "%" + email + "%"));
+        }
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 }

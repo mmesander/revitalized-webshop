@@ -10,7 +10,7 @@ import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.*;
 import nu.revitalized.revitalizedwebshop.repositories.*;
-import org.springframework.data.jpa.domain.Specification;
+import nu.revitalized.revitalizedwebshop.specifications.OrderSpecification;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import static nu.revitalized.revitalizedwebshop.helpers.BuildIdNotFound.buildIdNotFound;
@@ -20,7 +20,6 @@ import static nu.revitalized.revitalizedwebshop.helpers.CreateDate.createDate;
 import static nu.revitalized.revitalizedwebshop.services.GarmentService.garmentToOrderItemDto;
 import static nu.revitalized.revitalizedwebshop.services.ShippingDetailsService.shippingDetailsToShortDto;
 import static nu.revitalized.revitalizedwebshop.services.SupplementService.supplementToOrderItemDto;
-import static nu.revitalized.revitalizedwebshop.specifications.OrderSpecification.*;
 
 @Service
 public class OrderService {
@@ -53,7 +52,7 @@ public class OrderService {
         return order;
     }
 
-    public static OrderDto orderToDto(Order order) {
+    public OrderDto orderToDto(Order order) {
         OrderDto orderDto = new OrderDto();
 
         copyProperties(order, orderDto);
@@ -115,6 +114,14 @@ public class OrderService {
             orderDto.setUsername(order.getUser().getUsername());
         }
 
+        // This method is only for the testOrders in data.sql, it's useless for deployment
+        if (order.getTotalAmount() != null) {
+            if (!order.getTotalAmount().equals(orderDto.getTotalAmount())) {
+                order.setTotalAmount(orderDto.getTotalAmount());
+                orderRepository.save(order);
+            }
+        }
+
         return orderDto;
     }
 
@@ -153,14 +160,11 @@ public class OrderService {
     }
 
     public List<OrderDto> getALlOrdersByParam(
-            Double price,
-            Double minPrice,
-            Double maxPrice
+            Double minTotalAmount,
+            Double maxTotalAmount
     ) {
-        Specification<Order> params = Specification.where
-                        (price == null ? null : getOrderPriceLikeFilter(price))
-                .and(minPrice == null ? null : getOrderPriceMoreThanFilter(minPrice))
-                .and(maxPrice == null ? null : getOrderPriceLessThanFilter(maxPrice));
+        OrderSpecification params = new OrderSpecification(
+                minTotalAmount, maxTotalAmount);
 
         List<Order> orders = orderRepository.findAll(params);
         List<OrderDto> orderDtos = new ArrayList<>();
