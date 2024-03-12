@@ -279,7 +279,7 @@ public class SupplementService {
                 .orElseThrow(() -> new RecordNotFoundException(buildIdNotFound("Allergen", allergenId)));
 
         if (!supplement.getAllergens().remove(allergen)) {
-            throw new InvalidInputException("Supplement doesn't contain allergen: " + allergen.getName() + " with id: " + allergenId);
+            throw new BadRequestException("Supplement doesn't contain allergen: " + allergen.getName() + " with id: " + allergenId);
         }
 
         supplementRepository.save(supplement);

@@ -12,7 +12,6 @@ import nu.revitalized.revitalizedwebshop.models.Review;
 import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.repositories.AllergenRepository;
 import nu.revitalized.revitalizedwebshop.repositories.SupplementRepository;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,9 +36,6 @@ class SupplementServiceTest {
 
     @Mock
     private AllergenRepository allergenRepository;
-
-    @Mock
-    private AllergenService allergenService;
 
     @InjectMocks
     private SupplementService supplementService;
