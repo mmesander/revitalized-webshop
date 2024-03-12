@@ -278,8 +278,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from getAllSupplements method")
-    void getAllSupplements_Exception() {
+    @DisplayName("Should throw exception from getAllSupplements method when not found")
+    void getAllSupplements_Exception_WhenNotFound() {
         // Arrange
         doReturn(new ArrayList<>()).when(supplementRepository).findAll();
 
@@ -310,8 +310,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from getSupplementById method")
-    void getSupplementById_Exception() {
+    @DisplayName("Should throw exception from getSupplementById method when not found")
+    void getSupplementById_Exception_WhenNotFound() {
         // Arrange
         Long id = 3L;
         doReturn(Optional.empty()).when(supplementRepository).findById(id);
@@ -363,8 +363,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from getAllSupplementsByParam method")
-    void getAllSupplementsByParam_Exception() {
+    @DisplayName("Should throw exception from getAllSupplementsByParam method when not found")
+    void getAllSupplementsByParam_Exception_WhenNotFound() {
         // Arrange
         String name = "Crea";
         String brand = "Ener";
@@ -411,8 +411,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should trow exception from getOutOfStockSupplements method")
-    void getOutOfStockSupplements_Exception() {
+    @DisplayName("Should trow exception from getOutOfStockSupplements method when not found")
+    void getOutOfStockSupplements_Exception_WhenNotFound() {
         doReturn(new ArrayList<>()).when(supplementRepository).findAll();
 
         // Act
@@ -445,8 +445,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should trow exception from getInStockSupplements method")
-    void getInStockSupplements_Exception() {
+    @DisplayName("Should trow exception from getInStockSupplements method when not found")
+    void getInStockSupplements_Exception_WhenNotFound() {
         doReturn(new ArrayList<>()).when(supplementRepository).findAll();
 
         // Act
@@ -477,8 +477,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from createSupplement method")
-    void createSupplement_Exception() {
+    @DisplayName("Should throw exception from createSupplement method when already exists")
+    void createSupplement_Exception_WhenAlreadyExists() {
         // Arrange
         // BeforeEach init SupplementInputDto: mockInputDto
         mockInputDto.setName("Existing Supplement");
@@ -516,8 +516,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from updateSupplement method")
-    void updateSupplement_Exception() {
+    @DisplayName("Should throw exception from updateSupplement method when not found")
+    void updateSupplement_Exception_WhenNotFound() {
         // Arrange
         // BeforeEach init SupplementInputDto: mockInputDto
         Long id = 20L;
@@ -565,8 +565,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from patchSupplement method")
-    void patchSupplement_Exception() {
+    @DisplayName("Should throw exception from patchSupplement method when not found")
+    void patchSupplement_Exception_WhenNotFound() {
         // Arrange
         Long id = 20L;
         SupplementPatchInputDto mockPatchInputDto = new SupplementPatchInputDto();
@@ -606,8 +606,8 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception from deleteSupplement method")
-    void deleteSupplement_Exception() {
+    @DisplayName("Should throw exception from deleteSupplement method when not found")
+    void deleteSupplement_Exception_WhenNotFound() {
         // Arrange
         Long id = 13L;
         doReturn(Optional.empty()).when(supplementRepository).findById(id);
