@@ -52,7 +52,7 @@ public class OrderService {
         return order;
     }
 
-    public static OrderDto orderToDto(Order order) {
+    public OrderDto orderToDto(Order order) {
         OrderDto orderDto = new OrderDto();
 
         copyProperties(order, orderDto);
@@ -112,6 +112,14 @@ public class OrderService {
 
         if (order.getUser() != null) {
             orderDto.setUsername(order.getUser().getUsername());
+        }
+
+        // This method is only for the testOrders in data.sql, it's useless for deployment
+        if (order.getTotalAmount() != null) {
+            if (!order.getTotalAmount().equals(orderDto.getTotalAmount())) {
+                order.setTotalAmount(orderDto.getTotalAmount());
+                orderRepository.save(order);
+            }
         }
 
         return orderDto;

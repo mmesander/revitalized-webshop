@@ -87,8 +87,8 @@ VALUES ('mmesander', 'ROLE_ADMIN'),
        ('rplooij', 'ROLE_USER');
 
 INSERT INTO orders (order_number, order_date, status, is_paid, discount_code, total_amount, user_orders, shipping_details)
-VALUES (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10krijgen', 0.00, 'mmesander', 1),
-       (nextval('orders_seq'), CURRENT_DATE, 'delivered', FALSE, NULL, 0.00, 'mmesander', 1);
+VALUES (nextval('orders_seq'), CURRENT_DATE, 'delivered', TRUE, 'markgaateen10krijgen', 200.00, 'mmesander', 1),
+       (nextval('orders_seq'), CURRENT_DATE, 'delivered', FALSE, NULL, 50.00, 'mmesander', 1);
 
 INSERT INTO order_garments (order_id, garment_id)
 VALUES (101, 100101),
