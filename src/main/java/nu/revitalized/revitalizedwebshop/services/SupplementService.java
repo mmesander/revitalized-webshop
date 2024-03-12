@@ -49,7 +49,7 @@ public class SupplementService {
 
         copyProperties(supplement, supplementDto);
 
-        if (supplement.getAllergens() != null) {
+        if (supplement.getAllergens() != null && !supplement.getAllergens().isEmpty()) {
             Set<ShortAllergenDto> shortAllergenDtos = new TreeSet<>(Comparator.comparing(ShortAllergenDto::getId));
             for (Allergen allergen : supplement.getAllergens()) {
                 shortAllergenDtos.add(allergenToShortDto(allergen));
@@ -57,7 +57,7 @@ public class SupplementService {
             supplementDto.setAllergens(shortAllergenDtos);
         }
 
-        if (supplement.getReviews() != null) {
+        if (supplement.getReviews() != null && !supplement.getReviews().isEmpty()) {
             List<ReviewDto> dtos = new ArrayList<>();
             for (Review review : supplement.getReviews()) {
                 dtos.add(reviewToDto(review));
