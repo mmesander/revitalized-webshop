@@ -621,6 +621,7 @@ class SupplementServiceTest {
         String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
+        verify(supplementRepository, never()).deleteById(anyLong());
     }
 
 //    @Test
