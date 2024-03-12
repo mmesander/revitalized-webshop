@@ -4,6 +4,8 @@ package nu.revitalized.revitalizedwebshop.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,20 +42,20 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private List<ShippingDetails> shippingDetails;
+    private List<ShippingDetails> shippingDetails = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "user",
             fetch = FetchType.EAGER
     )
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 
     @ManyToMany(
             mappedBy = "users",
