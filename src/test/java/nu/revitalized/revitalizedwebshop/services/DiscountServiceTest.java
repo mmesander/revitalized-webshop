@@ -9,7 +9,6 @@ import nu.revitalized.revitalizedwebshop.exceptions.BadRequestException;
 import nu.revitalized.revitalizedwebshop.exceptions.RecordNotFoundException;
 import nu.revitalized.revitalizedwebshop.exceptions.UsernameNotFoundException;
 import nu.revitalized.revitalizedwebshop.models.Discount;
-import nu.revitalized.revitalizedwebshop.models.Supplement;
 import nu.revitalized.revitalizedwebshop.models.User;
 import nu.revitalized.revitalizedwebshop.repositories.DiscountRepository;
 import nu.revitalized.revitalizedwebshop.repositories.UserRepository;
@@ -26,7 +25,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class DiscountServiceTest {
@@ -580,6 +578,7 @@ class DiscountServiceTest {
         String expectedMessage = "Can't find user: " + username;
         String actualMessage = exception.getMessage();
 
+        assertNotNull(exception);
         assertEquals(expectedMessage, actualMessage);
         verify(discountRepository, never()).save(any());
     }
@@ -717,31 +716,62 @@ class DiscountServiceTest {
     }
 
     @Test
+    @DisplayName("Should get all authorized user discounts")
     void getAllAuthUserDiscounts_Succes() {
         // Arrange
+        // BeforeEach init Discount: mockDiscount1, mockDiscount2, User: mockUser1
+        String username = mockUser1.getUsername();
+        mockUser1.setDiscounts(Set.of(mockDiscount1, mockDiscount2));
+
+        doReturn(Optional.of(mockUser1)).when(userRepository).findById(username);
 
         // Act
+        List<String> result = discountService.getAllAuthUserDiscounts(username);
 
         // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("100.0% discount with code: TestDiscount100", result.get(0));
+        assertEquals("75.0% discount with code: TestDiscount75", result.get(1));
+
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from getAllAuthUserDiscounts method when user not found")
     void getAllAuthUserDiscounts_Exception_WhenUserNotFound() {
         // Arrange
+        String username = "NoUser";
+        doReturn(Optional.empty()).when(userRepository).findById(username);
 
         // Act
+        Exception exception = assertThrows(UsernameNotFoundException.class,
+                () -> discountService.getAllAuthUserDiscounts(username));
 
         // Assert
+        String expectedMessage = "Can't find user: " + username;
+        String actualMessage = exception.getMessage();
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    @DisplayName("Should throw exception from")
+    @DisplayName("Should throw exception from getAllAuthUserDiscounts method when discounts not found")
     void getAllAuthUserDiscounts_Exception_WhenDiscountsNotFound() {
         // Arrange
+        // BeforeEach init User: mockUser1
+        String username = mockUser1.getUsername();
+        doReturn(Optional.of(mockUser1)).when(userRepository).findById(username);
 
         // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> discountService.getAllAuthUserDiscounts(username));
 
         // Assert
+        String expectedMessage = "No discounts found for user: " + username;
+        String actualMessage = exception.getMessage();
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, actualMessage);
     }
 }
