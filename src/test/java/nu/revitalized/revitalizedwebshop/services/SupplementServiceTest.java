@@ -496,10 +496,10 @@ class SupplementServiceTest {
     }
 
     @Test
-    @DisplayName("Should update supplement")
+    @DisplayName("Should update existing supplement")
     void updateSupplement_Succes() {
         // Arrange
-        // BeforeEach init SupplementInputDto: mockInputDto, Supplement: supplement1
+        // BeforeEach init SupplementInputDto: mockInputDto, Supplement: mockSupplement1
         Long id = 10L;
         mockSupplement1.setId(10L);
 
@@ -535,9 +535,10 @@ class SupplementServiceTest {
     }
 
     @Test
-    void patchSupplement() {
+    @DisplayName("Should patch exisiting supplement")
+    void patchSupplement_Succes() {
         // Arrange
-        // BeforeEach init Supplement: supplement1
+        // BeforeEach init Supplement: mockSupplement1
         Long id = 20L;
         SupplementPatchInputDto mockPatchInputDto = new SupplementPatchInputDto();
         mockPatchInputDto.setName("Patched name");
@@ -582,15 +583,46 @@ class SupplementServiceTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
-//    @Test
-//    void deleteSupplement() {
-//        // Arrange
-//
-//        // Act
-//
-//        // Assert
-//    }
-//
+    @Test
+    @DisplayName("Should delete existing supplement")
+    void deleteSupplement_Succes() {
+        // Arrange
+        // BeforeEach init Supplement: mockSupplement1
+        Long id = 13L;
+        mockSupplement1.setId(13L);
+        String mockSupplementName = mockSupplement1.getName();
+
+        doReturn(Optional.of(mockSupplement1)).when(supplementRepository).findById(id);
+
+        // Act
+        String confirmation = supplementService.deleteSupplement(id);
+
+        // Assert
+        String expectedMessage = "Supplement: " + mockSupplementName + " with id: " + id + " is removed";
+
+        assertNotNull(confirmation);
+        assertEquals(expectedMessage, confirmation);
+        verify(supplementRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    @DisplayName("Should throw exception from deleteSupplement method")
+    void deleteSupplement_Exception() {
+        // Arrange
+        Long id = 13L;
+        doReturn(Optional.empty()).when(supplementRepository).findById(id);
+
+        // Act
+        Exception exception = assertThrows(RecordNotFoundException.class,
+                () -> supplementService.deleteSupplement(id));
+
+        // Assert
+        String expectedMessage = "Supplement with id: " + id + " not found";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
 //    @Test
 //    void assignAllergenToSupplement() {
 //        // Arrange
