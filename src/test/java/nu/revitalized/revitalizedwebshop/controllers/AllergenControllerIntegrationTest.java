@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
-class AllergenControllerTest {
+class AllergenControllerIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
