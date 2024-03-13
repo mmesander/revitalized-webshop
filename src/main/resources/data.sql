@@ -68,7 +68,7 @@ VALUES
     (nextval('shipping_details_seq'), 'WERKADRES', 'Mark Mesander', 'Nederland', 'Noordwijk', '3456CD', 'Test de Teststraat', 42, 'mark@test.nl', 'mmesander'),
     (nextval('shipping_details_seq'), 'NIETTOEKOMSTADRES', 'Rowan Plooij', 'Nederland', 'Friesland', '3333DE', 'Vriendinstraat 101', '26E', 'rowan@test.nl', 'rplooij');
 
--- -- Discounts
+-- Discounts
 INSERT INTO discounts (id, name, value)
 VALUES
     (nextval('discounts_seq'), 'markgaateen8krijgen', 10),
