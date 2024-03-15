@@ -12,7 +12,7 @@
 	<artifactId>revitalized-webshop</artifactId>
 	<version>1.0.0</version>
 	<name>RevitalizedWebshop</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Webshop for Revitalized</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
